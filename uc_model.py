@@ -3,10 +3,10 @@ import json
 import sys
 
 ## Grab instance file from first command line argument
-data_file = sys.argv[1]
+# data_file = sys.argv[1]
 
 print('loading data')
-data = json.load(open(data_file, 'r'))
+data = json.load(open('generated_power_system.json', 'r'))
 
 thermal_gens = data['thermal_generators']
 renewable_gens = data['renewable_generators']
@@ -133,7 +133,7 @@ for g, gen in thermal_gens.items():
         m.cost_select[g,t] = m.cg[g,t] == sum( (piece['cost'] - piece_cost1)*m.lg[g,l,t] for l,piece in enumerate(gen['piecewise_production'])) #(22)
         m.on_select[g,t] = m.ug[g,t] == sum(m.lg[g,l,t] for l,_ in enumerate(gen['piecewise_production'])) #(23)
 
-m.startup_allowed = Constraint(m.dg_index)
+m.startup_allowed = Constraint(((g,s,t) for g in thermal_gens for s in gen_startup_categories[g] for t in time_periods))
 for g, gen in thermal_gens.items():
     for s,_ in enumerate(gen['startup'][:-1]): ## all but last
         for t in time_periods:

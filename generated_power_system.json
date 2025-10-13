@@ -1,0 +1,9621 @@
+{
+  "time_periods": 48,
+  "demand": [
+    3131.18,
+    3095.97,
+    3213.66,
+    2975.08,
+    2971.73,
+    3128.11,
+    3631.58,
+    3625.75,
+    3753.91,
+    3892.04,
+    4160.74,
+    4168.89,
+    4151.35,
+    4063.93,
+    3858.38,
+    3830.98,
+    4032.35,
+    4223.12,
+    4413.59,
+    4359.24,
+    4522.04,
+    4465.8,
+    3501.92,
+    3538.93,
+    3238.72,
+    3170.4,
+    3048.25,
+    3089.24,
+    3084.79,
+    3101.27,
+    3371.93,
+    3449.78,
+    3802.48,
+    4063.33,
+    4078.71,
+    3993.36,
+    4053.76,
+    3905.45,
+    4226.78,
+    4073.26,
+    4111.47,
+    4272.02,
+    4278.03,
+    4415.24,
+    4543.2,
+    4270.91,
+    3674.31,
+    3630.5
+  ],
+  "reserves": [
+    111.16,
+    134.78,
+    123.53,
+    119.32,
+    127.78,
+    130.71,
+    167.48,
+    120.05,
+    119.58,
+    163.76,
+    169.44,
+    171.09,
+    196.09,
+    125.64,
+    121.91,
+    136.23,
+    150.82,
+    205.81,
+    147.51,
+    163.86,
+    186.03,
+    203.28,
+    127.15,
+    172.91,
+    139.62,
+    124.21,
+    125.67,
+    148.15,
+    154.09,
+    95.96,
+    154.57,
+    129.82,
+    187.92,
+    180.47,
+    144.13,
+    154.52,
+    192.62,
+    131.12,
+    152.03,
+    134.65,
+    187.37,
+    155.86,
+    203.52,
+    137.57,
+    144.08,
+    193.1,
+    145.16,
+    172.26
+  ],
+  "thermal_generators": {
+    "100_CT_1": {
+      "must_run": 0,
+      "power_output_minimum": 7.54,
+      "power_output_maximum": 55.43,
+      "ramp_up_limit": 60.99,
+      "ramp_down_limit": 68.84,
+      "ramp_startup_limit": 7.54,
+      "ramp_shutdown_limit": 7.54,
+      "time_up_minimum": 1,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 2,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 300.56
+        },
+        {
+          "lag": 3,
+          "cost": 430.52
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.54,
+          "cost": 61.92
+        },
+        {
+          "mw": 23.5,
+          "cost": 191.08
+        },
+        {
+          "mw": 39.47,
+          "cost": 330.53
+        },
+        {
+          "mw": 55.43,
+          "cost": 412.73
+        }
+      ],
+      "name": "100_CT_1"
+    },
+    "101_STEAM_1": {
+      "must_run": 0,
+      "power_output_minimum": 4.53,
+      "power_output_maximum": 149.74,
+      "ramp_up_limit": 59.37,
+      "ramp_down_limit": 23.94,
+      "ramp_startup_limit": 4.53,
+      "ramp_shutdown_limit": 4.53,
+      "time_up_minimum": 7,
+      "time_down_minimum": 4,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 168,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 1402.8
+        },
+        {
+          "lag": 4,
+          "cost": 946.56
+        },
+        {
+          "lag": 12,
+          "cost": 1233.76
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 4.53,
+          "cost": 43.55
+        },
+        {
+          "mw": 52.94,
+          "cost": 530.39
+        },
+        {
+          "mw": 101.34,
+          "cost": 1188.36
+        },
+        {
+          "mw": 149.74,
+          "cost": 1463.77
+        }
+      ],
+      "name": "101_STEAM_1"
+    },
+    "102_CC_1": {
+      "must_run": 0,
+      "power_output_minimum": 180.22,
+      "power_output_maximum": 327.26,
+      "ramp_up_limit": 82.93,
+      "ramp_down_limit": 82.85,
+      "ramp_startup_limit": 180.22,
+      "ramp_shutdown_limit": 180.22,
+      "time_up_minimum": 6,
+      "time_down_minimum": 5,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 24,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 4468.56
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 180.22,
+          "cost": 1909.61
+        },
+        {
+          "mw": 229.23,
+          "cost": 2205.81
+        },
+        {
+          "mw": 278.25,
+          "cost": 3535.37
+        },
+        {
+          "mw": 327.26,
+          "cost": 3460.93
+        }
+      ],
+      "name": "102_CC_1"
+    },
+    "103_CT_1": {
+      "must_run": 0,
+      "power_output_minimum": 7.97,
+      "power_output_maximum": 59.01,
+      "ramp_up_limit": 63.05,
+      "ramp_down_limit": 60.82,
+      "ramp_startup_limit": 7.97,
+      "ramp_shutdown_limit": 7.97,
+      "time_up_minimum": 3,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 76,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 646.75
+        },
+        {
+          "lag": 3,
+          "cost": 545.58
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.97,
+          "cost": 69.06
+        },
+        {
+          "mw": 24.98,
+          "cost": 156.56
+        },
+        {
+          "mw": 42.0,
+          "cost": 415.73
+        },
+        {
+          "mw": 59.01,
+          "cost": 448.5
+        }
+      ],
+      "name": "103_CT_1"
+    },
+    "104_CT_1": {
+      "must_run": 0,
+      "power_output_minimum": 8.4,
+      "power_output_maximum": 50.13,
+      "ramp_up_limit": 68.32,
+      "ramp_down_limit": 68.67,
+      "ramp_startup_limit": 8.4,
+      "ramp_shutdown_limit": 8.4,
+      "time_up_minimum": 2,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 149,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 421.38
+        },
+        {
+          "lag": 3,
+          "cost": 287.4
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 8.4,
+          "cost": 69.48
+        },
+        {
+          "mw": 22.31,
+          "cost": 189.69
+        },
+        {
+          "mw": 36.22,
+          "cost": 314.33
+        },
+        {
+          "mw": 50.13,
+          "cost": 357.3
+        }
+      ],
+      "name": "104_CT_1"
+    },
+    "105_CT_1": {
+      "must_run": 0,
+      "power_output_minimum": 8.1,
+      "power_output_maximum": 52.98,
+      "ramp_up_limit": 67.53,
+      "ramp_down_limit": 67.08,
+      "ramp_startup_limit": 8.1,
+      "ramp_shutdown_limit": 8.1,
+      "time_up_minimum": 1,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 19,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 489.09
+        },
+        {
+          "lag": 3,
+          "cost": 487.17
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 8.1,
+          "cost": 60.62
+        },
+        {
+          "mw": 23.06,
+          "cost": 162.78
+        },
+        {
+          "mw": 38.02,
+          "cost": 266.81
+        },
+        {
+          "mw": 52.98,
+          "cost": 452.33
+        }
+      ],
+      "name": "105_CT_1"
+    },
+    "106_NUCLEAR_1": {
+      "must_run": 1,
+      "power_output_minimum": 426.16,
+      "power_output_maximum": 430.34,
+      "ramp_up_limit": 400.0,
+      "ramp_down_limit": 400.0,
+      "ramp_startup_limit": 426.16,
+      "ramp_shutdown_limit": 426.16,
+      "time_up_minimum": 27,
+      "time_down_minimum": 24,
+      "power_output_t0": 426.16,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 27,
+      "startup": [
+        {
+          "lag": 48,
+          "cost": 2606.6
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 426.16,
+          "cost": 1881.37
+        },
+        {
+          "mw": 427.56,
+          "cost": 2521.82
+        },
+        {
+          "mw": 428.95,
+          "cost": 2458.89
+        },
+        {
+          "mw": 430.34,
+          "cost": 2059.38
+        }
+      ],
+      "name": "106_NUCLEAR_1"
+    },
+    "107_CC_1": {
+      "must_run": 0,
+      "power_output_minimum": 178.24,
+      "power_output_maximum": 330.54,
+      "ramp_up_limit": 82.0,
+      "ramp_down_limit": 82.77,
+      "ramp_startup_limit": 178.24,
+      "ramp_shutdown_limit": 178.24,
+      "time_up_minimum": 7,
+      "time_down_minimum": 5,
+      "power_output_t0": 178.24,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 12,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 2302.06
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 178.24,
+          "cost": 1839.2
+        },
+        {
+          "mw": 229.01,
+          "cost": 2671.95
+        },
+        {
+          "mw": 279.77,
+          "cost": 3835.34
+        },
+        {
+          "mw": 330.54,
+          "cost": 3863.13
+        }
+      ],
+      "name": "107_CC_1"
+    },
+    "108_STEAM_1": {
+      "must_run": 0,
+      "power_output_minimum": 4.94,
+      "power_output_maximum": 161.38,
+      "ramp_up_limit": 47.28,
+      "ramp_down_limit": 46.68,
+      "ramp_startup_limit": 4.94,
+      "ramp_shutdown_limit": 4.94,
+      "time_up_minimum": 6,
+      "time_down_minimum": 4,
+      "power_output_t0": 4.94,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 54,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 1225.46
+        },
+        {
+          "lag": 4,
+          "cost": 1637.06
+        },
+        {
+          "lag": 12,
+          "cost": 1938.53
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 4.94,
+          "cost": 46.69
+        },
+        {
+          "mw": 57.09,
+          "cost": 698.18
+        },
+        {
+          "mw": 109.23,
+          "cost": 851.84
+        },
+        {
+          "mw": 161.38,
+          "cost": 1545.4
+        }
+      ],
+      "name": "108_STEAM_1"
+    },
+    "109_CC_1": {
+      "must_run": 0,
+      "power_output_minimum": 183.06,
+      "power_output_maximum": 348.35,
+      "ramp_up_limit": 82.27,
+      "ramp_down_limit": 82.79,
+      "ramp_startup_limit": 183.06,
+      "ramp_shutdown_limit": 183.06,
+      "time_up_minimum": 5,
+      "time_down_minimum": 5,
+      "power_output_t0": 183.06,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 64,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 4822.15
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 183.06,
+          "cost": 2143.66
+        },
+        {
+          "mw": 238.16,
+          "cost": 3593.55
+        },
+        {
+          "mw": 293.26,
+          "cost": 4449.77
+        },
+        {
+          "mw": 348.35,
+          "cost": 4360.08
+        }
+      ],
+      "name": "109_CC_1"
+    },
+    "110_CT_1": {
+      "must_run": 0,
+      "power_output_minimum": 7.26,
+      "power_output_maximum": 54.68,
+      "ramp_up_limit": 64.64,
+      "ramp_down_limit": 60.39,
+      "ramp_startup_limit": 7.26,
+      "ramp_shutdown_limit": 7.26,
+      "time_up_minimum": 2,
+      "time_down_minimum": 1,
+      "power_output_t0": 7.26,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 138,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 281.92
+        },
+        {
+          "lag": 3,
+          "cost": 523.82
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.26,
+          "cost": 55.39
+        },
+        {
+          "mw": 23.07,
+          "cost": 184.56
+        },
+        {
+          "mw": 38.87,
+          "cost": 337.38
+        },
+        {
+          "mw": 54.68,
+          "cost": 455.97
+        }
+      ],
+      "name": "110_CT_1"
+    },
+    "111_STEAM_1": {
+      "must_run": 0,
+      "power_output_minimum": 5.46,
+      "power_output_maximum": 147.73,
+      "ramp_up_limit": 37.25,
+      "ramp_down_limit": 57.95,
+      "ramp_startup_limit": 5.46,
+      "ramp_shutdown_limit": 5.46,
+      "time_up_minimum": 6,
+      "time_down_minimum": 4,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 94,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 1208.06
+        },
+        {
+          "lag": 4,
+          "cost": 867.31
+        },
+        {
+          "lag": 12,
+          "cost": 1668.75
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 5.46,
+          "cost": 45.47
+        },
+        {
+          "mw": 52.88,
+          "cost": 555.69
+        },
+        {
+          "mw": 100.31,
+          "cost": 1048.07
+        },
+        {
+          "mw": 147.73,
+          "cost": 1431.04
+        }
+      ],
+      "name": "111_STEAM_1"
+    },
+    "112_CT_1": {
+      "must_run": 0,
+      "power_output_minimum": 8.26,
+      "power_output_maximum": 50.87,
+      "ramp_up_limit": 71.67,
+      "ramp_down_limit": 64.25,
+      "ramp_startup_limit": 8.26,
+      "ramp_shutdown_limit": 8.26,
+      "time_up_minimum": 1,
+      "time_down_minimum": 1,
+      "power_output_t0": 8.26,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 141,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 393.29
+        },
+        {
+          "lag": 3,
+          "cost": 281.89
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 8.26,
+          "cost": 76.78
+        },
+        {
+          "mw": 22.46,
+          "cost": 185.05
+        },
+        {
+          "mw": 36.67,
+          "cost": 319.93
+        },
+        {
+          "mw": 50.87,
+          "cost": 368.57
+        }
+      ],
+      "name": "112_CT_1"
+    },
+    "113_CT_1": {
+      "must_run": 0,
+      "power_output_minimum": 8.13,
+      "power_output_maximum": 56.7,
+      "ramp_up_limit": 63.14,
+      "ramp_down_limit": 62.79,
+      "ramp_startup_limit": 8.13,
+      "ramp_shutdown_limit": 8.13,
+      "time_up_minimum": 1,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 80,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 485.12
+        },
+        {
+          "lag": 3,
+          "cost": 427.11
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 8.13,
+          "cost": 63.37
+        },
+        {
+          "mw": 24.32,
+          "cost": 171.35
+        },
+        {
+          "mw": 40.51,
+          "cost": 398.36
+        },
+        {
+          "mw": 56.7,
+          "cost": 360.99
+        }
+      ],
+      "name": "113_CT_1"
+    },
+    "114_STEAM_1": {
+      "must_run": 0,
+      "power_output_minimum": 5.48,
+      "power_output_maximum": 158.45,
+      "ramp_up_limit": 42.3,
+      "ramp_down_limit": 56.7,
+      "ramp_startup_limit": 5.48,
+      "ramp_shutdown_limit": 5.48,
+      "time_up_minimum": 4,
+      "time_down_minimum": 4,
+      "power_output_t0": 5.48,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 13,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 2177.34
+        },
+        {
+          "lag": 4,
+          "cost": 2487.98
+        },
+        {
+          "lag": 12,
+          "cost": 1797.84
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 5.48,
+          "cost": 60.19
+        },
+        {
+          "mw": 56.47,
+          "cost": 661.82
+        },
+        {
+          "mw": 107.46,
+          "cost": 1141.35
+        },
+        {
+          "mw": 158.45,
+          "cost": 1413.69
+        }
+      ],
+      "name": "114_STEAM_1"
+    },
+    "115_CT_1": {
+      "must_run": 0,
+      "power_output_minimum": 8.48,
+      "power_output_maximum": 56.84,
+      "ramp_up_limit": 71.76,
+      "ramp_down_limit": 63.88,
+      "ramp_startup_limit": 8.48,
+      "ramp_shutdown_limit": 8.48,
+      "time_up_minimum": 3,
+      "time_down_minimum": 1,
+      "power_output_t0": 8.48,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 64,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 552.23
+        },
+        {
+          "lag": 3,
+          "cost": 559.82
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 8.48,
+          "cost": 82.65
+        },
+        {
+          "mw": 24.6,
+          "cost": 250.43
+        },
+        {
+          "mw": 40.72,
+          "cost": 355.4
+        },
+        {
+          "mw": 56.84,
+          "cost": 485.74
+        }
+      ],
+      "name": "115_CT_1"
+    },
+    "116_CT_1": {
+      "must_run": 0,
+      "power_output_minimum": 7.58,
+      "power_output_maximum": 54.34,
+      "ramp_up_limit": 71.66,
+      "ramp_down_limit": 65.45,
+      "ramp_startup_limit": 7.58,
+      "ramp_shutdown_limit": 7.58,
+      "time_up_minimum": 3,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 53,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 299.79
+        },
+        {
+          "lag": 3,
+          "cost": 356.27
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.58,
+          "cost": 62.35
+        },
+        {
+          "mw": 23.17,
+          "cost": 186.79
+        },
+        {
+          "mw": 38.75,
+          "cost": 240.0
+        },
+        {
+          "mw": 54.34,
+          "cost": 385.6
+        }
+      ],
+      "name": "116_CT_1"
+    },
+    "117_NUCLEAR_1": {
+      "must_run": 1,
+      "power_output_minimum": 357.95,
+      "power_output_maximum": 430.45,
+      "ramp_up_limit": 400.0,
+      "ramp_down_limit": 400.0,
+      "ramp_startup_limit": 357.95,
+      "ramp_shutdown_limit": 357.95,
+      "time_up_minimum": 39,
+      "time_down_minimum": 24,
+      "power_output_t0": 357.95,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 57,
+      "startup": [
+        {
+          "lag": 48,
+          "cost": 2975.99
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 357.95,
+          "cost": 1835.43
+        },
+        {
+          "mw": 382.12,
+          "cost": 2158.35
+        },
+        {
+          "mw": 406.28,
+          "cost": 2094.14
+        },
+        {
+          "mw": 430.45,
+          "cost": 2459.95
+        }
+      ],
+      "name": "117_NUCLEAR_1"
+    },
+    "118_STEAM_1": {
+      "must_run": 0,
+      "power_output_minimum": 4.84,
+      "power_output_maximum": 160.55,
+      "ramp_up_limit": 33.07,
+      "ramp_down_limit": 50.45,
+      "ramp_startup_limit": 4.84,
+      "ramp_shutdown_limit": 4.84,
+      "time_up_minimum": 7,
+      "time_down_minimum": 4,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 117,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 894.6
+        },
+        {
+          "lag": 4,
+          "cost": 1005.0
+        },
+        {
+          "lag": 12,
+          "cost": 840.78
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 4.84,
+          "cost": 43.39
+        },
+        {
+          "mw": 56.74,
+          "cost": 518.31
+        },
+        {
+          "mw": 108.65,
+          "cost": 1031.79
+        },
+        {
+          "mw": 160.55,
+          "cost": 1557.27
+        }
+      ],
+      "name": "118_STEAM_1"
+    },
+    "119_STEAM_1": {
+      "must_run": 0,
+      "power_output_minimum": 5.45,
+      "power_output_maximum": 152.57,
+      "ramp_up_limit": 42.56,
+      "ramp_down_limit": 28.72,
+      "ramp_startup_limit": 5.45,
+      "ramp_shutdown_limit": 5.45,
+      "time_up_minimum": 6,
+      "time_down_minimum": 4,
+      "power_output_t0": 5.45,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 30,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 669.64
+        },
+        {
+          "lag": 4,
+          "cost": 1294.82
+        },
+        {
+          "lag": 12,
+          "cost": 1531.89
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 5.45,
+          "cost": 61.45
+        },
+        {
+          "mw": 54.49,
+          "cost": 545.5
+        },
+        {
+          "mw": 103.53,
+          "cost": 1155.02
+        },
+        {
+          "mw": 152.57,
+          "cost": 1377.88
+        }
+      ],
+      "name": "119_STEAM_1"
+    },
+    "100_CC_2": {
+      "must_run": 0,
+      "power_output_minimum": 158.7,
+      "power_output_maximum": 362.61,
+      "ramp_up_limit": 82.59,
+      "ramp_down_limit": 82.83,
+      "ramp_startup_limit": 158.7,
+      "ramp_shutdown_limit": 158.7,
+      "time_up_minimum": 6,
+      "time_down_minimum": 5,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 20,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 6082.76
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 158.7,
+          "cost": 1931.94
+        },
+        {
+          "mw": 226.67,
+          "cost": 3352.62
+        },
+        {
+          "mw": 294.64,
+          "cost": 2698.64
+        },
+        {
+          "mw": 362.61,
+          "cost": 4166.81
+        }
+      ],
+      "name": "100_CC_2"
+    },
+    "101_STEAM_2": {
+      "must_run": 0,
+      "power_output_minimum": 5.27,
+      "power_output_maximum": 165.86,
+      "ramp_up_limit": 37.42,
+      "ramp_down_limit": 49.35,
+      "ramp_startup_limit": 5.27,
+      "ramp_shutdown_limit": 5.27,
+      "time_up_minimum": 6,
+      "time_down_minimum": 4,
+      "power_output_t0": 5.27,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 40,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 1590.36
+        },
+        {
+          "lag": 4,
+          "cost": 1847.15
+        },
+        {
+          "lag": 12,
+          "cost": 2554.25
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 5.27,
+          "cost": 50.69
+        },
+        {
+          "mw": 58.8,
+          "cost": 741.49
+        },
+        {
+          "mw": 112.33,
+          "cost": 1039.54
+        },
+        {
+          "mw": 165.86,
+          "cost": 1574.6
+        }
+      ],
+      "name": "101_STEAM_2"
+    },
+    "102_CT_2": {
+      "must_run": 0,
+      "power_output_minimum": 8.67,
+      "power_output_maximum": 58.02,
+      "ramp_up_limit": 62.55,
+      "ramp_down_limit": 62.97,
+      "ramp_startup_limit": 8.67,
+      "ramp_shutdown_limit": 8.67,
+      "time_up_minimum": 2,
+      "time_down_minimum": 1,
+      "power_output_t0": 8.67,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 84,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 596.65
+        },
+        {
+          "lag": 3,
+          "cost": 506.75
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 8.67,
+          "cost": 72.85
+        },
+        {
+          "mw": 25.12,
+          "cost": 201.0
+        },
+        {
+          "mw": 41.57,
+          "cost": 324.68
+        },
+        {
+          "mw": 58.02,
+          "cost": 418.96
+        }
+      ],
+      "name": "102_CT_2"
+    },
+    "103_CT_2": {
+      "must_run": 0,
+      "power_output_minimum": 8.61,
+      "power_output_maximum": 57.21,
+      "ramp_up_limit": 69.69,
+      "ramp_down_limit": 64.29,
+      "ramp_startup_limit": 8.61,
+      "ramp_shutdown_limit": 8.61,
+      "time_up_minimum": 3,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 104,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 522.56
+        },
+        {
+          "lag": 3,
+          "cost": 495.45
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 8.61,
+          "cost": 56.56
+        },
+        {
+          "mw": 24.81,
+          "cost": 214.66
+        },
+        {
+          "mw": 41.01,
+          "cost": 356.16
+        },
+        {
+          "mw": 57.21,
+          "cost": 524.22
+        }
+      ],
+      "name": "103_CT_2"
+    },
+    "104_CT_2": {
+      "must_run": 0,
+      "power_output_minimum": 8.09,
+      "power_output_maximum": 53.28,
+      "ramp_up_limit": 70.14,
+      "ramp_down_limit": 73.67,
+      "ramp_startup_limit": 8.09,
+      "ramp_shutdown_limit": 8.09,
+      "time_up_minimum": 3,
+      "time_down_minimum": 1,
+      "power_output_t0": 8.09,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 71,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 625.33
+        },
+        {
+          "lag": 3,
+          "cost": 444.71
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 8.09,
+          "cost": 78.32
+        },
+        {
+          "mw": 23.15,
+          "cost": 172.62
+        },
+        {
+          "mw": 38.22,
+          "cost": 266.88
+        },
+        {
+          "mw": 53.28,
+          "cost": 446.86
+        }
+      ],
+      "name": "104_CT_2"
+    },
+    "105_CT_2": {
+      "must_run": 0,
+      "power_output_minimum": 8.77,
+      "power_output_maximum": 58.66,
+      "ramp_up_limit": 63.98,
+      "ramp_down_limit": 66.7,
+      "ramp_startup_limit": 8.77,
+      "ramp_shutdown_limit": 8.77,
+      "time_up_minimum": 2,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 147,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 715.04
+        },
+        {
+          "lag": 3,
+          "cost": 494.44
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 8.77,
+          "cost": 62.64
+        },
+        {
+          "mw": 25.4,
+          "cost": 194.9
+        },
+        {
+          "mw": 42.03,
+          "cost": 260.01
+        },
+        {
+          "mw": 58.66,
+          "cost": 369.62
+        }
+      ],
+      "name": "105_CT_2"
+    },
+    "106_STEAM_2": {
+      "must_run": 0,
+      "power_output_minimum": 4.55,
+      "power_output_maximum": 168.67,
+      "ramp_up_limit": 35.22,
+      "ramp_down_limit": 56.34,
+      "ramp_startup_limit": 4.55,
+      "ramp_shutdown_limit": 4.55,
+      "time_up_minimum": 6,
+      "time_down_minimum": 4,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 134,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 1623.73
+        },
+        {
+          "lag": 4,
+          "cost": 1153.5
+        },
+        {
+          "lag": 12,
+          "cost": 2083.07
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 4.55,
+          "cost": 48.01
+        },
+        {
+          "mw": 59.26,
+          "cost": 520.58
+        },
+        {
+          "mw": 113.97,
+          "cost": 1091.65
+        },
+        {
+          "mw": 168.67,
+          "cost": 1468.27
+        }
+      ],
+      "name": "106_STEAM_2"
+    },
+    "107_CC_2": {
+      "must_run": 0,
+      "power_output_minimum": 186.66,
+      "power_output_maximum": 341.18,
+      "ramp_up_limit": 82.45,
+      "ramp_down_limit": 82.59,
+      "ramp_startup_limit": 186.66,
+      "ramp_shutdown_limit": 186.66,
+      "time_up_minimum": 7,
+      "time_down_minimum": 5,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 105,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 2289.81
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 186.66,
+          "cost": 2399.86
+        },
+        {
+          "mw": 238.17,
+          "cost": 3412.9
+        },
+        {
+          "mw": 289.68,
+          "cost": 2892.38
+        },
+        {
+          "mw": 341.18,
+          "cost": 4058.08
+        }
+      ],
+      "name": "107_CC_2"
+    },
+    "108_STEAM_2": {
+      "must_run": 0,
+      "power_output_minimum": 4.79,
+      "power_output_maximum": 148.26,
+      "ramp_up_limit": 49.96,
+      "ramp_down_limit": 42.77,
+      "ramp_startup_limit": 4.79,
+      "ramp_shutdown_limit": 4.79,
+      "time_up_minimum": 6,
+      "time_down_minimum": 4,
+      "power_output_t0": 4.79,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 153,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 811.16
+        },
+        {
+          "lag": 4,
+          "cost": 872.01
+        },
+        {
+          "lag": 12,
+          "cost": 784.48
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 4.79,
+          "cost": 50.07
+        },
+        {
+          "mw": 52.61,
+          "cost": 447.9
+        },
+        {
+          "mw": 100.44,
+          "cost": 1141.54
+        },
+        {
+          "mw": 148.26,
+          "cost": 1562.38
+        }
+      ],
+      "name": "108_STEAM_2"
+    },
+    "109_CT_2": {
+      "must_run": 0,
+      "power_output_minimum": 7.95,
+      "power_output_maximum": 52.85,
+      "ramp_up_limit": 68.07,
+      "ramp_down_limit": 70.68,
+      "ramp_startup_limit": 7.95,
+      "ramp_shutdown_limit": 7.95,
+      "time_up_minimum": 1,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 69,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 198.21
+        },
+        {
+          "lag": 3,
+          "cost": 568.04
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.95,
+          "cost": 58.34
+        },
+        {
+          "mw": 22.91,
+          "cost": 183.93
+        },
+        {
+          "mw": 37.88,
+          "cost": 339.45
+        },
+        {
+          "mw": 52.85,
+          "cost": 472.01
+        }
+      ],
+      "name": "109_CT_2"
+    },
+    "110_CT_2": {
+      "must_run": 0,
+      "power_output_minimum": 8.24,
+      "power_output_maximum": 59.58,
+      "ramp_up_limit": 60.51,
+      "ramp_down_limit": 61.23,
+      "ramp_startup_limit": 8.24,
+      "ramp_shutdown_limit": 8.24,
+      "time_up_minimum": 2,
+      "time_down_minimum": 1,
+      "power_output_t0": 8.24,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 141,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 603.06
+        },
+        {
+          "lag": 3,
+          "cost": 520.73
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 8.24,
+          "cost": 58.52
+        },
+        {
+          "mw": 25.35,
+          "cost": 213.41
+        },
+        {
+          "mw": 42.47,
+          "cost": 275.54
+        },
+        {
+          "mw": 59.58,
+          "cost": 459.97
+        }
+      ],
+      "name": "110_CT_2"
+    },
+    "111_CT_2": {
+      "must_run": 0,
+      "power_output_minimum": 8.75,
+      "power_output_maximum": 53.95,
+      "ramp_up_limit": 72.33,
+      "ramp_down_limit": 66.79,
+      "ramp_startup_limit": 8.75,
+      "ramp_shutdown_limit": 8.75,
+      "time_up_minimum": 1,
+      "time_down_minimum": 1,
+      "power_output_t0": 8.75,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 113,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 536.2
+        },
+        {
+          "lag": 3,
+          "cost": 309.61
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 8.75,
+          "cost": 77.3
+        },
+        {
+          "mw": 23.82,
+          "cost": 204.28
+        },
+        {
+          "mw": 38.88,
+          "cost": 281.5
+        },
+        {
+          "mw": 53.95,
+          "cost": 428.62
+        }
+      ],
+      "name": "111_CT_2"
+    },
+    "112_NUCLEAR_2": {
+      "must_run": 1,
+      "power_output_minimum": 404.62,
+      "power_output_maximum": 379.14,
+      "ramp_up_limit": 400.0,
+      "ramp_down_limit": 400.0,
+      "ramp_startup_limit": 404.62,
+      "ramp_shutdown_limit": 404.62,
+      "time_up_minimum": 39,
+      "time_down_minimum": 24,
+      "power_output_t0": 404.62,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 75,
+      "startup": [
+        {
+          "lag": 48,
+          "cost": 2523.73
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 404.62,
+          "cost": 1764.42
+        },
+        {
+          "mw": 396.13,
+          "cost": 1857.54
+        },
+        {
+          "mw": 387.64,
+          "cost": 2511.4
+        },
+        {
+          "mw": 379.14,
+          "cost": 1723.69
+        }
+      ],
+      "name": "112_NUCLEAR_2"
+    },
+    "113_NUCLEAR_2": {
+      "must_run": 1,
+      "power_output_minimum": 375.7,
+      "power_output_maximum": 404.1,
+      "ramp_up_limit": 400.0,
+      "ramp_down_limit": 400.0,
+      "ramp_startup_limit": 375.7,
+      "ramp_shutdown_limit": 375.7,
+      "time_up_minimum": 42,
+      "time_down_minimum": 24,
+      "power_output_t0": 375.7,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 1,
+      "startup": [
+        {
+          "lag": 48,
+          "cost": 2906.88
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 375.7,
+          "cost": 1942.16
+        },
+        {
+          "mw": 385.17,
+          "cost": 2078.78
+        },
+        {
+          "mw": 394.64,
+          "cost": 2159.33
+        },
+        {
+          "mw": 404.1,
+          "cost": 2216.53
+        }
+      ],
+      "name": "113_NUCLEAR_2"
+    },
+    "114_CT_2": {
+      "must_run": 0,
+      "power_output_minimum": 8.26,
+      "power_output_maximum": 59.02,
+      "ramp_up_limit": 69.87,
+      "ramp_down_limit": 71.36,
+      "ramp_startup_limit": 8.26,
+      "ramp_shutdown_limit": 8.26,
+      "time_up_minimum": 2,
+      "time_down_minimum": 1,
+      "power_output_t0": 8.26,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 122,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 332.49
+        },
+        {
+          "lag": 3,
+          "cost": 617.38
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 8.26,
+          "cost": 64.43
+        },
+        {
+          "mw": 25.18,
+          "cost": 197.79
+        },
+        {
+          "mw": 42.1,
+          "cost": 347.96
+        },
+        {
+          "mw": 59.02,
+          "cost": 594.06
+        }
+      ],
+      "name": "114_CT_2"
+    },
+    "115_NUCLEAR_2": {
+      "must_run": 1,
+      "power_output_minimum": 419.16,
+      "power_output_maximum": 412.16,
+      "ramp_up_limit": 400.0,
+      "ramp_down_limit": 400.0,
+      "ramp_startup_limit": 419.16,
+      "ramp_shutdown_limit": 419.16,
+      "time_up_minimum": 28,
+      "time_down_minimum": 24,
+      "power_output_t0": 419.16,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 37,
+      "startup": [
+        {
+          "lag": 48,
+          "cost": 2343.16
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 419.16,
+          "cost": 1971.86
+        },
+        {
+          "mw": 416.83,
+          "cost": 1937.52
+        },
+        {
+          "mw": 414.49,
+          "cost": 1778.68
+        },
+        {
+          "mw": 412.16,
+          "cost": 2157.48
+        }
+      ],
+      "name": "115_NUCLEAR_2"
+    },
+    "116_STEAM_2": {
+      "must_run": 0,
+      "power_output_minimum": 5.28,
+      "power_output_maximum": 147.72,
+      "ramp_up_limit": 49.87,
+      "ramp_down_limit": 37.36,
+      "ramp_startup_limit": 5.28,
+      "ramp_shutdown_limit": 5.28,
+      "time_up_minimum": 4,
+      "time_down_minimum": 4,
+      "power_output_t0": 5.28,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 59,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 2039.58
+        },
+        {
+          "lag": 4,
+          "cost": 1609.99
+        },
+        {
+          "lag": 12,
+          "cost": 1165.43
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 5.28,
+          "cost": 54.28
+        },
+        {
+          "mw": 52.76,
+          "cost": 423.97
+        },
+        {
+          "mw": 100.24,
+          "cost": 1079.5
+        },
+        {
+          "mw": 147.72,
+          "cost": 1789.76
+        }
+      ],
+      "name": "116_STEAM_2"
+    },
+    "117_CC_2": {
+      "must_run": 0,
+      "power_output_minimum": 176.93,
+      "power_output_maximum": 326.64,
+      "ramp_up_limit": 82.18,
+      "ramp_down_limit": 82.61,
+      "ramp_startup_limit": 176.93,
+      "ramp_shutdown_limit": 176.93,
+      "time_up_minimum": 8,
+      "time_down_minimum": 5,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 44,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 3834.88
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 176.93,
+          "cost": 1766.05
+        },
+        {
+          "mw": 226.83,
+          "cost": 2131.52
+        },
+        {
+          "mw": 276.73,
+          "cost": 2653.89
+        },
+        {
+          "mw": 326.64,
+          "cost": 3615.99
+        }
+      ],
+      "name": "117_CC_2"
+    },
+    "118_CT_2": {
+      "must_run": 0,
+      "power_output_minimum": 7.59,
+      "power_output_maximum": 59.54,
+      "ramp_up_limit": 66.4,
+      "ramp_down_limit": 64.23,
+      "ramp_startup_limit": 7.59,
+      "ramp_shutdown_limit": 7.59,
+      "time_up_minimum": 2,
+      "time_down_minimum": 1,
+      "power_output_t0": 7.59,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 65,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 306.11
+        },
+        {
+          "lag": 3,
+          "cost": 416.88
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.59,
+          "cost": 51.62
+        },
+        {
+          "mw": 24.9,
+          "cost": 170.84
+        },
+        {
+          "mw": 42.22,
+          "cost": 288.04
+        },
+        {
+          "mw": 59.54,
+          "cost": 572.41
+        }
+      ],
+      "name": "118_CT_2"
+    },
+    "119_CC_2": {
+      "must_run": 0,
+      "power_output_minimum": 156.63,
+      "power_output_maximum": 346.58,
+      "ramp_up_limit": 82.78,
+      "ramp_down_limit": 82.23,
+      "ramp_startup_limit": 156.63,
+      "ramp_shutdown_limit": 156.63,
+      "time_up_minimum": 7,
+      "time_down_minimum": 5,
+      "power_output_t0": 156.63,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 74,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 6323.54
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 156.63,
+          "cost": 1701.08
+        },
+        {
+          "mw": 219.94,
+          "cost": 2577.24
+        },
+        {
+          "mw": 283.26,
+          "cost": 3767.67
+        },
+        {
+          "mw": 346.58,
+          "cost": 3584.52
+        }
+      ],
+      "name": "119_CC_2"
+    },
+    "100_STEAM_3": {
+      "must_run": 0,
+      "power_output_minimum": 4.69,
+      "power_output_maximum": 147.27,
+      "ramp_up_limit": 51.46,
+      "ramp_down_limit": 55.06,
+      "ramp_startup_limit": 4.69,
+      "ramp_shutdown_limit": 4.69,
+      "time_up_minimum": 6,
+      "time_down_minimum": 4,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 34,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 743.02
+        },
+        {
+          "lag": 4,
+          "cost": 1082.24
+        },
+        {
+          "lag": 12,
+          "cost": 1176.35
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 4.69,
+          "cost": 54.46
+        },
+        {
+          "mw": 52.22,
+          "cost": 519.26
+        },
+        {
+          "mw": 99.74,
+          "cost": 858.04
+        },
+        {
+          "mw": 147.27,
+          "cost": 1270.72
+        }
+      ],
+      "name": "100_STEAM_3"
+    },
+    "101_CT_3": {
+      "must_run": 0,
+      "power_output_minimum": 8.66,
+      "power_output_maximum": 58.64,
+      "ramp_up_limit": 65.12,
+      "ramp_down_limit": 71.07,
+      "ramp_startup_limit": 8.66,
+      "ramp_shutdown_limit": 8.66,
+      "time_up_minimum": 1,
+      "time_down_minimum": 1,
+      "power_output_t0": 8.66,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 143,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 356.65
+        },
+        {
+          "lag": 3,
+          "cost": 695.24
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 8.66,
+          "cost": 66.62
+        },
+        {
+          "mw": 25.32,
+          "cost": 213.41
+        },
+        {
+          "mw": 41.98,
+          "cost": 357.04
+        },
+        {
+          "mw": 58.64,
+          "cost": 433.62
+        }
+      ],
+      "name": "101_CT_3"
+    },
+    "102_STEAM_3": {
+      "must_run": 0,
+      "power_output_minimum": 4.62,
+      "power_output_maximum": 150.93,
+      "ramp_up_limit": 36.33,
+      "ramp_down_limit": 25.59,
+      "ramp_startup_limit": 4.62,
+      "ramp_shutdown_limit": 4.62,
+      "time_up_minimum": 4,
+      "time_down_minimum": 4,
+      "power_output_t0": 4.62,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 167,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 2028.27
+        },
+        {
+          "lag": 4,
+          "cost": 1774.36
+        },
+        {
+          "lag": 12,
+          "cost": 1689.13
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 4.62,
+          "cost": 48.42
+        },
+        {
+          "mw": 53.39,
+          "cost": 522.59
+        },
+        {
+          "mw": 102.16,
+          "cost": 1002.95
+        },
+        {
+          "mw": 150.93,
+          "cost": 1527.72
+        }
+      ],
+      "name": "102_STEAM_3"
+    },
+    "103_CT_3": {
+      "must_run": 0,
+      "power_output_minimum": 7.99,
+      "power_output_maximum": 50.57,
+      "ramp_up_limit": 60.46,
+      "ramp_down_limit": 65.19,
+      "ramp_startup_limit": 7.99,
+      "ramp_shutdown_limit": 7.99,
+      "time_up_minimum": 2,
+      "time_down_minimum": 1,
+      "power_output_t0": 7.99,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 72,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 255.77
+        },
+        {
+          "lag": 3,
+          "cost": 241.3
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.99,
+          "cost": 68.43
+        },
+        {
+          "mw": 22.18,
+          "cost": 180.1
+        },
+        {
+          "mw": 36.38,
+          "cost": 347.79
+        },
+        {
+          "mw": 50.57,
+          "cost": 410.43
+        }
+      ],
+      "name": "103_CT_3"
+    },
+    "104_CT_3": {
+      "must_run": 0,
+      "power_output_minimum": 7.58,
+      "power_output_maximum": 53.49,
+      "ramp_up_limit": 71.02,
+      "ramp_down_limit": 63.41,
+      "ramp_startup_limit": 7.58,
+      "ramp_shutdown_limit": 7.58,
+      "time_up_minimum": 1,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 13,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 474.09
+        },
+        {
+          "lag": 3,
+          "cost": 321.72
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.58,
+          "cost": 70.37
+        },
+        {
+          "mw": 22.88,
+          "cost": 218.62
+        },
+        {
+          "mw": 38.19,
+          "cost": 240.5
+        },
+        {
+          "mw": 53.49,
+          "cost": 553.68
+        }
+      ],
+      "name": "104_CT_3"
+    },
+    "105_CC_3": {
+      "must_run": 0,
+      "power_output_minimum": 159.98,
+      "power_output_maximum": 378.42,
+      "ramp_up_limit": 82.11,
+      "ramp_down_limit": 82.87,
+      "ramp_startup_limit": 159.98,
+      "ramp_shutdown_limit": 159.98,
+      "time_up_minimum": 6,
+      "time_down_minimum": 5,
+      "power_output_t0": 159.98,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 45,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 8053.15
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 159.98,
+          "cost": 1995.23
+        },
+        {
+          "mw": 232.79,
+          "cost": 2975.44
+        },
+        {
+          "mw": 305.6,
+          "cost": 4304.65
+        },
+        {
+          "mw": 378.42,
+          "cost": 4505.3
+        }
+      ],
+      "name": "105_CC_3"
+    },
+    "106_STEAM_3": {
+      "must_run": 0,
+      "power_output_minimum": 5.29,
+      "power_output_maximum": 146.88,
+      "ramp_up_limit": 45.73,
+      "ramp_down_limit": 21.25,
+      "ramp_startup_limit": 5.29,
+      "ramp_shutdown_limit": 5.29,
+      "time_up_minimum": 7,
+      "time_down_minimum": 4,
+      "power_output_t0": 5.29,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 118,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 1255.48
+        },
+        {
+          "lag": 4,
+          "cost": 1737.08
+        },
+        {
+          "lag": 12,
+          "cost": 888.49
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 5.29,
+          "cost": 45.97
+        },
+        {
+          "mw": 52.49,
+          "cost": 451.71
+        },
+        {
+          "mw": 99.68,
+          "cost": 1056.69
+        },
+        {
+          "mw": 146.88,
+          "cost": 1535.7
+        }
+      ],
+      "name": "106_STEAM_3"
+    },
+    "107_CC_3": {
+      "must_run": 0,
+      "power_output_minimum": 167.49,
+      "power_output_maximum": 327.17,
+      "ramp_up_limit": 82.51,
+      "ramp_down_limit": 82.43,
+      "ramp_startup_limit": 167.49,
+      "ramp_shutdown_limit": 167.49,
+      "time_up_minimum": 5,
+      "time_down_minimum": 5,
+      "power_output_t0": 167.49,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 117,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 4532.19
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 167.49,
+          "cost": 2156.07
+        },
+        {
+          "mw": 220.72,
+          "cost": 2962.33
+        },
+        {
+          "mw": 273.94,
+          "cost": 2613.69
+        },
+        {
+          "mw": 327.17,
+          "cost": 4191.57
+        }
+      ],
+      "name": "107_CC_3"
+    },
+    "108_CC_3": {
+      "must_run": 0,
+      "power_output_minimum": 175.13,
+      "power_output_maximum": 374.1,
+      "ramp_up_limit": 82.69,
+      "ramp_down_limit": 82.47,
+      "ramp_startup_limit": 175.13,
+      "ramp_shutdown_limit": 175.13,
+      "time_up_minimum": 5,
+      "time_down_minimum": 5,
+      "power_output_t0": 175.13,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 40,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 4435.15
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 175.13,
+          "cost": 2156.86
+        },
+        {
+          "mw": 241.45,
+          "cost": 2687.0
+        },
+        {
+          "mw": 307.77,
+          "cost": 3423.21
+        },
+        {
+          "mw": 374.1,
+          "cost": 3986.97
+        }
+      ],
+      "name": "108_CC_3"
+    },
+    "109_CC_3": {
+      "must_run": 0,
+      "power_output_minimum": 156.17,
+      "power_output_maximum": 326.36,
+      "ramp_up_limit": 82.6,
+      "ramp_down_limit": 82.35,
+      "ramp_startup_limit": 156.17,
+      "ramp_shutdown_limit": 156.17,
+      "time_up_minimum": 6,
+      "time_down_minimum": 5,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 74,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 5020.69
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 156.17,
+          "cost": 2181.06
+        },
+        {
+          "mw": 212.9,
+          "cost": 2657.56
+        },
+        {
+          "mw": 269.63,
+          "cost": 3202.28
+        },
+        {
+          "mw": 326.36,
+          "cost": 3227.15
+        }
+      ],
+      "name": "109_CC_3"
+    },
+    "110_STEAM_3": {
+      "must_run": 0,
+      "power_output_minimum": 4.98,
+      "power_output_maximum": 165.77,
+      "ramp_up_limit": 30.93,
+      "ramp_down_limit": 50.5,
+      "ramp_startup_limit": 4.98,
+      "ramp_shutdown_limit": 4.98,
+      "time_up_minimum": 6,
+      "time_down_minimum": 4,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 47,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 1989.57
+        },
+        {
+          "lag": 4,
+          "cost": 1828.08
+        },
+        {
+          "lag": 12,
+          "cost": 2067.82
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 4.98,
+          "cost": 47.36
+        },
+        {
+          "mw": 58.58,
+          "cost": 473.59
+        },
+        {
+          "mw": 112.17,
+          "cost": 984.68
+        },
+        {
+          "mw": 165.77,
+          "cost": 1788.9
+        }
+      ],
+      "name": "110_STEAM_3"
+    },
+    "111_CT_3": {
+      "must_run": 0,
+      "power_output_minimum": 7.49,
+      "power_output_maximum": 51.08,
+      "ramp_up_limit": 62.18,
+      "ramp_down_limit": 70.56,
+      "ramp_startup_limit": 7.49,
+      "ramp_shutdown_limit": 7.49,
+      "time_up_minimum": 1,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 14,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 248.38
+        },
+        {
+          "lag": 3,
+          "cost": 396.32
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.49,
+          "cost": 58.21
+        },
+        {
+          "mw": 22.02,
+          "cost": 211.35
+        },
+        {
+          "mw": 36.55,
+          "cost": 246.13
+        },
+        {
+          "mw": 51.08,
+          "cost": 384.77
+        }
+      ],
+      "name": "111_CT_3"
+    },
+    "112_CT_3": {
+      "must_run": 0,
+      "power_output_minimum": 7.64,
+      "power_output_maximum": 56.78,
+      "ramp_up_limit": 62.86,
+      "ramp_down_limit": 73.23,
+      "ramp_startup_limit": 7.64,
+      "ramp_shutdown_limit": 7.64,
+      "time_up_minimum": 1,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 2,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 478.14
+        },
+        {
+          "lag": 3,
+          "cost": 237.38
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.64,
+          "cost": 60.03
+        },
+        {
+          "mw": 24.02,
+          "cost": 183.61
+        },
+        {
+          "mw": 40.4,
+          "cost": 269.44
+        },
+        {
+          "mw": 56.78,
+          "cost": 429.68
+        }
+      ],
+      "name": "112_CT_3"
+    },
+    "113_CC_3": {
+      "must_run": 0,
+      "power_output_minimum": 162.84,
+      "power_output_maximum": 328.02,
+      "ramp_up_limit": 82.46,
+      "ramp_down_limit": 82.08,
+      "ramp_startup_limit": 162.84,
+      "ramp_shutdown_limit": 162.84,
+      "time_up_minimum": 7,
+      "time_down_minimum": 5,
+      "power_output_t0": 162.84,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 5,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 3872.94
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 162.84,
+          "cost": 1924.98
+        },
+        {
+          "mw": 217.9,
+          "cost": 2241.47
+        },
+        {
+          "mw": 272.96,
+          "cost": 2956.22
+        },
+        {
+          "mw": 328.02,
+          "cost": 4078.29
+        }
+      ],
+      "name": "113_CC_3"
+    },
+    "114_CT_3": {
+      "must_run": 0,
+      "power_output_minimum": 8.12,
+      "power_output_maximum": 57.3,
+      "ramp_up_limit": 72.19,
+      "ramp_down_limit": 70.44,
+      "ramp_startup_limit": 8.12,
+      "ramp_shutdown_limit": 8.12,
+      "time_up_minimum": 1,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 102,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 306.77
+        },
+        {
+          "lag": 3,
+          "cost": 352.88
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 8.12,
+          "cost": 57.97
+        },
+        {
+          "mw": 24.51,
+          "cost": 152.96
+        },
+        {
+          "mw": 40.91,
+          "cost": 375.38
+        },
+        {
+          "mw": 57.3,
+          "cost": 562.92
+        }
+      ],
+      "name": "114_CT_3"
+    },
+    "115_CT_3": {
+      "must_run": 0,
+      "power_output_minimum": 7.47,
+      "power_output_maximum": 55.12,
+      "ramp_up_limit": 73.32,
+      "ramp_down_limit": 68.79,
+      "ramp_startup_limit": 7.47,
+      "ramp_shutdown_limit": 7.47,
+      "time_up_minimum": 2,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 46,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 250.52
+        },
+        {
+          "lag": 3,
+          "cost": 536.67
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.47,
+          "cost": 50.63
+        },
+        {
+          "mw": 23.35,
+          "cost": 210.6
+        },
+        {
+          "mw": 39.23,
+          "cost": 364.25
+        },
+        {
+          "mw": 55.12,
+          "cost": 470.3
+        }
+      ],
+      "name": "115_CT_3"
+    },
+    "116_CC_3": {
+      "must_run": 0,
+      "power_output_minimum": 178.84,
+      "power_output_maximum": 351.37,
+      "ramp_up_limit": 82.06,
+      "ramp_down_limit": 82.51,
+      "ramp_startup_limit": 178.84,
+      "ramp_shutdown_limit": 178.84,
+      "time_up_minimum": 7,
+      "time_down_minimum": 5,
+      "power_output_t0": 178.84,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 152,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 3659.45
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 178.84,
+          "cost": 2542.51
+        },
+        {
+          "mw": 236.35,
+          "cost": 3064.12
+        },
+        {
+          "mw": 293.86,
+          "cost": 4142.9
+        },
+        {
+          "mw": 351.37,
+          "cost": 3314.54
+        }
+      ],
+      "name": "116_CC_3"
+    },
+    "117_CT_3": {
+      "must_run": 0,
+      "power_output_minimum": 7.26,
+      "power_output_maximum": 53.56,
+      "ramp_up_limit": 68.47,
+      "ramp_down_limit": 67.02,
+      "ramp_startup_limit": 7.26,
+      "ramp_shutdown_limit": 7.26,
+      "time_up_minimum": 1,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 83,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 433.36
+        },
+        {
+          "lag": 3,
+          "cost": 621.01
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.26,
+          "cost": 54.67
+        },
+        {
+          "mw": 22.69,
+          "cost": 198.49
+        },
+        {
+          "mw": 38.12,
+          "cost": 309.16
+        },
+        {
+          "mw": 53.56,
+          "cost": 482.39
+        }
+      ],
+      "name": "117_CT_3"
+    },
+    "118_CT_3": {
+      "must_run": 0,
+      "power_output_minimum": 8.5,
+      "power_output_maximum": 58.71,
+      "ramp_up_limit": 69.06,
+      "ramp_down_limit": 60.92,
+      "ramp_startup_limit": 8.5,
+      "ramp_shutdown_limit": 8.5,
+      "time_up_minimum": 1,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 162,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 473.6
+        },
+        {
+          "lag": 3,
+          "cost": 462.57
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 8.5,
+          "cost": 74.36
+        },
+        {
+          "mw": 25.24,
+          "cost": 193.99
+        },
+        {
+          "mw": 41.97,
+          "cost": 399.38
+        },
+        {
+          "mw": 58.71,
+          "cost": 484.63
+        }
+      ],
+      "name": "118_CT_3"
+    },
+    "119_CT_3": {
+      "must_run": 0,
+      "power_output_minimum": 7.82,
+      "power_output_maximum": 52.27,
+      "ramp_up_limit": 67.82,
+      "ramp_down_limit": 69.01,
+      "ramp_startup_limit": 7.82,
+      "ramp_shutdown_limit": 7.82,
+      "time_up_minimum": 2,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 80,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 514.79
+        },
+        {
+          "lag": 3,
+          "cost": 284.98
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.82,
+          "cost": 77.97
+        },
+        {
+          "mw": 22.64,
+          "cost": 175.35
+        },
+        {
+          "mw": 37.45,
+          "cost": 257.64
+        },
+        {
+          "mw": 52.27,
+          "cost": 469.37
+        }
+      ],
+      "name": "119_CT_3"
+    },
+    "100_CC_4": {
+      "must_run": 0,
+      "power_output_minimum": 175.78,
+      "power_output_maximum": 378.36,
+      "ramp_up_limit": 82.23,
+      "ramp_down_limit": 82.14,
+      "ramp_startup_limit": 175.78,
+      "ramp_shutdown_limit": 175.78,
+      "time_up_minimum": 5,
+      "time_down_minimum": 5,
+      "power_output_t0": 175.78,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 50,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 3823.28
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 175.78,
+          "cost": 2396.57
+        },
+        {
+          "mw": 243.31,
+          "cost": 3036.69
+        },
+        {
+          "mw": 310.83,
+          "cost": 3515.79
+        },
+        {
+          "mw": 378.36,
+          "cost": 4016.35
+        }
+      ],
+      "name": "100_CC_4"
+    },
+    "101_STEAM_4": {
+      "must_run": 0,
+      "power_output_minimum": 5.29,
+      "power_output_maximum": 155.24,
+      "ramp_up_limit": 58.78,
+      "ramp_down_limit": 44.42,
+      "ramp_startup_limit": 5.29,
+      "ramp_shutdown_limit": 5.29,
+      "time_up_minimum": 7,
+      "time_down_minimum": 4,
+      "power_output_t0": 5.29,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 61,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 1138.46
+        },
+        {
+          "lag": 4,
+          "cost": 2027.25
+        },
+        {
+          "lag": 12,
+          "cost": 1549.73
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 5.29,
+          "cost": 56.29
+        },
+        {
+          "mw": 55.27,
+          "cost": 576.67
+        },
+        {
+          "mw": 105.25,
+          "cost": 1239.61
+        },
+        {
+          "mw": 155.24,
+          "cost": 1501.25
+        }
+      ],
+      "name": "101_STEAM_4"
+    },
+    "102_STEAM_4": {
+      "must_run": 0,
+      "power_output_minimum": 4.74,
+      "power_output_maximum": 169.43,
+      "ramp_up_limit": 39.22,
+      "ramp_down_limit": 34.85,
+      "ramp_startup_limit": 4.74,
+      "ramp_shutdown_limit": 4.74,
+      "time_up_minimum": 4,
+      "time_down_minimum": 4,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 165,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 1643.97
+        },
+        {
+          "lag": 4,
+          "cost": 987.0
+        },
+        {
+          "lag": 12,
+          "cost": 2150.92
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 4.74,
+          "cost": 57.05
+        },
+        {
+          "mw": 59.64,
+          "cost": 542.05
+        },
+        {
+          "mw": 114.54,
+          "cost": 1163.63
+        },
+        {
+          "mw": 169.43,
+          "cost": 1981.35
+        }
+      ],
+      "name": "102_STEAM_4"
+    },
+    "103_CC_4": {
+      "must_run": 0,
+      "power_output_minimum": 170.54,
+      "power_output_maximum": 328.35,
+      "ramp_up_limit": 82.4,
+      "ramp_down_limit": 82.37,
+      "ramp_startup_limit": 170.54,
+      "ramp_shutdown_limit": 170.54,
+      "time_up_minimum": 8,
+      "time_down_minimum": 5,
+      "power_output_t0": 170.54,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 14,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 6395.17
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 170.54,
+          "cost": 1589.96
+        },
+        {
+          "mw": 223.14,
+          "cost": 2630.46
+        },
+        {
+          "mw": 275.75,
+          "cost": 3441.17
+        },
+        {
+          "mw": 328.35,
+          "cost": 4877.78
+        }
+      ],
+      "name": "103_CC_4"
+    },
+    "104_NUCLEAR_4": {
+      "must_run": 1,
+      "power_output_minimum": 386.09,
+      "power_output_maximum": 362.26,
+      "ramp_up_limit": 400.0,
+      "ramp_down_limit": 400.0,
+      "ramp_startup_limit": 386.09,
+      "ramp_shutdown_limit": 386.09,
+      "time_up_minimum": 24,
+      "time_down_minimum": 24,
+      "power_output_t0": 386.09,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 115,
+      "startup": [
+        {
+          "lag": 48,
+          "cost": 1252.15
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 386.09,
+          "cost": 2416.66
+        },
+        {
+          "mw": 378.15,
+          "cost": 2120.94
+        },
+        {
+          "mw": 370.2,
+          "cost": 1515.22
+        },
+        {
+          "mw": 362.26,
+          "cost": 2130.59
+        }
+      ],
+      "name": "104_NUCLEAR_4"
+    },
+    "105_STEAM_4": {
+      "must_run": 0,
+      "power_output_minimum": 5.33,
+      "power_output_maximum": 156.51,
+      "ramp_up_limit": 31.65,
+      "ramp_down_limit": 20.06,
+      "ramp_startup_limit": 5.33,
+      "ramp_shutdown_limit": 5.33,
+      "time_up_minimum": 6,
+      "time_down_minimum": 4,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 37,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 1264.83
+        },
+        {
+          "lag": 4,
+          "cost": 2284.34
+        },
+        {
+          "lag": 12,
+          "cost": 813.26
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 5.33,
+          "cost": 58.52
+        },
+        {
+          "mw": 55.73,
+          "cost": 450.66
+        },
+        {
+          "mw": 106.12,
+          "cost": 888.44
+        },
+        {
+          "mw": 156.51,
+          "cost": 1603.98
+        }
+      ],
+      "name": "105_STEAM_4"
+    },
+    "106_STEAM_4": {
+      "must_run": 0,
+      "power_output_minimum": 4.92,
+      "power_output_maximum": 160.1,
+      "ramp_up_limit": 49.32,
+      "ramp_down_limit": 45.13,
+      "ramp_startup_limit": 4.92,
+      "ramp_shutdown_limit": 4.92,
+      "time_up_minimum": 8,
+      "time_down_minimum": 4,
+      "power_output_t0": 4.92,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 62,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 1637.43
+        },
+        {
+          "lag": 4,
+          "cost": 2137.43
+        },
+        {
+          "lag": 12,
+          "cost": 921.86
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 4.92,
+          "cost": 44.91
+        },
+        {
+          "mw": 56.64,
+          "cost": 470.92
+        },
+        {
+          "mw": 108.37,
+          "cost": 1193.02
+        },
+        {
+          "mw": 160.1,
+          "cost": 1599.8
+        }
+      ],
+      "name": "106_STEAM_4"
+    },
+    "107_CC_4": {
+      "must_run": 0,
+      "power_output_minimum": 164.31,
+      "power_output_maximum": 322.65,
+      "ramp_up_limit": 82.29,
+      "ramp_down_limit": 82.04,
+      "ramp_startup_limit": 164.31,
+      "ramp_shutdown_limit": 164.31,
+      "time_up_minimum": 6,
+      "time_down_minimum": 5,
+      "power_output_t0": 164.31,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 10,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 2421.06
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 164.31,
+          "cost": 2133.86
+        },
+        {
+          "mw": 217.09,
+          "cost": 2393.01
+        },
+        {
+          "mw": 269.87,
+          "cost": 3317.34
+        },
+        {
+          "mw": 322.65,
+          "cost": 4329.71
+        }
+      ],
+      "name": "107_CC_4"
+    },
+    "108_CC_4": {
+      "must_run": 0,
+      "power_output_minimum": 163.73,
+      "power_output_maximum": 341.52,
+      "ramp_up_limit": 82.89,
+      "ramp_down_limit": 82.74,
+      "ramp_startup_limit": 163.73,
+      "ramp_shutdown_limit": 163.73,
+      "time_up_minimum": 8,
+      "time_down_minimum": 5,
+      "power_output_t0": 163.73,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 112,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 4306.75
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 163.73,
+          "cost": 2003.67
+        },
+        {
+          "mw": 222.99,
+          "cost": 2402.08
+        },
+        {
+          "mw": 282.25,
+          "cost": 3432.66
+        },
+        {
+          "mw": 341.52,
+          "cost": 4267.5
+        }
+      ],
+      "name": "108_CC_4"
+    },
+    "109_CT_4": {
+      "must_run": 0,
+      "power_output_minimum": 7.5,
+      "power_output_maximum": 57.11,
+      "ramp_up_limit": 70.05,
+      "ramp_down_limit": 62.33,
+      "ramp_startup_limit": 7.5,
+      "ramp_shutdown_limit": 7.5,
+      "time_up_minimum": 2,
+      "time_down_minimum": 1,
+      "power_output_t0": 7.5,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 155,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 305.02
+        },
+        {
+          "lag": 3,
+          "cost": 347.36
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.5,
+          "cost": 60.19
+        },
+        {
+          "mw": 24.04,
+          "cost": 159.8
+        },
+        {
+          "mw": 40.57,
+          "cost": 310.43
+        },
+        {
+          "mw": 57.11,
+          "cost": 512.4
+        }
+      ],
+      "name": "109_CT_4"
+    },
+    "110_CT_4": {
+      "must_run": 0,
+      "power_output_minimum": 7.27,
+      "power_output_maximum": 59.07,
+      "ramp_up_limit": 61.77,
+      "ramp_down_limit": 63.3,
+      "ramp_startup_limit": 7.27,
+      "ramp_shutdown_limit": 7.27,
+      "time_up_minimum": 3,
+      "time_down_minimum": 1,
+      "power_output_t0": 7.27,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 9,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 658.97
+        },
+        {
+          "lag": 3,
+          "cost": 588.44
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.27,
+          "cost": 60.16
+        },
+        {
+          "mw": 24.54,
+          "cost": 195.73
+        },
+        {
+          "mw": 41.8,
+          "cost": 360.82
+        },
+        {
+          "mw": 59.07,
+          "cost": 484.93
+        }
+      ],
+      "name": "110_CT_4"
+    },
+    "111_CT_4": {
+      "must_run": 0,
+      "power_output_minimum": 7.81,
+      "power_output_maximum": 55.74,
+      "ramp_up_limit": 65.42,
+      "ramp_down_limit": 67.86,
+      "ramp_startup_limit": 7.81,
+      "ramp_shutdown_limit": 7.81,
+      "time_up_minimum": 2,
+      "time_down_minimum": 1,
+      "power_output_t0": 7.81,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 133,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 461.27
+        },
+        {
+          "lag": 3,
+          "cost": 299.33
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.81,
+          "cost": 67.46
+        },
+        {
+          "mw": 23.79,
+          "cost": 218.73
+        },
+        {
+          "mw": 39.76,
+          "cost": 356.79
+        },
+        {
+          "mw": 55.74,
+          "cost": 441.97
+        }
+      ],
+      "name": "111_CT_4"
+    },
+    "112_CC_4": {
+      "must_run": 0,
+      "power_output_minimum": 176.94,
+      "power_output_maximum": 334.73,
+      "ramp_up_limit": 82.71,
+      "ramp_down_limit": 82.55,
+      "ramp_startup_limit": 176.94,
+      "ramp_shutdown_limit": 176.94,
+      "time_up_minimum": 7,
+      "time_down_minimum": 5,
+      "power_output_t0": 176.94,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 89,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 6761.22
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 176.94,
+          "cost": 2304.32
+        },
+        {
+          "mw": 229.54,
+          "cost": 3105.7
+        },
+        {
+          "mw": 282.14,
+          "cost": 2645.92
+        },
+        {
+          "mw": 334.73,
+          "cost": 3639.83
+        }
+      ],
+      "name": "112_CC_4"
+    },
+    "113_CC_4": {
+      "must_run": 0,
+      "power_output_minimum": 181.95,
+      "power_output_maximum": 370.04,
+      "ramp_up_limit": 82.8,
+      "ramp_down_limit": 82.55,
+      "ramp_startup_limit": 181.95,
+      "ramp_shutdown_limit": 181.95,
+      "time_up_minimum": 5,
+      "time_down_minimum": 5,
+      "power_output_t0": 181.95,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 120,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 2387.44
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 181.95,
+          "cost": 2626.96
+        },
+        {
+          "mw": 244.64,
+          "cost": 3286.35
+        },
+        {
+          "mw": 307.34,
+          "cost": 2942.36
+        },
+        {
+          "mw": 370.04,
+          "cost": 4019.67
+        }
+      ],
+      "name": "113_CC_4"
+    },
+    "114_STEAM_4": {
+      "must_run": 0,
+      "power_output_minimum": 4.9,
+      "power_output_maximum": 161.72,
+      "ramp_up_limit": 40.11,
+      "ramp_down_limit": 54.73,
+      "ramp_startup_limit": 4.9,
+      "ramp_shutdown_limit": 4.9,
+      "time_up_minimum": 4,
+      "time_down_minimum": 4,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 111,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 1400.72
+        },
+        {
+          "lag": 4,
+          "cost": 2193.52
+        },
+        {
+          "lag": 12,
+          "cost": 1947.66
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 4.9,
+          "cost": 47.7
+        },
+        {
+          "mw": 57.17,
+          "cost": 559.28
+        },
+        {
+          "mw": 109.45,
+          "cost": 896.41
+        },
+        {
+          "mw": 161.72,
+          "cost": 1332.61
+        }
+      ],
+      "name": "114_STEAM_4"
+    },
+    "115_CT_4": {
+      "must_run": 0,
+      "power_output_minimum": 7.69,
+      "power_output_maximum": 51.28,
+      "ramp_up_limit": 73.18,
+      "ramp_down_limit": 62.16,
+      "ramp_startup_limit": 7.69,
+      "ramp_shutdown_limit": 7.69,
+      "time_up_minimum": 3,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 152,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 333.61
+        },
+        {
+          "lag": 3,
+          "cost": 382.84
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.69,
+          "cost": 68.22
+        },
+        {
+          "mw": 22.22,
+          "cost": 210.35
+        },
+        {
+          "mw": 36.75,
+          "cost": 245.98
+        },
+        {
+          "mw": 51.28,
+          "cost": 393.31
+        }
+      ],
+      "name": "115_CT_4"
+    },
+    "116_CT_4": {
+      "must_run": 0,
+      "power_output_minimum": 8.64,
+      "power_output_maximum": 53.21,
+      "ramp_up_limit": 73.39,
+      "ramp_down_limit": 66.76,
+      "ramp_startup_limit": 8.64,
+      "ramp_shutdown_limit": 8.64,
+      "time_up_minimum": 3,
+      "time_down_minimum": 1,
+      "power_output_t0": 8.64,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 165,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 477.98
+        },
+        {
+          "lag": 3,
+          "cost": 260.87
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 8.64,
+          "cost": 73.45
+        },
+        {
+          "mw": 23.5,
+          "cost": 197.32
+        },
+        {
+          "mw": 38.36,
+          "cost": 381.53
+        },
+        {
+          "mw": 53.21,
+          "cost": 363.33
+        }
+      ],
+      "name": "116_CT_4"
+    },
+    "117_CT_4": {
+      "must_run": 0,
+      "power_output_minimum": 7.93,
+      "power_output_maximum": 57.07,
+      "ramp_up_limit": 63.38,
+      "ramp_down_limit": 61.72,
+      "ramp_startup_limit": 7.93,
+      "ramp_shutdown_limit": 7.93,
+      "time_up_minimum": 2,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 82,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 370.36
+        },
+        {
+          "lag": 3,
+          "cost": 579.07
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.93,
+          "cost": 53.81
+        },
+        {
+          "mw": 24.31,
+          "cost": 185.58
+        },
+        {
+          "mw": 40.69,
+          "cost": 299.32
+        },
+        {
+          "mw": 57.07,
+          "cost": 464.94
+        }
+      ],
+      "name": "117_CT_4"
+    },
+    "118_STEAM_4": {
+      "must_run": 0,
+      "power_output_minimum": 4.6,
+      "power_output_maximum": 148.5,
+      "ramp_up_limit": 38.29,
+      "ramp_down_limit": 29.63,
+      "ramp_startup_limit": 4.6,
+      "ramp_shutdown_limit": 4.6,
+      "time_up_minimum": 8,
+      "time_down_minimum": 4,
+      "power_output_t0": 4.6,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 130,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 1874.39
+        },
+        {
+          "lag": 4,
+          "cost": 1506.08
+        },
+        {
+          "lag": 12,
+          "cost": 971.65
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 4.6,
+          "cost": 44.85
+        },
+        {
+          "mw": 52.56,
+          "cost": 507.24
+        },
+        {
+          "mw": 100.53,
+          "cost": 838.49
+        },
+        {
+          "mw": 148.5,
+          "cost": 1473.76
+        }
+      ],
+      "name": "118_STEAM_4"
+    },
+    "119_CT_4": {
+      "must_run": 0,
+      "power_output_minimum": 7.28,
+      "power_output_maximum": 54.94,
+      "ramp_up_limit": 67.75,
+      "ramp_down_limit": 61.03,
+      "ramp_startup_limit": 7.28,
+      "ramp_shutdown_limit": 7.28,
+      "time_up_minimum": 3,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 93,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 525.74
+        },
+        {
+          "lag": 3,
+          "cost": 406.98
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.28,
+          "cost": 69.23
+        },
+        {
+          "mw": 23.17,
+          "cost": 184.51
+        },
+        {
+          "mw": 39.06,
+          "cost": 350.92
+        },
+        {
+          "mw": 54.94,
+          "cost": 529.85
+        }
+      ],
+      "name": "119_CT_4"
+    },
+    "100_CT_5": {
+      "must_run": 0,
+      "power_output_minimum": 8.08,
+      "power_output_maximum": 58.58,
+      "ramp_up_limit": 69.99,
+      "ramp_down_limit": 71.26,
+      "ramp_startup_limit": 8.08,
+      "ramp_shutdown_limit": 8.08,
+      "time_up_minimum": 3,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 36,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 314.3
+        },
+        {
+          "lag": 3,
+          "cost": 344.73
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 8.08,
+          "cost": 69.33
+        },
+        {
+          "mw": 24.91,
+          "cost": 156.01
+        },
+        {
+          "mw": 41.75,
+          "cost": 347.89
+        },
+        {
+          "mw": 58.58,
+          "cost": 466.58
+        }
+      ],
+      "name": "100_CT_5"
+    },
+    "101_CT_5": {
+      "must_run": 0,
+      "power_output_minimum": 8.17,
+      "power_output_maximum": 55.17,
+      "ramp_up_limit": 69.43,
+      "ramp_down_limit": 73.72,
+      "ramp_startup_limit": 8.17,
+      "ramp_shutdown_limit": 8.17,
+      "time_up_minimum": 3,
+      "time_down_minimum": 1,
+      "power_output_t0": 8.17,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 85,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 493.68
+        },
+        {
+          "lag": 3,
+          "cost": 397.58
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 8.17,
+          "cost": 62.24
+        },
+        {
+          "mw": 23.84,
+          "cost": 181.14
+        },
+        {
+          "mw": 39.5,
+          "cost": 332.38
+        },
+        {
+          "mw": 55.17,
+          "cost": 439.56
+        }
+      ],
+      "name": "101_CT_5"
+    },
+    "102_CT_5": {
+      "must_run": 0,
+      "power_output_minimum": 8.64,
+      "power_output_maximum": 59.09,
+      "ramp_up_limit": 71.5,
+      "ramp_down_limit": 63.39,
+      "ramp_startup_limit": 8.64,
+      "ramp_shutdown_limit": 8.64,
+      "time_up_minimum": 3,
+      "time_down_minimum": 1,
+      "power_output_t0": 8.64,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 38,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 467.99
+        },
+        {
+          "lag": 3,
+          "cost": 640.72
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 8.64,
+          "cost": 74.09
+        },
+        {
+          "mw": 25.46,
+          "cost": 190.29
+        },
+        {
+          "mw": 42.27,
+          "cost": 408.37
+        },
+        {
+          "mw": 59.09,
+          "cost": 383.43
+        }
+      ],
+      "name": "102_CT_5"
+    },
+    "103_NUCLEAR_5": {
+      "must_run": 1,
+      "power_output_minimum": 365.1,
+      "power_output_maximum": 361.51,
+      "ramp_up_limit": 400.0,
+      "ramp_down_limit": 400.0,
+      "ramp_startup_limit": 365.1,
+      "ramp_shutdown_limit": 365.1,
+      "time_up_minimum": 39,
+      "time_down_minimum": 24,
+      "power_output_t0": 365.1,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 54,
+      "startup": [
+        {
+          "lag": 48,
+          "cost": 869.23
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 365.1,
+          "cost": 1571.7
+        },
+        {
+          "mw": 363.91,
+          "cost": 1923.09
+        },
+        {
+          "mw": 362.71,
+          "cost": 2182.33
+        },
+        {
+          "mw": 361.51,
+          "cost": 2175.11
+        }
+      ],
+      "name": "103_NUCLEAR_5"
+    },
+    "104_CT_5": {
+      "must_run": 0,
+      "power_output_minimum": 7.7,
+      "power_output_maximum": 51.41,
+      "ramp_up_limit": 69.87,
+      "ramp_down_limit": 69.66,
+      "ramp_startup_limit": 7.7,
+      "ramp_shutdown_limit": 7.7,
+      "time_up_minimum": 2,
+      "time_down_minimum": 1,
+      "power_output_t0": 7.7,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 74,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 255.82
+        },
+        {
+          "lag": 3,
+          "cost": 387.24
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.7,
+          "cost": 69.51
+        },
+        {
+          "mw": 22.27,
+          "cost": 176.9
+        },
+        {
+          "mw": 36.84,
+          "cost": 329.93
+        },
+        {
+          "mw": 51.41,
+          "cost": 452.79
+        }
+      ],
+      "name": "104_CT_5"
+    },
+    "105_CT_5": {
+      "must_run": 0,
+      "power_output_minimum": 7.76,
+      "power_output_maximum": 59.77,
+      "ramp_up_limit": 69.18,
+      "ramp_down_limit": 70.46,
+      "ramp_startup_limit": 7.76,
+      "ramp_shutdown_limit": 7.76,
+      "time_up_minimum": 1,
+      "time_down_minimum": 1,
+      "power_output_t0": 7.76,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 114,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 571.53
+        },
+        {
+          "lag": 3,
+          "cost": 408.88
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.76,
+          "cost": 66.25
+        },
+        {
+          "mw": 25.1,
+          "cost": 176.42
+        },
+        {
+          "mw": 42.43,
+          "cost": 354.16
+        },
+        {
+          "mw": 59.77,
+          "cost": 588.07
+        }
+      ],
+      "name": "105_CT_5"
+    },
+    "106_STEAM_5": {
+      "must_run": 0,
+      "power_output_minimum": 5.04,
+      "power_output_maximum": 168.42,
+      "ramp_up_limit": 46.12,
+      "ramp_down_limit": 55.23,
+      "ramp_startup_limit": 5.04,
+      "ramp_shutdown_limit": 5.04,
+      "time_up_minimum": 7,
+      "time_down_minimum": 4,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 105,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 898.26
+        },
+        {
+          "lag": 4,
+          "cost": 1722.72
+        },
+        {
+          "lag": 12,
+          "cost": 1716.65
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 5.04,
+          "cost": 50.4
+        },
+        {
+          "mw": 59.5,
+          "cost": 633.35
+        },
+        {
+          "mw": 113.96,
+          "cost": 1056.94
+        },
+        {
+          "mw": 168.42,
+          "cost": 1752.19
+        }
+      ],
+      "name": "106_STEAM_5"
+    },
+    "107_CT_5": {
+      "must_run": 0,
+      "power_output_minimum": 7.52,
+      "power_output_maximum": 60.1,
+      "ramp_up_limit": 71.03,
+      "ramp_down_limit": 62.61,
+      "ramp_startup_limit": 7.52,
+      "ramp_shutdown_limit": 7.52,
+      "time_up_minimum": 3,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 102,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 591.2
+        },
+        {
+          "lag": 3,
+          "cost": 578.43
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.52,
+          "cost": 57.48
+        },
+        {
+          "mw": 25.05,
+          "cost": 213.94
+        },
+        {
+          "mw": 42.58,
+          "cost": 353.17
+        },
+        {
+          "mw": 60.1,
+          "cost": 569.48
+        }
+      ],
+      "name": "107_CT_5"
+    },
+    "108_NUCLEAR_5": {
+      "must_run": 1,
+      "power_output_minimum": 429.74,
+      "power_output_maximum": 430.14,
+      "ramp_up_limit": 400.0,
+      "ramp_down_limit": 400.0,
+      "ramp_startup_limit": 429.74,
+      "ramp_shutdown_limit": 429.74,
+      "time_up_minimum": 34,
+      "time_down_minimum": 24,
+      "power_output_t0": 429.74,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 120,
+      "startup": [
+        {
+          "lag": 48,
+          "cost": 3528.37
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 429.74,
+          "cost": 1750.41
+        },
+        {
+          "mw": 429.87,
+          "cost": 1986.76
+        },
+        {
+          "mw": 430.01,
+          "cost": 2156.95
+        },
+        {
+          "mw": 430.14,
+          "cost": 2185.28
+        }
+      ],
+      "name": "108_NUCLEAR_5"
+    },
+    "109_STEAM_5": {
+      "must_run": 0,
+      "power_output_minimum": 4.96,
+      "power_output_maximum": 147.48,
+      "ramp_up_limit": 20.27,
+      "ramp_down_limit": 35.34,
+      "ramp_startup_limit": 4.96,
+      "ramp_shutdown_limit": 4.96,
+      "time_up_minimum": 7,
+      "time_down_minimum": 4,
+      "power_output_t0": 4.96,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 64,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 1968.94
+        },
+        {
+          "lag": 4,
+          "cost": 923.88
+        },
+        {
+          "lag": 12,
+          "cost": 864.71
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 4.96,
+          "cost": 45.42
+        },
+        {
+          "mw": 52.46,
+          "cost": 593.6
+        },
+        {
+          "mw": 99.97,
+          "cost": 1031.02
+        },
+        {
+          "mw": 147.48,
+          "cost": 1818.63
+        }
+      ],
+      "name": "109_STEAM_5"
+    },
+    "110_CC_5": {
+      "must_run": 0,
+      "power_output_minimum": 185.44,
+      "power_output_maximum": 340.94,
+      "ramp_up_limit": 82.64,
+      "ramp_down_limit": 82.94,
+      "ramp_startup_limit": 185.44,
+      "ramp_shutdown_limit": 185.44,
+      "time_up_minimum": 7,
+      "time_down_minimum": 5,
+      "power_output_t0": 185.44,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 31,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 4749.81
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 185.44,
+          "cost": 2186.81
+        },
+        {
+          "mw": 237.27,
+          "cost": 3138.8
+        },
+        {
+          "mw": 289.1,
+          "cost": 2643.11
+        },
+        {
+          "mw": 340.94,
+          "cost": 3703.68
+        }
+      ],
+      "name": "110_CC_5"
+    },
+    "111_CT_5": {
+      "must_run": 0,
+      "power_output_minimum": 7.55,
+      "power_output_maximum": 50.97,
+      "ramp_up_limit": 66.25,
+      "ramp_down_limit": 69.85,
+      "ramp_startup_limit": 7.55,
+      "ramp_shutdown_limit": 7.55,
+      "time_up_minimum": 1,
+      "time_down_minimum": 1,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 135,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 263.34
+        },
+        {
+          "lag": 3,
+          "cost": 587.99
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 7.55,
+          "cost": 54.6
+        },
+        {
+          "mw": 22.02,
+          "cost": 180.55
+        },
+        {
+          "mw": 36.5,
+          "cost": 295.98
+        },
+        {
+          "mw": 50.97,
+          "cost": 427.46
+        }
+      ],
+      "name": "111_CT_5"
+    },
+    "112_NUCLEAR_5": {
+      "must_run": 1,
+      "power_output_minimum": 365.29,
+      "power_output_maximum": 426.3,
+      "ramp_up_limit": 400.0,
+      "ramp_down_limit": 400.0,
+      "ramp_startup_limit": 365.29,
+      "ramp_shutdown_limit": 365.29,
+      "time_up_minimum": 40,
+      "time_down_minimum": 24,
+      "power_output_t0": 365.29,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 115,
+      "startup": [
+        {
+          "lag": 48,
+          "cost": 2443.99
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 365.29,
+          "cost": 1994.44
+        },
+        {
+          "mw": 385.63,
+          "cost": 1825.14
+        },
+        {
+          "mw": 405.96,
+          "cost": 2290.68
+        },
+        {
+          "mw": 426.3,
+          "cost": 2384.37
+        }
+      ],
+      "name": "112_NUCLEAR_5"
+    },
+    "113_CT_5": {
+      "must_run": 0,
+      "power_output_minimum": 8.1,
+      "power_output_maximum": 55.65,
+      "ramp_up_limit": 64.02,
+      "ramp_down_limit": 62.52,
+      "ramp_startup_limit": 8.1,
+      "ramp_shutdown_limit": 8.1,
+      "time_up_minimum": 1,
+      "time_down_minimum": 1,
+      "power_output_t0": 8.1,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 9,
+      "startup": [
+        {
+          "lag": 1,
+          "cost": 543.18
+        },
+        {
+          "lag": 3,
+          "cost": 288.74
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 8.1,
+          "cost": 66.64
+        },
+        {
+          "mw": 23.95,
+          "cost": 147.34
+        },
+        {
+          "mw": 39.8,
+          "cost": 240.7
+        },
+        {
+          "mw": 55.65,
+          "cost": 363.51
+        }
+      ],
+      "name": "113_CT_5"
+    },
+    "114_CC_5": {
+      "must_run": 0,
+      "power_output_minimum": 186.26,
+      "power_output_maximum": 365.36,
+      "ramp_up_limit": 82.18,
+      "ramp_down_limit": 82.54,
+      "ramp_startup_limit": 186.26,
+      "ramp_shutdown_limit": 186.26,
+      "time_up_minimum": 6,
+      "time_down_minimum": 5,
+      "power_output_t0": 186.26,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 31,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 4836.43
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 186.26,
+          "cost": 2377.26
+        },
+        {
+          "mw": 245.96,
+          "cost": 3020.72
+        },
+        {
+          "mw": 305.66,
+          "cost": 4158.64
+        },
+        {
+          "mw": 365.36,
+          "cost": 4856.99
+        }
+      ],
+      "name": "114_CC_5"
+    },
+    "115_CC_5": {
+      "must_run": 0,
+      "power_output_minimum": 160.57,
+      "power_output_maximum": 319.75,
+      "ramp_up_limit": 82.81,
+      "ramp_down_limit": 82.42,
+      "ramp_startup_limit": 160.57,
+      "ramp_shutdown_limit": 160.57,
+      "time_up_minimum": 5,
+      "time_down_minimum": 5,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 9,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 3496.85
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 160.57,
+          "cost": 1496.14
+        },
+        {
+          "mw": 213.63,
+          "cost": 2765.84
+        },
+        {
+          "mw": 266.69,
+          "cost": 3450.75
+        },
+        {
+          "mw": 319.75,
+          "cost": 3343.31
+        }
+      ],
+      "name": "115_CC_5"
+    },
+    "116_STEAM_5": {
+      "must_run": 0,
+      "power_output_minimum": 4.57,
+      "power_output_maximum": 157.91,
+      "ramp_up_limit": 32.07,
+      "ramp_down_limit": 25.73,
+      "ramp_startup_limit": 4.57,
+      "ramp_shutdown_limit": 4.57,
+      "time_up_minimum": 8,
+      "time_down_minimum": 4,
+      "power_output_t0": 4.57,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 61,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 1725.0
+        },
+        {
+          "lag": 4,
+          "cost": 2107.61
+        },
+        {
+          "lag": 12,
+          "cost": 2304.76
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 4.57,
+          "cost": 46.23
+        },
+        {
+          "mw": 55.68,
+          "cost": 607.07
+        },
+        {
+          "mw": 106.8,
+          "cost": 862.62
+        },
+        {
+          "mw": 157.91,
+          "cost": 1685.86
+        }
+      ],
+      "name": "116_STEAM_5"
+    },
+    "117_STEAM_5": {
+      "must_run": 0,
+      "power_output_minimum": 4.8,
+      "power_output_maximum": 141.39,
+      "ramp_up_limit": 53.97,
+      "ramp_down_limit": 32.03,
+      "ramp_startup_limit": 4.8,
+      "ramp_shutdown_limit": 4.8,
+      "time_up_minimum": 5,
+      "time_down_minimum": 4,
+      "power_output_t0": 4.8,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 62,
+      "startup": [
+        {
+          "lag": 2,
+          "cost": 1845.49
+        },
+        {
+          "lag": 4,
+          "cost": 1118.86
+        },
+        {
+          "lag": 12,
+          "cost": 872.57
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 4.8,
+          "cost": 60.92
+        },
+        {
+          "mw": 50.33,
+          "cost": 600.93
+        },
+        {
+          "mw": 95.86,
+          "cost": 929.87
+        },
+        {
+          "mw": 141.39,
+          "cost": 1829.47
+        }
+      ],
+      "name": "117_STEAM_5"
+    },
+    "118_CC_5": {
+      "must_run": 0,
+      "power_output_minimum": 184.1,
+      "power_output_maximum": 359.43,
+      "ramp_up_limit": 82.27,
+      "ramp_down_limit": 82.67,
+      "ramp_startup_limit": 184.1,
+      "ramp_shutdown_limit": 184.1,
+      "time_up_minimum": 5,
+      "time_down_minimum": 5,
+      "power_output_t0": 0.0,
+      "unit_on_t0": 0,
+      "time_down_t0": 14,
+      "time_up_t0": 0,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 2784.95
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 184.1,
+          "cost": 2652.64
+        },
+        {
+          "mw": 242.54,
+          "cost": 2356.76
+        },
+        {
+          "mw": 300.99,
+          "cost": 3276.64
+        },
+        {
+          "mw": 359.43,
+          "cost": 5391.62
+        }
+      ],
+      "name": "118_CC_5"
+    },
+    "119_CC_5": {
+      "must_run": 0,
+      "power_output_minimum": 159.4,
+      "power_output_maximum": 373.58,
+      "ramp_up_limit": 82.7,
+      "ramp_down_limit": 82.7,
+      "ramp_startup_limit": 159.4,
+      "ramp_shutdown_limit": 159.4,
+      "time_up_minimum": 8,
+      "time_down_minimum": 5,
+      "power_output_t0": 159.4,
+      "unit_on_t0": 1,
+      "time_down_t0": 0,
+      "time_up_t0": 63,
+      "startup": [
+        {
+          "lag": 5,
+          "cost": 5551.13
+        }
+      ],
+      "piecewise_production": [
+        {
+          "mw": 159.4,
+          "cost": 2108.92
+        },
+        {
+          "mw": 230.79,
+          "cost": 2949.64
+        },
+        {
+          "mw": 302.19,
+          "cost": 3693.26
+        },
+        {
+          "mw": 373.58,
+          "cost": 3929.84
+        }
+      ],
+      "name": "119_CC_5"
+    }
+  },
+  "renewable_generators": {
+    "100_RTPV_1": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.1,
+        1.07,
+        1.03,
+        1.96,
+        1.83,
+        1.13,
+        0.52,
+        0.84,
+        0.76,
+        1.31,
+        1.64,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.98,
+        0.34,
+        1.83,
+        0.12,
+        1.89,
+        0.82,
+        1.41,
+        0.75,
+        1.23,
+        0.01,
+        1.06,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        15.84,
+        9.4,
+        10.46,
+        13.68,
+        10.2,
+        7.14,
+        19.62,
+        6.79,
+        17.5,
+        13.79,
+        20.6,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        8.41,
+        15.73,
+        13.88,
+        6.27,
+        16.61,
+        15.74,
+        5.15,
+        15.22,
+        12.19,
+        10.68,
+        10.86,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "100_RTPV_1"
+    },
+    "101_PV_1": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        4.07,
+        4.55,
+        0.74,
+        4.08,
+        1.87,
+        4.95,
+        4.24,
+        3.8,
+        2.76,
+        0.86,
+        3.92,
+        0.48,
+        1.06,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.38,
+        4.63,
+        0.16,
+        4.81,
+        3.56,
+        0.81,
+        1.95,
+        3.78,
+        3.62,
+        0.27,
+        1.7,
+        1.98,
+        1.37,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        82.98,
+        23.95,
+        35.73,
+        39.68,
+        53.85,
+        40.87,
+        82.66,
+        26.15,
+        19.68,
+        58.4,
+        74.61,
+        50.86,
+        103.32,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        19.69,
+        94.28,
+        87.3,
+        73.72,
+        43.09,
+        44.49,
+        85.55,
+        37.29,
+        71.46,
+        62.41,
+        96.35,
+        66.48,
+        99.03,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "101_PV_1"
+    },
+    "102_WIND_1": {
+      "power_output_minimum": [
+        9.41,
+        6.61,
+        7.98,
+        1.54,
+        7.4,
+        0.05,
+        2.7,
+        4.49,
+        0.26,
+        5.98,
+        2.92,
+        9.01,
+        5.72,
+        1.39,
+        0.63,
+        4.84,
+        2.47,
+        1.96,
+        9.49,
+        8.04,
+        8.15,
+        1.36,
+        2.01,
+        9.69,
+        4.91,
+        3.76,
+        1.14,
+        5.46,
+        9.53,
+        4.38,
+        8.19,
+        4.99,
+        6.59,
+        0.74,
+        4.01,
+        6.92,
+        3.6,
+        6.38,
+        6.58,
+        0.44,
+        4.0,
+        4.3,
+        5.11,
+        5.75,
+        7.72,
+        3.45,
+        4.16,
+        9.41
+      ],
+      "power_output_maximum": [
+        127.15,
+        67.33,
+        117.6,
+        169.35,
+        74.48,
+        88.15,
+        56.77,
+        125.86,
+        77.92,
+        91.87,
+        81.22,
+        239.08,
+        70.04,
+        94.78,
+        109.75,
+        52.37,
+        151.85,
+        58.3,
+        107.03,
+        89.57,
+        229.84,
+        124.43,
+        124.2,
+        104.68,
+        115.3,
+        161.39,
+        142.02,
+        156.83,
+        134.15,
+        104.54,
+        160.12,
+        122.56,
+        184.57,
+        196.13,
+        157.77,
+        154.49,
+        188.41,
+        72.87,
+        112.36,
+        218.58,
+        208.42,
+        44.12,
+        133.99,
+        109.23,
+        138.33,
+        40.95,
+        149.51,
+        63.21
+      ],
+      "name": "102_WIND_1"
+    },
+    "103_WIND_1": {
+      "power_output_minimum": [
+        2.07,
+        4.38,
+        3.0,
+        8.49,
+        1.64,
+        1.74,
+        9.58,
+        1.84,
+        0.29,
+        5.92,
+        2.06,
+        0.63,
+        1.87,
+        2.62,
+        6.39,
+        5.87,
+        6.17,
+        2.97,
+        1.34,
+        1.83,
+        4.18,
+        1.86,
+        6.45,
+        4.9,
+        4.51,
+        0.1,
+        9.64,
+        6.85,
+        4.89,
+        7.61,
+        5.38,
+        7.43,
+        1.13,
+        8.23,
+        0.42,
+        9.9,
+        7.51,
+        4.5,
+        4.39,
+        2.37,
+        3.51,
+        1.66,
+        2.07,
+        2.81,
+        7.04,
+        8.58,
+        0.95,
+        9.19
+      ],
+      "power_output_maximum": [
+        120.69,
+        137.73,
+        131.91,
+        162.84,
+        167.23,
+        76.68,
+        79.95,
+        140.12,
+        116.31,
+        121.63,
+        193.01,
+        79.83,
+        96.38,
+        182.38,
+        148.87,
+        123.37,
+        193.33,
+        106.75,
+        59.78,
+        155.02,
+        65.75,
+        162.19,
+        206.57,
+        63.14,
+        53.13,
+        83.81,
+        125.44,
+        135.26,
+        44.84,
+        81.14,
+        73.3,
+        169.81,
+        78.21,
+        125.36,
+        162.24,
+        78.31,
+        123.01,
+        121.72,
+        232.02,
+        180.66,
+        169.09,
+        58.41,
+        53.63,
+        116.97,
+        80.36,
+        219.1,
+        227.74,
+        242.67
+      ],
+      "name": "103_WIND_1"
+    },
+    "104_PV_1": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        4.33,
+        4.14,
+        2.45,
+        2.07,
+        4.4,
+        1.39,
+        4.75,
+        3.87,
+        2.29,
+        0.32,
+        2.15,
+        4.14,
+        2.83,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        3.41,
+        3.92,
+        4.29,
+        4.79,
+        0.66,
+        4.66,
+        1.25,
+        0.83,
+        3.5,
+        3.52,
+        0.66,
+        0.05,
+        4.94,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        43.35,
+        86.62,
+        60.07,
+        59.16,
+        27.62,
+        89.94,
+        36.99,
+        85.88,
+        68.98,
+        55.67,
+        33.53,
+        48.49,
+        55.15,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        20.05,
+        48.23,
+        44.26,
+        38.92,
+        62.18,
+        44.51,
+        57.78,
+        47.68,
+        41.14,
+        19.9,
+        40.84,
+        85.24,
+        45.87,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "104_PV_1"
+    },
+    "105_PV_1": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.92,
+        1.57,
+        3.87,
+        4.96,
+        0.04,
+        3.61,
+        2.06,
+        0.43,
+        2.95,
+        1.57,
+        0.42,
+        3.04,
+        4.24,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.59,
+        1.48,
+        4.77,
+        2.5,
+        4.89,
+        0.66,
+        1.83,
+        4.77,
+        0.34,
+        0.3,
+        3.14,
+        3.51,
+        3.08,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        65.98,
+        77.35,
+        68.48,
+        31.81,
+        70.28,
+        60.45,
+        85.71,
+        30.87,
+        60.12,
+        28.4,
+        66.84,
+        88.59,
+        66.91,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        66.79,
+        28.24,
+        50.36,
+        68.28,
+        116.13,
+        91.3,
+        82.48,
+        65.85,
+        33.43,
+        83.36,
+        58.05,
+        26.98,
+        38.99,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "105_PV_1"
+    },
+    "106_WIND_1": {
+      "power_output_minimum": [
+        2.03,
+        3.91,
+        6.81,
+        7.3,
+        0.86,
+        6.09,
+        7.41,
+        7.01,
+        5.23,
+        1.67,
+        2.69,
+        0.29,
+        0.64,
+        0.77,
+        5.0,
+        2.55,
+        7.23,
+        0.44,
+        4.72,
+        9.31,
+        9.14,
+        3.22,
+        2.71,
+        5.02,
+        8.04,
+        0.69,
+        8.45,
+        0.08,
+        3.04,
+        5.92,
+        1.95,
+        2.45,
+        2.33,
+        8.77,
+        6.57,
+        1.04,
+        4.92,
+        7.12,
+        8.97,
+        3.72,
+        0.96,
+        0.75,
+        9.64,
+        3.15,
+        7.35,
+        0.75,
+        5.85,
+        4.66
+      ],
+      "power_output_maximum": [
+        174.95,
+        174.28,
+        67.06,
+        130.03,
+        111.95,
+        110.37,
+        76.39,
+        94.85,
+        189.63,
+        80.68,
+        212.76,
+        147.66,
+        164.06,
+        108.35,
+        124.31,
+        68.34,
+        84.71,
+        151.94,
+        84.89,
+        184.29,
+        153.31,
+        127.3,
+        56.98,
+        149.64,
+        250.94,
+        104.12,
+        102.25,
+        83.17,
+        140.3,
+        144.29,
+        213.99,
+        48.21,
+        122.74,
+        135.02,
+        201.53,
+        109.13,
+        76.57,
+        80.12,
+        143.38,
+        147.32,
+        83.47,
+        129.9,
+        73.25,
+        190.61,
+        84.34,
+        93.91,
+        58.55,
+        113.37
+      ],
+      "name": "106_WIND_1"
+    },
+    "107_CSP_1": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "107_CSP_1"
+    },
+    "108_PV_1": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.54,
+        0.79,
+        3.48,
+        1.64,
+        1.78,
+        1.3,
+        2.02,
+        1.25,
+        0.7,
+        4.91,
+        1.86,
+        2.91,
+        0.11,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.22,
+        4.15,
+        2.3,
+        4.11,
+        3.42,
+        0.94,
+        0.17,
+        1.48,
+        0.3,
+        1.0,
+        3.15,
+        4.95,
+        2.72,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        34.94,
+        84.66,
+        26.35,
+        24.55,
+        65.41,
+        80.64,
+        61.75,
+        63.89,
+        23.73,
+        34.4,
+        74.5,
+        45.8,
+        29.21,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        35.21,
+        38.01,
+        34.43,
+        41.89,
+        29.96,
+        48.89,
+        62.46,
+        54.03,
+        36.23,
+        91.71,
+        94.1,
+        77.9,
+        68.48,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "108_PV_1"
+    },
+    "109_WIND_1": {
+      "power_output_minimum": [
+        3.88,
+        2.19,
+        0.59,
+        7.67,
+        1.0,
+        8.16,
+        9.96,
+        7.97,
+        8.45,
+        8.06,
+        0.28,
+        5.64,
+        9.88,
+        3.09,
+        2.33,
+        0.01,
+        1.3,
+        8.44,
+        5.87,
+        8.46,
+        3.74,
+        1.01,
+        1.58,
+        9.61,
+        9.69,
+        7.87,
+        1.75,
+        1.27,
+        9.49,
+        9.65,
+        9.21,
+        5.66,
+        7.45,
+        1.68,
+        7.09,
+        4.47,
+        0.68,
+        0.01,
+        9.69,
+        3.79,
+        4.79,
+        6.87,
+        8.46,
+        9.52,
+        3.75,
+        8.98,
+        6.14,
+        9.42
+      ],
+      "power_output_maximum": [
+        68.61,
+        215.18,
+        202.24,
+        256.8,
+        127.72,
+        137.6,
+        100.15,
+        124.23,
+        80.66,
+        193.06,
+        196.73,
+        109.31,
+        181.39,
+        93.19,
+        84.14,
+        154.07,
+        197.13,
+        70.27,
+        218.46,
+        228.59,
+        179.31,
+        74.48,
+        225.98,
+        118.57,
+        193.67,
+        87.94,
+        106.88,
+        202.23,
+        140.99,
+        58.23,
+        162.45,
+        149.43,
+        110.5,
+        137.69,
+        179.71,
+        76.29,
+        67.69,
+        122.95,
+        181.92,
+        100.36,
+        195.88,
+        55.37,
+        83.99,
+        49.03,
+        164.31,
+        67.57,
+        87.96,
+        92.23
+      ],
+      "name": "109_WIND_1"
+    },
+    "110_PV_1": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.51,
+        3.49,
+        1.33,
+        0.25,
+        0.77,
+        1.47,
+        1.0,
+        1.46,
+        1.54,
+        3.31,
+        0.92,
+        2.23,
+        1.13,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        3.76,
+        1.72,
+        2.95,
+        4.09,
+        4.33,
+        2.38,
+        3.57,
+        4.0,
+        0.6,
+        4.92,
+        0.63,
+        2.18,
+        4.17,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        31.92,
+        84.92,
+        38.06,
+        74.68,
+        47.45,
+        75.89,
+        19.15,
+        30.21,
+        51.57,
+        27.77,
+        86.09,
+        40.49,
+        34.21,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        61.23,
+        75.24,
+        73.05,
+        54.25,
+        66.84,
+        30.56,
+        69.81,
+        77.77,
+        70.03,
+        109.84,
+        64.39,
+        104.86,
+        47.31,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "110_PV_1"
+    },
+    "111_RTPV_1": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.13,
+        0.65,
+        1.75,
+        1.05,
+        0.3,
+        1.88,
+        0.2,
+        0.69,
+        0.97,
+        0.55,
+        1.39,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.66,
+        1.84,
+        1.63,
+        0.98,
+        1.74,
+        0.89,
+        0.83,
+        0.42,
+        1.52,
+        1.03,
+        1.01,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        10.38,
+        8.99,
+        17.63,
+        10.91,
+        15.25,
+        19.35,
+        9.42,
+        10.64,
+        11.52,
+        7.47,
+        6.45,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        9.41,
+        14.91,
+        8.71,
+        12.96,
+        8.35,
+        15.78,
+        12.85,
+        19.03,
+        20.32,
+        6.83,
+        8.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "111_RTPV_1"
+    },
+    "112_RTPV_1": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        1.67,
+        1.84,
+        1.65,
+        0.25,
+        1.19,
+        1.17,
+        1.79,
+        0.57,
+        1.14,
+        1.29,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.82,
+        1.54,
+        1.29,
+        0.5,
+        1.93,
+        0.75,
+        0.93,
+        0.79,
+        1.32,
+        1.29,
+        0.22,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        8.94,
+        8.59,
+        14.16,
+        13.26,
+        5.18,
+        8.8,
+        8.87,
+        17.46,
+        9.34,
+        22.26,
+        13.76,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        5.9,
+        5.98,
+        11.26,
+        15.75,
+        14.19,
+        9.22,
+        17.12,
+        6.56,
+        16.76,
+        13.0,
+        7.12,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "112_RTPV_1"
+    },
+    "113_HYDRO_1": {
+      "power_output_minimum": [
+        22.17,
+        26.58,
+        28.35,
+        22.53,
+        21.08,
+        27.11,
+        28.42,
+        27.5,
+        27.47,
+        25.49,
+        26.08,
+        26.28,
+        26.68,
+        26.03,
+        29.38,
+        22.15,
+        23.71,
+        23.41,
+        19.95,
+        26.55,
+        25.21,
+        21.47,
+        26.73,
+        21.79,
+        24.85,
+        27.3,
+        28.49,
+        26.19,
+        24.58,
+        27.89,
+        27.85,
+        28.2,
+        21.38,
+        20.56,
+        20.86,
+        22.14,
+        27.53,
+        27.08,
+        21.4,
+        26.27,
+        22.9,
+        20.48,
+        23.09,
+        26.9,
+        22.62,
+        27.33,
+        22.85,
+        22.16
+      ],
+      "power_output_maximum": [
+        27.09,
+        32.48,
+        34.65,
+        27.54,
+        25.76,
+        33.13,
+        34.74,
+        33.61,
+        33.58,
+        31.15,
+        31.88,
+        32.12,
+        32.6,
+        31.81,
+        35.91,
+        27.07,
+        28.98,
+        28.61,
+        24.39,
+        32.45,
+        30.82,
+        26.24,
+        32.67,
+        26.63,
+        30.37,
+        33.37,
+        34.82,
+        32.01,
+        30.04,
+        34.09,
+        34.03,
+        34.46,
+        26.13,
+        25.13,
+        25.5,
+        27.06,
+        33.65,
+        33.1,
+        26.16,
+        32.11,
+        27.98,
+        25.03,
+        28.22,
+        32.88,
+        27.64,
+        33.4,
+        27.93,
+        27.08
+      ],
+      "name": "113_HYDRO_1"
+    },
+    "114_PV_1": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        4.26,
+        2.92,
+        4.45,
+        1.91,
+        4.27,
+        2.05,
+        2.29,
+        3.89,
+        0.88,
+        1.37,
+        3.82,
+        0.44,
+        2.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.19,
+        0.07,
+        0.95,
+        1.24,
+        0.64,
+        0.84,
+        1.45,
+        1.69,
+        1.71,
+        0.94,
+        2.02,
+        0.66,
+        0.84,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        66.09,
+        79.16,
+        68.86,
+        36.04,
+        27.27,
+        76.21,
+        49.22,
+        62.1,
+        56.74,
+        70.17,
+        65.4,
+        72.85,
+        92.69,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        34.13,
+        51.88,
+        77.9,
+        70.78,
+        52.48,
+        78.97,
+        81.24,
+        109.08,
+        86.92,
+        111.88,
+        41.75,
+        81.55,
+        52.3,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "114_PV_1"
+    },
+    "115_PV_1": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        4.38,
+        0.24,
+        3.27,
+        2.08,
+        2.37,
+        3.15,
+        3.31,
+        0.69,
+        3.59,
+        0.53,
+        1.31,
+        3.52,
+        2.48,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.65,
+        4.53,
+        0.75,
+        3.62,
+        1.16,
+        2.32,
+        0.2,
+        1.56,
+        3.79,
+        3.32,
+        2.19,
+        0.46,
+        2.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        41.03,
+        106.03,
+        23.22,
+        51.37,
+        34.77,
+        46.94,
+        43.36,
+        72.79,
+        24.88,
+        31.58,
+        54.47,
+        35.59,
+        42.96,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        21.61,
+        92.69,
+        27.33,
+        25.36,
+        91.01,
+        24.34,
+        48.46,
+        66.27,
+        27.0,
+        31.72,
+        80.3,
+        74.39,
+        88.13,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "115_PV_1"
+    },
+    "116_WIND_1": {
+      "power_output_minimum": [
+        8.51,
+        7.97,
+        0.59,
+        4.16,
+        6.78,
+        3.59,
+        8.39,
+        9.2,
+        0.46,
+        7.05,
+        5.77,
+        6.7,
+        7.01,
+        2.49,
+        3.85,
+        9.88,
+        1.57,
+        8.69,
+        2.41,
+        2.23,
+        2.35,
+        4.48,
+        1.19,
+        1.03,
+        0.0,
+        6.19,
+        2.07,
+        3.63,
+        4.54,
+        4.73,
+        1.14,
+        3.41,
+        2.92,
+        0.46,
+        7.17,
+        6.11,
+        3.93,
+        7.17,
+        9.27,
+        7.72,
+        9.56,
+        5.3,
+        8.39,
+        9.21,
+        7.3,
+        6.01,
+        3.85,
+        7.62
+      ],
+      "power_output_maximum": [
+        185.17,
+        74.84,
+        152.26,
+        163.75,
+        71.62,
+        60.33,
+        152.58,
+        63.38,
+        79.3,
+        176.04,
+        173.39,
+        102.14,
+        70.52,
+        112.64,
+        182.01,
+        63.19,
+        214.76,
+        60.92,
+        142.77,
+        138.0,
+        140.35,
+        172.82,
+        136.07,
+        115.68,
+        67.61,
+        96.17,
+        191.45,
+        48.48,
+        143.65,
+        167.82,
+        136.53,
+        223.1,
+        143.85,
+        58.52,
+        120.92,
+        98.3,
+        138.58,
+        62.77,
+        184.98,
+        128.75,
+        70.15,
+        72.25,
+        123.05,
+        80.19,
+        64.58,
+        182.85,
+        246.07,
+        116.36
+      ],
+      "name": "116_WIND_1"
+    },
+    "117_CSP_1": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "117_CSP_1"
+    },
+    "118_WIND_1": {
+      "power_output_minimum": [
+        1.33,
+        7.48,
+        8.61,
+        6.33,
+        2.91,
+        9.81,
+        5.04,
+        1.15,
+        5.71,
+        7.48,
+        8.47,
+        0.25,
+        2.0,
+        2.87,
+        6.91,
+        0.32,
+        8.68,
+        7.42,
+        7.84,
+        6.64,
+        9.57,
+        5.52,
+        6.21,
+        8.3,
+        6.48,
+        6.03,
+        2.94,
+        1.87,
+        3.77,
+        1.3,
+        3.31,
+        1.54,
+        9.32,
+        4.91,
+        7.84,
+        1.84,
+        4.16,
+        2.21,
+        3.61,
+        5.3,
+        9.81,
+        4.46,
+        6.21,
+        3.21,
+        3.86,
+        9.11,
+        8.03,
+        8.98
+      ],
+      "power_output_maximum": [
+        125.34,
+        106.3,
+        197.75,
+        86.1,
+        112.32,
+        188.08,
+        137.72,
+        101.62,
+        142.64,
+        153.58,
+        173.58,
+        79.13,
+        129.46,
+        105.42,
+        108.62,
+        131.06,
+        196.15,
+        113.06,
+        148.18,
+        176.22,
+        174.3,
+        44.19,
+        204.26,
+        209.65,
+        167.83,
+        212.78,
+        85.01,
+        76.7,
+        118.16,
+        117.37,
+        124.05,
+        71.88,
+        156.17,
+        124.33,
+        81.27,
+        60.41,
+        98.59,
+        73.73,
+        95.31,
+        238.24,
+        56.52,
+        198.34,
+        215.07,
+        237.42,
+        113.96,
+        160.31,
+        84.86,
+        79.53
+      ],
+      "name": "118_WIND_1"
+    },
+    "119_RTPV_1": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.33,
+        0.01,
+        1.55,
+        0.21,
+        1.95,
+        1.88,
+        0.92,
+        0.11,
+        1.15,
+        0.78,
+        0.03,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.28,
+        1.17,
+        1.86,
+        0.6,
+        0.88,
+        0.95,
+        0.78,
+        1.92,
+        1.83,
+        0.75,
+        1.11,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        19.64,
+        6.39,
+        17.43,
+        14.13,
+        17.6,
+        13.96,
+        8.33,
+        17.31,
+        7.6,
+        14.07,
+        15.31,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        15.74,
+        12.86,
+        7.35,
+        6.97,
+        11.63,
+        11.11,
+        17.27,
+        7.67,
+        18.48,
+        19.65,
+        5.49,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "119_RTPV_1"
+    },
+    "100_HYDRO_2": {
+      "power_output_minimum": [
+        22.01,
+        17.21,
+        20.52,
+        21.68,
+        17.5,
+        18.02,
+        19.76,
+        18.76,
+        16.14,
+        16.58,
+        21.17,
+        16.39,
+        16.29,
+        20.91,
+        21.3,
+        21.29,
+        21.9,
+        22.36,
+        18.38,
+        19.04,
+        17.11,
+        15.44,
+        15.67,
+        20.35,
+        18.57,
+        17.41,
+        15.89,
+        19.83,
+        15.68,
+        19.56,
+        21.66,
+        17.31,
+        18.3,
+        19.54,
+        17.22,
+        19.3,
+        19.16,
+        17.66,
+        17.3,
+        18.13,
+        14.97,
+        16.77,
+        16.59,
+        20.46,
+        18.19,
+        21.21,
+        15.94,
+        20.41
+      ],
+      "power_output_maximum": [
+        26.9,
+        21.03,
+        25.08,
+        26.5,
+        21.39,
+        22.02,
+        24.15,
+        22.93,
+        19.72,
+        20.27,
+        25.87,
+        20.03,
+        19.91,
+        25.55,
+        26.03,
+        26.02,
+        26.76,
+        27.33,
+        22.46,
+        23.27,
+        20.91,
+        18.87,
+        19.15,
+        24.88,
+        22.7,
+        21.27,
+        19.42,
+        24.24,
+        19.17,
+        23.91,
+        26.47,
+        21.15,
+        22.37,
+        23.88,
+        21.04,
+        23.59,
+        23.42,
+        21.58,
+        21.14,
+        22.16,
+        18.3,
+        20.5,
+        20.28,
+        25.01,
+        22.23,
+        25.92,
+        19.48,
+        24.94
+      ],
+      "name": "100_HYDRO_2"
+    },
+    "101_RTPV_2": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.93,
+        1.1,
+        1.68,
+        1.08,
+        0.15,
+        1.01,
+        0.81,
+        1.1,
+        0.94,
+        0.45,
+        0.58,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.79,
+        1.7,
+        0.33,
+        0.36,
+        1.94,
+        0.72,
+        0.13,
+        0.41,
+        0.94,
+        1.96,
+        1.04,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        9.57,
+        7.96,
+        15.31,
+        10.33,
+        4.95,
+        5.65,
+        16.1,
+        15.78,
+        15.74,
+        18.13,
+        12.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        13.35,
+        17.88,
+        12.44,
+        20.46,
+        15.93,
+        8.24,
+        8.61,
+        17.58,
+        9.68,
+        10.66,
+        19.78,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "101_RTPV_2"
+    },
+    "102_PV_2": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.72,
+        1.83,
+        2.58,
+        2.58,
+        2.43,
+        2.51,
+        0.39,
+        0.93,
+        0.59,
+        3.6,
+        1.05,
+        0.11,
+        0.81,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.86,
+        0.9,
+        2.82,
+        3.31,
+        2.25,
+        0.85,
+        3.97,
+        3.3,
+        1.71,
+        1.15,
+        1.01,
+        2.1,
+        2.38,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        35.99,
+        81.96,
+        58.27,
+        55.33,
+        61.01,
+        26.96,
+        63.23,
+        53.24,
+        43.21,
+        58.03,
+        37.29,
+        24.14,
+        57.39,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        22.11,
+        100.5,
+        23.38,
+        35.6,
+        114.03,
+        89.92,
+        74.74,
+        44.85,
+        58.32,
+        42.88,
+        88.92,
+        26.8,
+        56.42,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "102_PV_2"
+    },
+    "103_RTPV_2": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.01,
+        0.26,
+        1.79,
+        1.04,
+        1.06,
+        1.58,
+        1.48,
+        0.2,
+        0.47,
+        1.75,
+        1.42,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.24,
+        1.38,
+        0.31,
+        1.71,
+        0.55,
+        0.83,
+        0.74,
+        0.61,
+        1.47,
+        1.5,
+        0.32,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        6.71,
+        15.89,
+        17.62,
+        8.63,
+        9.46,
+        11.1,
+        17.72,
+        6.94,
+        16.34,
+        9.75,
+        17.37,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        5.42,
+        9.2,
+        13.32,
+        10.74,
+        16.76,
+        16.64,
+        12.01,
+        11.0,
+        18.96,
+        12.63,
+        7.89,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "103_RTPV_2"
+    },
+    "104_WIND_2": {
+      "power_output_minimum": [
+        5.51,
+        1.61,
+        0.91,
+        4.35,
+        0.8,
+        9.84,
+        7.12,
+        8.2,
+        2.02,
+        2.86,
+        5.16,
+        0.36,
+        1.57,
+        3.53,
+        5.18,
+        0.9,
+        9.15,
+        2.77,
+        9.3,
+        4.07,
+        2.94,
+        9.57,
+        5.75,
+        5.63,
+        9.61,
+        5.87,
+        0.68,
+        6.77,
+        9.55,
+        8.32,
+        6.74,
+        9.31,
+        8.94,
+        6.83,
+        2.0,
+        2.07,
+        6.19,
+        9.2,
+        6.14,
+        0.42,
+        4.92,
+        8.69,
+        9.16,
+        5.77,
+        4.78,
+        3.94,
+        9.77,
+        6.89
+      ],
+      "power_output_maximum": [
+        173.74,
+        136.9,
+        90.15,
+        49.66,
+        51.8,
+        143.89,
+        176.96,
+        140.7,
+        175.62,
+        58.33,
+        67.94,
+        60.14,
+        233.0,
+        114.92,
+        118.99,
+        111.01,
+        130.63,
+        115.12,
+        116.71,
+        49.04,
+        226.96,
+        215.5,
+        197.23,
+        191.06,
+        116.03,
+        41.65,
+        188.06,
+        75.15,
+        89.98,
+        65.94,
+        129.11,
+        110.81,
+        114.6,
+        186.38,
+        196.17,
+        68.34,
+        56.08,
+        166.21,
+        168.73,
+        131.2,
+        244.92,
+        159.55,
+        76.69,
+        68.56,
+        131.31,
+        123.11,
+        151.03,
+        42.79
+      ],
+      "name": "104_WIND_2"
+    },
+    "105_HYDRO_2": {
+      "power_output_minimum": [
+        15.53,
+        13.43,
+        15.15,
+        13.3,
+        14.69,
+        15.53,
+        14.06,
+        14.85,
+        13.14,
+        16.05,
+        14.1,
+        16.96,
+        13.55,
+        12.96,
+        12.67,
+        15.31,
+        13.24,
+        12.48,
+        13.49,
+        13.29,
+        14.46,
+        14.15,
+        12.75,
+        17.59,
+        12.78,
+        16.67,
+        12.94,
+        14.86,
+        17.8,
+        16.93,
+        14.96,
+        16.17,
+        16.55,
+        13.67,
+        15.23,
+        15.26,
+        14.25,
+        15.99,
+        12.24,
+        16.72,
+        14.72,
+        15.63,
+        14.56,
+        13.88,
+        14.03,
+        15.22,
+        17.42,
+        13.42
+      ],
+      "power_output_maximum": [
+        18.98,
+        16.41,
+        18.51,
+        16.25,
+        17.95,
+        18.98,
+        17.19,
+        18.15,
+        16.06,
+        19.62,
+        17.23,
+        20.73,
+        16.56,
+        15.83,
+        15.48,
+        18.71,
+        16.19,
+        15.25,
+        16.49,
+        16.24,
+        17.67,
+        17.29,
+        15.59,
+        21.49,
+        15.61,
+        20.38,
+        15.81,
+        18.16,
+        21.76,
+        20.7,
+        18.28,
+        19.76,
+        20.23,
+        16.71,
+        18.61,
+        18.65,
+        17.42,
+        19.54,
+        14.96,
+        20.44,
+        17.99,
+        19.1,
+        17.8,
+        16.96,
+        17.15,
+        18.6,
+        21.3,
+        16.4
+      ],
+      "name": "105_HYDRO_2"
+    },
+    "106_PV_2": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.61,
+        0.99,
+        0.87,
+        3.37,
+        4.45,
+        3.16,
+        4.04,
+        2.86,
+        0.81,
+        1.46,
+        1.36,
+        1.82,
+        2.07,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        3.64,
+        3.5,
+        0.52,
+        2.74,
+        3.82,
+        0.78,
+        1.55,
+        3.13,
+        0.14,
+        1.63,
+        2.7,
+        4.85,
+        2.99,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        105.95,
+        70.01,
+        77.65,
+        64.58,
+        46.17,
+        27.39,
+        49.46,
+        72.84,
+        35.46,
+        43.79,
+        63.66,
+        79.42,
+        28.09,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        85.82,
+        22.89,
+        28.91,
+        21.2,
+        24.13,
+        83.55,
+        36.36,
+        34.63,
+        83.62,
+        69.13,
+        40.87,
+        66.02,
+        74.31,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "106_PV_2"
+    },
+    "107_HYDRO_2": {
+      "power_output_minimum": [
+        19.45,
+        17.02,
+        17.3,
+        18.71,
+        20.67,
+        17.99,
+        17.43,
+        16.65,
+        16.97,
+        14.74,
+        20.75,
+        20.99,
+        17.27,
+        18.2,
+        14.8,
+        21.53,
+        21.72,
+        18.25,
+        14.81,
+        17.91,
+        16.9,
+        16.44,
+        14.79,
+        17.49,
+        17.77,
+        18.87,
+        17.65,
+        15.94,
+        20.17,
+        17.61,
+        17.53,
+        16.68,
+        17.85,
+        16.5,
+        20.37,
+        21.44,
+        20.69,
+        19.78,
+        16.84,
+        20.21,
+        20.7,
+        17.78,
+        21.03,
+        16.08,
+        16.87,
+        19.43,
+        19.29,
+        16.74
+      ],
+      "power_output_maximum": [
+        23.77,
+        20.8,
+        21.14,
+        22.87,
+        25.26,
+        21.99,
+        21.31,
+        20.35,
+        20.75,
+        18.01,
+        25.36,
+        25.65,
+        21.11,
+        22.24,
+        18.09,
+        26.32,
+        26.54,
+        22.31,
+        18.1,
+        21.89,
+        20.65,
+        20.1,
+        18.08,
+        21.38,
+        21.72,
+        23.06,
+        21.57,
+        19.48,
+        24.65,
+        21.52,
+        21.42,
+        20.38,
+        21.82,
+        20.17,
+        24.9,
+        26.21,
+        25.29,
+        24.18,
+        20.58,
+        24.7,
+        25.3,
+        21.73,
+        25.7,
+        19.66,
+        20.62,
+        23.75,
+        23.58,
+        20.46
+      ],
+      "name": "107_HYDRO_2"
+    },
+    "108_HYDRO_2": {
+      "power_output_minimum": [
+        10.0,
+        10.15,
+        12.55,
+        10.82,
+        10.41,
+        11.24,
+        13.45,
+        13.5,
+        11.06,
+        10.65,
+        12.35,
+        11.6,
+        11.45,
+        13.86,
+        14.85,
+        12.2,
+        13.82,
+        11.54,
+        14.08,
+        14.62,
+        10.18,
+        13.75,
+        10.26,
+        12.23,
+        10.86,
+        14.07,
+        13.95,
+        14.01,
+        10.51,
+        13.71,
+        11.14,
+        13.72,
+        12.1,
+        13.56,
+        10.07,
+        12.19,
+        13.72,
+        12.48,
+        14.77,
+        12.25,
+        13.28,
+        11.45,
+        11.5,
+        13.02,
+        10.11,
+        14.55,
+        12.48,
+        11.16
+      ],
+      "power_output_maximum": [
+        12.22,
+        12.41,
+        15.34,
+        13.23,
+        12.72,
+        13.73,
+        16.43,
+        16.51,
+        13.51,
+        13.02,
+        15.09,
+        14.17,
+        13.99,
+        16.94,
+        18.15,
+        14.91,
+        16.9,
+        14.1,
+        17.21,
+        17.86,
+        12.44,
+        16.8,
+        12.54,
+        14.95,
+        13.27,
+        17.2,
+        17.05,
+        17.12,
+        12.84,
+        16.75,
+        13.61,
+        16.77,
+        14.79,
+        16.57,
+        12.31,
+        14.89,
+        16.77,
+        15.26,
+        18.05,
+        14.97,
+        16.23,
+        13.99,
+        14.06,
+        15.91,
+        12.36,
+        17.78,
+        15.26,
+        13.64
+      ],
+      "name": "108_HYDRO_2"
+    },
+    "109_HYDRO_2": {
+      "power_output_minimum": [
+        14.53,
+        14.41,
+        11.16,
+        10.63,
+        13.25,
+        11.69,
+        10.9,
+        11.45,
+        10.66,
+        14.03,
+        10.11,
+        10.27,
+        14.0,
+        12.45,
+        13.06,
+        11.93,
+        10.51,
+        10.85,
+        10.52,
+        13.17,
+        14.74,
+        15.08,
+        13.21,
+        10.36,
+        13.3,
+        13.59,
+        14.04,
+        10.69,
+        11.23,
+        15.0,
+        14.03,
+        13.87,
+        14.11,
+        12.27,
+        11.03,
+        13.53,
+        11.86,
+        10.74,
+        14.58,
+        12.5,
+        12.26,
+        11.54,
+        13.57,
+        11.02,
+        11.0,
+        11.81,
+        13.75,
+        11.45
+      ],
+      "power_output_maximum": [
+        17.75,
+        17.61,
+        13.64,
+        12.99,
+        16.19,
+        14.29,
+        13.33,
+        14.0,
+        13.03,
+        17.15,
+        12.35,
+        12.56,
+        17.11,
+        15.22,
+        15.96,
+        14.58,
+        12.85,
+        13.27,
+        12.86,
+        16.1,
+        18.02,
+        18.43,
+        16.14,
+        12.67,
+        16.26,
+        16.61,
+        17.16,
+        13.07,
+        13.73,
+        18.33,
+        17.15,
+        16.95,
+        17.25,
+        15.0,
+        13.48,
+        16.54,
+        14.5,
+        13.13,
+        17.82,
+        15.28,
+        14.99,
+        14.11,
+        16.58,
+        13.46,
+        13.45,
+        14.44,
+        16.8,
+        13.99
+      ],
+      "name": "109_HYDRO_2"
+    },
+    "110_RTPV_2": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.83,
+        0.31,
+        0.73,
+        0.76,
+        1.71,
+        1.44,
+        0.77,
+        1.1,
+        1.28,
+        0.13,
+        1.75,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.2,
+        1.32,
+        0.51,
+        0.14,
+        0.98,
+        1.6,
+        1.88,
+        1.42,
+        0.08,
+        1.89,
+        1.45,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        11.02,
+        8.54,
+        5.29,
+        6.28,
+        14.9,
+        15.11,
+        12.85,
+        13.19,
+        6.72,
+        14.93,
+        7.98,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        15.39,
+        13.93,
+        10.94,
+        16.75,
+        15.26,
+        6.05,
+        10.65,
+        15.73,
+        5.58,
+        16.28,
+        11.36,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "110_RTPV_2"
+    },
+    "111_WIND_2": {
+      "power_output_minimum": [
+        2.49,
+        7.49,
+        6.39,
+        6.65,
+        1.8,
+        1.58,
+        3.52,
+        3.25,
+        4.31,
+        5.63,
+        9.26,
+        4.47,
+        9.83,
+        9.93,
+        2.22,
+        8.22,
+        5.54,
+        1.55,
+        1.38,
+        2.33,
+        4.0,
+        7.24,
+        8.26,
+        9.08,
+        7.31,
+        0.56,
+        8.17,
+        8.7,
+        6.02,
+        3.82,
+        5.4,
+        2.21,
+        3.93,
+        5.05,
+        3.94,
+        5.71,
+        0.85,
+        1.3,
+        4.88,
+        6.16,
+        0.72,
+        9.24,
+        4.24,
+        5.94,
+        9.88,
+        4.42,
+        8.18,
+        7.58
+      ],
+      "power_output_maximum": [
+        116.09,
+        85.7,
+        101.13,
+        145.95,
+        99.49,
+        192.93,
+        125.96,
+        122.52,
+        169.21,
+        95.18,
+        112.52,
+        124.44,
+        140.84,
+        83.86,
+        127.17,
+        132.83,
+        167.55,
+        50.84,
+        110.24,
+        129.63,
+        214.06,
+        135.78,
+        160.46,
+        122.6,
+        101.93,
+        150.52,
+        137.3,
+        91.71,
+        60.32,
+        69.37,
+        72.54,
+        65.58,
+        123.51,
+        72.8,
+        52.34,
+        53.93,
+        145.86,
+        72.73,
+        120.88,
+        135.94,
+        148.87,
+        69.98,
+        91.25,
+        47.35,
+        184.32,
+        52.25,
+        73.9,
+        136.54
+      ],
+      "name": "111_WIND_2"
+    },
+    "112_PV_2": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        4.74,
+        4.1,
+        0.56,
+        1.05,
+        2.62,
+        3.65,
+        0.09,
+        0.22,
+        3.95,
+        3.27,
+        1.36,
+        4.32,
+        3.25,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        4.88,
+        4.33,
+        2.5,
+        0.11,
+        1.67,
+        1.73,
+        1.18,
+        4.06,
+        4.45,
+        2.77,
+        4.49,
+        1.91,
+        3.13,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        108.02,
+        22.73,
+        45.31,
+        55.57,
+        40.42,
+        33.8,
+        71.0,
+        30.72,
+        57.02,
+        19.75,
+        93.81,
+        24.69,
+        36.66,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        25.9,
+        54.68,
+        66.3,
+        40.26,
+        44.41,
+        50.57,
+        98.31,
+        80.68,
+        69.16,
+        36.51,
+        60.59,
+        101.2,
+        34.23,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "112_PV_2"
+    },
+    "113_PV_2": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        4.85,
+        2.71,
+        2.71,
+        1.54,
+        0.68,
+        0.73,
+        1.59,
+        0.59,
+        3.64,
+        2.07,
+        4.67,
+        1.37,
+        0.92,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.33,
+        1.16,
+        3.44,
+        3.02,
+        4.26,
+        0.97,
+        0.08,
+        3.71,
+        0.33,
+        4.34,
+        2.29,
+        0.21,
+        1.56,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        86.44,
+        31.26,
+        96.19,
+        77.14,
+        118.62,
+        110.43,
+        76.18,
+        52.3,
+        93.59,
+        51.69,
+        107.39,
+        69.38,
+        84.62,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        58.33,
+        70.77,
+        58.18,
+        73.08,
+        50.72,
+        24.97,
+        40.14,
+        109.27,
+        112.46,
+        55.05,
+        38.23,
+        75.05,
+        75.6,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "113_PV_2"
+    },
+    "114_HYDRO_2": {
+      "power_output_minimum": [
+        21.23,
+        20.57,
+        18.61,
+        18.1,
+        20.87,
+        15.08,
+        22.11,
+        18.59,
+        17.68,
+        20.19,
+        18.88,
+        18.57,
+        19.42,
+        15.13,
+        16.91,
+        17.7,
+        17.01,
+        20.87,
+        18.17,
+        17.88,
+        19.29,
+        15.17,
+        18.58,
+        15.81,
+        20.89,
+        18.1,
+        20.1,
+        15.6,
+        20.51,
+        21.69,
+        19.9,
+        15.76,
+        17.82,
+        18.09,
+        16.08,
+        19.12,
+        20.02,
+        16.25,
+        18.12,
+        16.61,
+        19.87,
+        21.46,
+        20.64,
+        20.07,
+        15.68,
+        15.61,
+        18.08,
+        17.44
+      ],
+      "power_output_maximum": [
+        25.95,
+        25.14,
+        22.74,
+        22.12,
+        25.51,
+        18.43,
+        27.03,
+        22.72,
+        21.61,
+        24.68,
+        23.08,
+        22.7,
+        23.73,
+        18.49,
+        20.67,
+        21.64,
+        20.79,
+        25.51,
+        22.21,
+        21.86,
+        23.58,
+        18.54,
+        22.71,
+        19.33,
+        25.53,
+        22.12,
+        24.56,
+        19.07,
+        25.07,
+        26.51,
+        24.32,
+        19.26,
+        21.78,
+        22.11,
+        19.66,
+        23.37,
+        24.47,
+        19.87,
+        22.15,
+        20.3,
+        24.28,
+        26.23,
+        25.23,
+        24.53,
+        19.16,
+        19.07,
+        22.1,
+        21.32
+      ],
+      "name": "114_HYDRO_2"
+    },
+    "115_WIND_2": {
+      "power_output_minimum": [
+        3.84,
+        9.5,
+        7.68,
+        6.6,
+        1.79,
+        3.1,
+        6.26,
+        2.03,
+        4.59,
+        0.06,
+        5.89,
+        0.79,
+        5.47,
+        8.25,
+        6.53,
+        6.67,
+        9.2,
+        1.78,
+        6.92,
+        1.77,
+        9.31,
+        3.69,
+        4.27,
+        1.35,
+        5.27,
+        6.12,
+        6.29,
+        6.89,
+        2.87,
+        5.25,
+        1.3,
+        6.32,
+        6.09,
+        0.02,
+        1.18,
+        9.99,
+        5.6,
+        2.01,
+        3.08,
+        0.06,
+        7.24,
+        1.76,
+        6.72,
+        6.46,
+        8.92,
+        7.84,
+        8.35,
+        3.16
+      ],
+      "power_output_maximum": [
+        169.84,
+        99.15,
+        194.18,
+        88.56,
+        149.24,
+        159.96,
+        52.68,
+        122.14,
+        182.97,
+        153.72,
+        114.81,
+        118.57,
+        147.9,
+        45.24,
+        67.29,
+        154.45,
+        54.5,
+        160.87,
+        163.25,
+        123.91,
+        56.27,
+        79.13,
+        116.09,
+        133.32,
+        143.82,
+        75.55,
+        196.14,
+        245.54,
+        125.77,
+        181.78,
+        135.98,
+        100.08,
+        201.23,
+        57.63,
+        209.06,
+        100.93,
+        102.92,
+        108.31,
+        112.69,
+        138.32,
+        102.17,
+        89.89,
+        220.85,
+        131.55,
+        117.63,
+        128.41,
+        107.71,
+        107.56
+      ],
+      "name": "115_WIND_2"
+    },
+    "116_HYDRO_2": {
+      "power_output_minimum": [
+        27.02,
+        22.02,
+        27.79,
+        21.34,
+        19.0,
+        27.92,
+        24.58,
+        26.6,
+        24.06,
+        22.36,
+        24.28,
+        26.8,
+        25.75,
+        25.31,
+        21.66,
+        19.01,
+        22.59,
+        23.36,
+        20.94,
+        22.94,
+        27.61,
+        20.74,
+        21.54,
+        19.76,
+        26.06,
+        25.99,
+        27.26,
+        22.87,
+        18.95,
+        23.23,
+        23.39,
+        20.49,
+        27.36,
+        25.57,
+        23.61,
+        25.97,
+        20.05,
+        26.87,
+        26.41,
+        27.49,
+        25.05,
+        19.96,
+        25.49,
+        23.01,
+        25.39,
+        23.6,
+        18.75,
+        27.44
+      ],
+      "power_output_maximum": [
+        33.03,
+        26.92,
+        33.96,
+        26.08,
+        23.23,
+        34.12,
+        30.04,
+        32.51,
+        29.4,
+        27.33,
+        29.68,
+        32.76,
+        31.47,
+        30.94,
+        26.47,
+        23.23,
+        27.6,
+        28.56,
+        25.59,
+        28.04,
+        33.74,
+        25.34,
+        26.33,
+        24.16,
+        31.85,
+        31.77,
+        33.32,
+        27.95,
+        23.16,
+        28.39,
+        28.59,
+        25.05,
+        33.43,
+        31.25,
+        28.86,
+        31.74,
+        24.51,
+        32.84,
+        32.27,
+        33.6,
+        30.61,
+        24.39,
+        31.16,
+        28.13,
+        31.03,
+        28.85,
+        22.92,
+        33.53
+      ],
+      "name": "116_HYDRO_2"
+    },
+    "117_HYDRO_2": {
+      "power_output_minimum": [
+        16.44,
+        19.44,
+        16.12,
+        19.86,
+        20.95,
+        18.22,
+        20.31,
+        18.22,
+        22.79,
+        18.29,
+        17.27,
+        17.94,
+        18.27,
+        19.23,
+        16.68,
+        16.93,
+        17.91,
+        15.88,
+        20.67,
+        19.81,
+        17.39,
+        18.52,
+        18.27,
+        16.87,
+        21.31,
+        17.99,
+        17.69,
+        16.32,
+        20.59,
+        18.43,
+        19.25,
+        16.78,
+        19.47,
+        21.08,
+        16.59,
+        16.18,
+        19.12,
+        17.17,
+        20.45,
+        20.43,
+        22.35,
+        21.27,
+        20.61,
+        18.22,
+        22.2,
+        21.37,
+        21.04,
+        19.96
+      ],
+      "power_output_maximum": [
+        20.1,
+        23.76,
+        19.7,
+        24.27,
+        25.61,
+        22.27,
+        24.82,
+        22.27,
+        27.85,
+        22.35,
+        21.11,
+        21.92,
+        22.33,
+        23.51,
+        20.39,
+        20.7,
+        21.89,
+        19.41,
+        25.26,
+        24.21,
+        21.25,
+        22.63,
+        22.33,
+        20.62,
+        26.04,
+        21.99,
+        21.62,
+        19.95,
+        25.17,
+        22.52,
+        23.53,
+        20.51,
+        23.79,
+        25.76,
+        20.28,
+        19.78,
+        23.37,
+        20.98,
+        25.0,
+        24.97,
+        27.31,
+        25.99,
+        25.19,
+        22.27,
+        27.13,
+        26.12,
+        25.72,
+        24.4
+      ],
+      "name": "117_HYDRO_2"
+    },
+    "118_CSP_2": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "118_CSP_2"
+    },
+    "119_RTPV_2": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.93,
+        1.84,
+        1.37,
+        0.46,
+        1.23,
+        1.4,
+        1.76,
+        0.95,
+        0.34,
+        0.25,
+        1.59,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.58,
+        0.83,
+        1.95,
+        1.63,
+        0.87,
+        0.47,
+        1.86,
+        1.18,
+        1.64,
+        0.14,
+        1.54,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        7.85,
+        11.81,
+        15.44,
+        9.56,
+        17.89,
+        16.71,
+        9.58,
+        10.11,
+        17.21,
+        7.38,
+        10.48,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        12.48,
+        14.59,
+        10.07,
+        15.44,
+        17.11,
+        12.42,
+        13.54,
+        12.21,
+        9.04,
+        7.46,
+        10.66,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "119_RTPV_2"
+    },
+    "100_HYDRO_3": {
+      "power_output_minimum": [
+        11.98,
+        12.28,
+        12.34,
+        11.21,
+        8.5,
+        9.13,
+        9.14,
+        10.76,
+        10.16,
+        10.96,
+        9.34,
+        11.4,
+        9.85,
+        10.93,
+        12.39,
+        9.8,
+        12.51,
+        10.35,
+        12.68,
+        9.97,
+        8.88,
+        8.54,
+        12.7,
+        10.22,
+        9.05,
+        9.75,
+        10.07,
+        10.84,
+        8.73,
+        11.49,
+        11.99,
+        10.03,
+        12.17,
+        12.18,
+        9.5,
+        11.49,
+        10.18,
+        9.86,
+        10.13,
+        10.13,
+        10.82,
+        11.32,
+        10.52,
+        9.3,
+        10.14,
+        12.43,
+        12.08,
+        9.16
+      ],
+      "power_output_maximum": [
+        14.64,
+        15.0,
+        15.09,
+        13.7,
+        10.39,
+        11.16,
+        11.17,
+        13.15,
+        12.42,
+        13.4,
+        11.41,
+        13.94,
+        12.04,
+        13.36,
+        15.14,
+        11.98,
+        15.3,
+        12.65,
+        15.5,
+        12.18,
+        10.86,
+        10.44,
+        15.52,
+        12.49,
+        11.06,
+        11.92,
+        12.31,
+        13.25,
+        10.67,
+        14.05,
+        14.66,
+        12.26,
+        14.87,
+        14.89,
+        11.62,
+        14.04,
+        12.44,
+        12.05,
+        12.38,
+        12.38,
+        13.23,
+        13.84,
+        12.86,
+        11.37,
+        12.39,
+        15.2,
+        14.76,
+        11.2
+      ],
+      "name": "100_HYDRO_3"
+    },
+    "101_CSP_3": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "101_CSP_3"
+    },
+    "102_HYDRO_3": {
+      "power_output_minimum": [
+        9.46,
+        9.21,
+        12.43,
+        11.36,
+        11.13,
+        13.66,
+        9.52,
+        12.07,
+        11.03,
+        11.22,
+        12.74,
+        11.89,
+        11.08,
+        9.95,
+        11.46,
+        11.65,
+        11.19,
+        10.76,
+        9.98,
+        11.89,
+        11.77,
+        13.0,
+        10.21,
+        11.42,
+        11.01,
+        11.63,
+        10.81,
+        13.6,
+        11.73,
+        12.35,
+        9.65,
+        11.33,
+        12.29,
+        9.78,
+        12.47,
+        13.63,
+        13.63,
+        12.69,
+        11.26,
+        9.49,
+        13.2,
+        9.54,
+        11.29,
+        12.52,
+        13.52,
+        9.49,
+        12.03,
+        12.78
+      ],
+      "power_output_maximum": [
+        11.56,
+        11.25,
+        15.19,
+        13.88,
+        13.6,
+        16.69,
+        11.64,
+        14.75,
+        13.48,
+        13.71,
+        15.57,
+        14.54,
+        13.54,
+        12.17,
+        14.01,
+        14.24,
+        13.68,
+        13.15,
+        12.2,
+        14.54,
+        14.39,
+        15.89,
+        12.48,
+        13.96,
+        13.46,
+        14.21,
+        13.21,
+        16.62,
+        14.33,
+        15.1,
+        11.79,
+        13.85,
+        15.02,
+        11.96,
+        15.25,
+        16.65,
+        16.65,
+        15.51,
+        13.76,
+        11.6,
+        16.13,
+        11.66,
+        13.8,
+        15.3,
+        16.52,
+        11.6,
+        14.7,
+        15.62
+      ],
+      "name": "102_HYDRO_3"
+    },
+    "103_WIND_3": {
+      "power_output_minimum": [
+        0.53,
+        4.69,
+        7.34,
+        7.98,
+        9.23,
+        5.64,
+        1.69,
+        8.09,
+        0.83,
+        2.78,
+        8.58,
+        1.75,
+        4.47,
+        7.01,
+        8.62,
+        1.45,
+        4.96,
+        2.38,
+        2.11,
+        6.42,
+        1.68,
+        7.46,
+        3.8,
+        1.45,
+        9.27,
+        9.62,
+        9.18,
+        4.32,
+        3.35,
+        6.54,
+        7.49,
+        1.95,
+        1.8,
+        8.32,
+        1.04,
+        2.83,
+        0.92,
+        8.35,
+        7.08,
+        1.3,
+        5.66,
+        6.96,
+        9.36,
+        2.76,
+        7.7,
+        0.74,
+        3.33,
+        2.65
+      ],
+      "power_output_maximum": [
+        118.5,
+        124.56,
+        144.42,
+        67.35,
+        184.53,
+        58.26,
+        74.73,
+        125.27,
+        152.37,
+        60.7,
+        39.98,
+        109.72,
+        146.66,
+        144.78,
+        76.14,
+        150.65,
+        231.33,
+        125.61,
+        145.27,
+        125.69,
+        96.72,
+        166.04,
+        153.47,
+        127.66,
+        129.89,
+        110.45,
+        185.47,
+        228.07,
+        68.35,
+        126.48,
+        168.67,
+        112.1,
+        145.84,
+        39.29,
+        97.21,
+        56.4,
+        208.7,
+        208.53,
+        82.54,
+        184.08,
+        241.42,
+        86.26,
+        182.8,
+        141.65,
+        78.53,
+        154.85,
+        75.14,
+        115.51
+      ],
+      "name": "103_WIND_3"
+    },
+    "104_RTPV_3": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.22,
+        0.29,
+        1.29,
+        0.21,
+        0.5,
+        0.3,
+        1.33,
+        1.81,
+        1.88,
+        1.69,
+        1.08,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.64,
+        1.87,
+        0.8,
+        0.18,
+        0.16,
+        1.3,
+        0.77,
+        1.79,
+        0.17,
+        0.28,
+        1.19,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        7.65,
+        14.67,
+        20.3,
+        6.27,
+        13.54,
+        17.13,
+        9.72,
+        13.7,
+        12.04,
+        18.62,
+        5.97,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        12.56,
+        11.14,
+        17.14,
+        15.42,
+        13.16,
+        6.24,
+        8.48,
+        13.65,
+        15.86,
+        8.59,
+        10.18,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "104_RTPV_3"
+    },
+    "105_WIND_3": {
+      "power_output_minimum": [
+        3.08,
+        4.49,
+        0.56,
+        1.18,
+        4.58,
+        1.49,
+        0.37,
+        4.71,
+        7.01,
+        0.5,
+        4.56,
+        8.18,
+        7.99,
+        4.26,
+        6.78,
+        5.76,
+        7.93,
+        3.36,
+        4.15,
+        4.39,
+        1.0,
+        7.78,
+        0.06,
+        6.52,
+        8.07,
+        2.06,
+        4.12,
+        0.38,
+        9.5,
+        3.48,
+        1.18,
+        3.62,
+        2.19,
+        2.76,
+        6.85,
+        1.76,
+        6.45,
+        3.34,
+        0.43,
+        1.76,
+        1.16,
+        5.93,
+        6.77,
+        3.26,
+        8.7,
+        4.71,
+        1.45,
+        3.87
+      ],
+      "power_output_maximum": [
+        156.18,
+        143.99,
+        122.04,
+        188.24,
+        185.78,
+        171.8,
+        77.81,
+        136.55,
+        55.9,
+        113.04,
+        79.73,
+        65.84,
+        98.26,
+        221.41,
+        126.8,
+        84.85,
+        173.83,
+        53.45,
+        159.39,
+        136.81,
+        189.05,
+        51.94,
+        57.95,
+        173.84,
+        185.03,
+        148.0,
+        203.36,
+        76.99,
+        168.51,
+        42.65,
+        98.11,
+        168.08,
+        181.38,
+        93.13,
+        192.29,
+        109.26,
+        89.12,
+        197.25,
+        202.12,
+        166.32,
+        208.74,
+        81.02,
+        115.4,
+        73.94,
+        88.51,
+        151.4,
+        184.07,
+        79.75
+      ],
+      "name": "105_WIND_3"
+    },
+    "106_HYDRO_3": {
+      "power_output_minimum": [
+        23.4,
+        22.6,
+        28.6,
+        21.88,
+        22.7,
+        30.3,
+        26.12,
+        23.07,
+        24.9,
+        30.67,
+        27.66,
+        29.64,
+        28.03,
+        27.74,
+        23.05,
+        31.55,
+        30.33,
+        22.17,
+        30.35,
+        26.45,
+        31.83,
+        27.53,
+        30.14,
+        24.21,
+        29.0,
+        29.07,
+        23.87,
+        24.73,
+        27.4,
+        30.72,
+        27.53,
+        22.83,
+        27.34,
+        21.3,
+        31.66,
+        21.67,
+        26.25,
+        29.41,
+        21.61,
+        26.89,
+        26.34,
+        29.73,
+        29.97,
+        26.05,
+        23.8,
+        27.18,
+        21.38,
+        29.02
+      ],
+      "power_output_maximum": [
+        28.6,
+        27.62,
+        34.96,
+        26.74,
+        27.74,
+        37.03,
+        31.92,
+        28.19,
+        30.43,
+        37.48,
+        33.81,
+        36.22,
+        34.25,
+        33.91,
+        28.18,
+        38.57,
+        37.07,
+        27.09,
+        37.1,
+        32.32,
+        38.9,
+        33.65,
+        36.84,
+        29.59,
+        35.45,
+        35.53,
+        29.17,
+        30.22,
+        33.49,
+        37.55,
+        33.65,
+        27.9,
+        33.42,
+        26.04,
+        38.7,
+        26.49,
+        32.08,
+        35.95,
+        26.41,
+        32.87,
+        32.19,
+        36.33,
+        36.63,
+        31.84,
+        29.09,
+        33.22,
+        26.13,
+        35.47
+      ],
+      "name": "106_HYDRO_3"
+    },
+    "107_RTPV_3": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.27,
+        0.18,
+        1.41,
+        0.05,
+        1.75,
+        0.74,
+        1.72,
+        0.67,
+        0.54,
+        1.59,
+        1.76,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.89,
+        0.22,
+        0.73,
+        0.13,
+        1.96,
+        0.96,
+        1.92,
+        0.45,
+        1.36,
+        0.69,
+        0.25,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        9.99,
+        11.24,
+        19.64,
+        13.11,
+        12.37,
+        12.6,
+        7.01,
+        5.33,
+        19.52,
+        14.0,
+        13.18,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        17.47,
+        10.98,
+        7.81,
+        13.79,
+        7.25,
+        19.7,
+        8.95,
+        9.33,
+        7.56,
+        12.42,
+        16.76,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "107_RTPV_3"
+    },
+    "108_WIND_3": {
+      "power_output_minimum": [
+        2.92,
+        9.45,
+        0.66,
+        0.8,
+        9.57,
+        6.97,
+        5.21,
+        9.7,
+        3.47,
+        2.92,
+        2.32,
+        4.12,
+        3.26,
+        8.42,
+        1.32,
+        2.6,
+        7.7,
+        4.56,
+        7.12,
+        8.39,
+        1.53,
+        3.17,
+        1.84,
+        3.17,
+        5.4,
+        9.2,
+        1.45,
+        0.04,
+        3.31,
+        2.9,
+        5.74,
+        9.07,
+        7.32,
+        5.51,
+        8.41,
+        0.55,
+        2.22,
+        0.23,
+        6.72,
+        1.94,
+        9.43,
+        1.48,
+        3.73,
+        9.78,
+        7.28,
+        8.04,
+        9.7,
+        1.4
+      ],
+      "power_output_maximum": [
+        168.9,
+        216.64,
+        179.14,
+        161.24,
+        57.48,
+        152.45,
+        126.21,
+        102.25,
+        126.7,
+        72.7,
+        208.79,
+        110.31,
+        155.42,
+        103.06,
+        135.23,
+        157.27,
+        52.07,
+        94.03,
+        119.13,
+        169.29,
+        62.1,
+        59.06,
+        96.86,
+        93.83,
+        65.53,
+        110.65,
+        105.9,
+        206.65,
+        153.38,
+        246.86,
+        74.88,
+        129.52,
+        145.0,
+        90.53,
+        88.31,
+        153.52,
+        164.99,
+        126.48,
+        63.55,
+        103.82,
+        170.74,
+        164.14,
+        84.43,
+        136.32,
+        151.1,
+        110.41,
+        140.59,
+        103.79
+      ],
+      "name": "108_WIND_3"
+    },
+    "109_PV_3": {
+      "power_output_minimum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.37,
+        0.33,
+        0.44,
+        2.07,
+        3.78,
+        1.91,
+        4.13,
+        2.8,
+        0.01,
+        4.17,
+        4.46,
+        3.44,
+        1.39,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        3.73,
+        4.34,
+        3.47,
+        2.88,
+        0.29,
+        0.68,
+        2.1,
+        1.45,
+        2.57,
+        0.47,
+        4.36,
+        1.51,
+        0.48,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "power_output_maximum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        106.8,
+        106.73,
+        61.5,
+        69.89,
+        27.07,
+        52.53,
+        79.96,
+        46.27,
+        48.5,
+        61.36,
+        53.2,
+        33.55,
+        82.29,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        68.23,
+        69.57,
+        29.71,
+        75.81,
+        52.47,
+        30.06,
+        87.61,
+        73.25,
+        71.01,
+        81.61,
+        92.52,
+        80.47,
+        74.99,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "name": "109_PV_3"
+    }
+  }
+}
