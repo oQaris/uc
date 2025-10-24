@@ -126,6 +126,7 @@ def load_and_solve_instance(args):
         m.pg = Var(thermal_gens.keys(), time_periods.keys(), within=NonNegativeReals)
         m.rg = Var(thermal_gens.keys(), time_periods.keys(), within=NonNegativeReals)
         m.pw = Var(renewable_gens.keys(), time_periods.keys(), within=NonNegativeReals)
+        #todo фиксировать подматрицу
         m.ug = Var(thermal_gens.keys(), time_periods.keys(), within=Binary)
         m.vg = Var(thermal_gens.keys(), time_periods.keys(), within=Binary)
         m.wg = Var(thermal_gens.keys(), time_periods.keys(), within=Binary)
@@ -257,6 +258,22 @@ def load_and_solve_instance(args):
         print(f"[{os.path.basename(data_file)}] Solving with {threads} threads...")
 
         start_solve = time.time()
+
+        # Найти допустимое решение неоптимальное
+
+        # 1. Фиксировать непросмотренную часть в 0
+        # минусы:
+        # сложно найти первое допустимое решение,
+        # 0-е может оказаться недопустимым,
+        # нужно менять ограничения и вводить штрафы
+        # плюсы:
+        # подзадачи получаются маленькой размерности, т.к. на каждом шаге решаем задачу с выбранными переменными
+
+        # 2. Не фиксируем переменные в 0, а объявляем их вещественными (для непросмотренной части)
+        # плюсы:
+        # первое решение в любом случае будет допустимым
+        # минусы:
+        # на каждом шаге решаем большую задачу LP
 
         # HiGHS-specific options - use highspy directly
         if solver_name == 'highs':
@@ -454,7 +471,7 @@ def find_all_test_instances(base_dir: str = '.'):
 def main():
     import argparse
     parser = argparse.ArgumentParser(description='Run UC model on all test instances in parallel')
-    parser.add_argument('--solver', type=str, default='cbc',
+    parser.add_argument('--solver', type=str, default='appsi_highs',
                        help='Solver to use: highs (default) or cbc')
     parser.add_argument('--gap', type=float, default=0.01,
                        help='MIP gap tolerance (default: 0.01)')
