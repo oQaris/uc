@@ -6,19 +6,17 @@ Features:
 - Resume from where it stopped (skip already solved instances)
 - Instance metadata for complexity analysis
 """
-import os
-import json
-import time
-import sys
-from pathlib import Path
-from datetime import datetime
 import csv
-from multiprocessing import Pool, cpu_count
+import json
+import os
 import threading
+import time
+from multiprocessing import Pool, cpu_count
 
-# Import pyomo modules
 from pyomo.environ import *
 from pyomo.opt import SolverFactory
+
+from src.models.uc_model import build_uc_model
 
 # Thread-safe CSV writer
 csv_lock = threading.Lock()
@@ -108,149 +106,10 @@ def load_and_solve_instance(args):
         load_time = time.time() - start_load
         print(f"[{os.path.basename(data_file)}] Data loaded in {load_time:.2f}s")
 
-        thermal_gens = data['thermal_generators']
-        renewable_gens = data['renewable_generators']
-
-        time_periods = {t+1 : t for t in range(data['time_periods'])}
-
-        gen_startup_categories = {g : list(range(0, len(gen['startup']))) for (g, gen) in thermal_gens.items()}
-        gen_pwl_points = {g : list(range(0, len(gen['piecewise_production']))) for (g, gen) in thermal_gens.items()}
-
         # Build model
         print(f"[{os.path.basename(data_file)}] Building model...")
         start_build = time.time()
-        m = ConcreteModel()
-
-        # Variables
-        m.cg = Var(thermal_gens.keys(), time_periods.keys())
-        m.pg = Var(thermal_gens.keys(), time_periods.keys(), within=NonNegativeReals)
-        m.rg = Var(thermal_gens.keys(), time_periods.keys(), within=NonNegativeReals)
-        m.pw = Var(renewable_gens.keys(), time_periods.keys(), within=NonNegativeReals)
-        #todo фиксировать подматрицу
-        m.ug = Var(thermal_gens.keys(), time_periods.keys(), within=Binary)
-        m.vg = Var(thermal_gens.keys(), time_periods.keys(), within=Binary)
-        m.wg = Var(thermal_gens.keys(), time_periods.keys(), within=Binary)
-
-        m.dg = Var(((g,s,t) for g in thermal_gens for s in gen_startup_categories[g] for t in time_periods), within=Binary)
-        m.lg = Var(((g,l,t) for g in thermal_gens for l in gen_pwl_points[g] for t in time_periods), within=UnitInterval)
-
-        # Objective
-        m.obj = Objective(expr=sum(
-                                  sum(
-                                      m.cg[g,t] + gen['piecewise_production'][0]['cost']*m.ug[g,t]
-                                      + sum( gen_startup['cost']*m.dg[g,s,t] for (s, gen_startup) in enumerate(gen['startup']))
-                                  for t in time_periods)
-                                for g, gen in thermal_gens.items() )
-                                )
-
-        # System-wide constraints
-        m.demand = Constraint(time_periods.keys())
-        m.reserves = Constraint(time_periods.keys())
-        for t,t_idx in time_periods.items():
-            m.demand[t] = sum( m.pg[g,t]+gen['power_output_minimum']*m.ug[g,t] for (g, gen) in thermal_gens.items() ) + sum( m.pw[w,t] for w in renewable_gens ) == data['demand'][t_idx]
-            m.reserves[t] = sum( m.rg[g,t] for g in thermal_gens ) >= data['reserves'][t_idx]
-
-        # Initial time constraints
-        m.uptimet0 = Constraint(thermal_gens.keys())
-        m.downtimet0 = Constraint(thermal_gens.keys())
-        m.logicalt0 = Constraint(thermal_gens.keys())
-        m.startupt0 = Constraint(thermal_gens.keys())
-        m.rampupt0 = Constraint(thermal_gens.keys())
-        m.rampdownt0 = Constraint(thermal_gens.keys())
-        m.shutdownt0 = Constraint(thermal_gens.keys())
-
-        for g, gen in thermal_gens.items():
-            if gen['unit_on_t0'] == 1:
-                if gen['time_up_minimum'] - gen['time_up_t0'] >= 1:
-                    m.uptimet0[g] = sum( (m.ug[g,t] - 1) for t in range(1, min(gen['time_up_minimum'] - gen['time_up_t0'], data['time_periods'])+1)) == 0
-            elif gen['unit_on_t0'] == 0:
-                if gen['time_down_minimum'] - gen['time_down_t0'] >= 1:
-                    m.downtimet0[g] = sum( m.ug[g,t] for t in range(1, min(gen['time_down_minimum'] - gen['time_down_t0'], data['time_periods'])+1)) == 0
-            else:
-                raise Exception('Invalid unit_on_t0 for generator {}, unit_on_t0={}'.format(g, gen['unit_on_t0']))
-
-            m.logicalt0[g] = m.ug[g,1] - gen['unit_on_t0'] == m.vg[g,1] - m.wg[g,1]
-
-            startup_expr = sum(
-                                sum( m.dg[g,s,t]
-                                        for t in range(
-                                                        max(1,gen['startup'][s+1]['lag']-gen['time_down_t0']+1),
-                                                        min(gen['startup'][s+1]['lag']-1,data['time_periods'])+1
-                                                      )
-                                    )
-                               for s,_ in enumerate(gen['startup'][:-1]))
-            if isinstance(startup_expr, int):
-                pass
-            else:
-                m.startupt0[g] = startup_expr == 0
-
-            m.rampupt0[g] = m.pg[g,1] + m.rg[g,1] - gen['unit_on_t0']*(gen['power_output_t0']-gen['power_output_minimum']) <= gen['ramp_up_limit']
-            m.rampdownt0[g] = gen['unit_on_t0']*(gen['power_output_t0']-gen['power_output_minimum']) - m.pg[g,1] <= gen['ramp_down_limit']
-
-            shutdown_constr = gen['unit_on_t0']*(gen['power_output_t0']-gen['power_output_minimum']) <= gen['unit_on_t0']*(gen['power_output_maximum'] - gen['power_output_minimum']) - max((gen['power_output_maximum'] - gen['ramp_shutdown_limit']),0)*m.wg[g,1]
-
-            if isinstance(shutdown_constr, bool):
-                pass
-            else:
-                m.shutdownt0[g] = shutdown_constr
-
-        # Generator constraints
-        m.mustrun = Constraint(thermal_gens.keys(), time_periods.keys())
-        m.logical = Constraint(thermal_gens.keys(), time_periods.keys())
-        m.uptime = Constraint(thermal_gens.keys(), time_periods.keys())
-        m.downtime = Constraint(thermal_gens.keys(), time_periods.keys())
-        m.startup_select = Constraint(thermal_gens.keys(), time_periods.keys())
-        m.gen_limit1 = Constraint(thermal_gens.keys(), time_periods.keys())
-        m.gen_limit2 = Constraint(thermal_gens.keys(), time_periods.keys())
-        m.ramp_up = Constraint(thermal_gens.keys(), time_periods.keys())
-        m.ramp_down = Constraint(thermal_gens.keys(), time_periods.keys())
-        m.power_select = Constraint(thermal_gens.keys(), time_periods.keys())
-        m.cost_select = Constraint(thermal_gens.keys(), time_periods.keys())
-        m.on_select = Constraint(thermal_gens.keys(), time_periods.keys())
-
-        for g, gen in thermal_gens.items():
-            for t in time_periods:
-                m.mustrun[g,t] = m.ug[g,t] >= gen['must_run']
-
-                if t > 1:
-                    m.logical[g,t] = m.ug[g,t] - m.ug[g,t-1] == m.vg[g,t] - m.wg[g,t]
-
-                UT = min(gen['time_up_minimum'],data['time_periods'])
-                if t >= UT:
-                    m.uptime[g,t] = sum(m.vg[g,t] for t in range(t-UT+1, t+1)) <= m.ug[g,t]
-                DT = min(gen['time_down_minimum'],data['time_periods'])
-                if t >= DT:
-                    m.downtime[g,t] = sum(m.wg[g,t] for t in range(t-DT+1, t+1)) <= 1-m.ug[g,t]
-                m.startup_select[g,t] = m.vg[g,t] == sum(m.dg[g,s,t] for s,_ in enumerate(gen['startup']))
-
-                m.gen_limit1[g,t] = m.pg[g,t]+m.rg[g,t] <= (gen['power_output_maximum'] - gen['power_output_minimum'])*m.ug[g,t] - max((gen['power_output_maximum'] - gen['ramp_startup_limit']),0)*m.vg[g,t]
-
-                if t < len(time_periods):
-                    m.gen_limit2[g,t] = m.pg[g,t]+m.rg[g,t] <= (gen['power_output_maximum'] - gen['power_output_minimum'])*m.ug[g,t] - max((gen['power_output_maximum'] - gen['ramp_shutdown_limit']),0)*m.wg[g,t+1]
-
-                if t > 1:
-                    m.ramp_up[g,t] = m.pg[g,t]+m.rg[g,t] - m.pg[g,t-1] <= gen['ramp_up_limit']
-                    m.ramp_down[g,t] = m.pg[g,t-1] - m.pg[g,t] <= gen['ramp_down_limit']
-
-                piece_mw1 = gen['piecewise_production'][0]['mw']
-                piece_cost1 = gen['piecewise_production'][0]['cost']
-                m.power_select[g,t] = m.pg[g,t] == sum( (piece['mw'] - piece_mw1)*m.lg[g,l,t] for l,piece in enumerate(gen['piecewise_production']))
-                m.cost_select[g,t] = m.cg[g,t] == sum( (piece['cost'] - piece_cost1)*m.lg[g,l,t] for l,piece in enumerate(gen['piecewise_production']))
-                m.on_select[g,t] = m.ug[g,t] == sum(m.lg[g,l,t] for l,_ in enumerate(gen['piecewise_production']))
-
-        m.startup_allowed = Constraint(((g,s,t) for g in thermal_gens for s in gen_startup_categories[g] for t in time_periods))
-        for g, gen in thermal_gens.items():
-            for s,_ in enumerate(gen['startup'][:-1]):
-                for t in time_periods:
-                    if t >= gen['startup'][s+1]['lag']:
-                        m.startup_allowed[g,s,t] = m.dg[g,s,t] <= sum(m.wg[g,t-i] for i in range(gen['startup'][s]['lag'], gen['startup'][s+1]['lag']))
-
-        # Renewable constraints
-        for w, gen in renewable_gens.items():
-            for t, t_idx in time_periods.items():
-                m.pw[w,t].setlb(gen['power_output_minimum'][t_idx])
-                m.pw[w,t].setub(gen['power_output_maximum'][t_idx])
-
+        m = build_uc_model(data)
         build_time = time.time() - start_build
         print(f"[{os.path.basename(data_file)}] Model built in {build_time:.2f}s")
 
@@ -345,7 +204,8 @@ def load_and_solve_instance(args):
                 # If needed, value(m.obj) won't work - use solve_result directly
 
             except ImportError:
-                print(f"[{os.path.basename(data_file)}] WARNING: highspy not available, falling back to Pyomo interface")
+                print(
+                    f"[{os.path.basename(data_file)}] WARNING: highspy not available, falling back to Pyomo interface")
                 solver = SolverFactory(solver_name)
                 solve_result = solver.solve(m, tee=verbose)
 
@@ -455,7 +315,7 @@ def get_solved_instances(output_file):
 
 def find_all_test_instances(base_dir: str = '.'):
     """Find all JSON test instances in the repository"""
-    test_dirs = ['ca', 'ferc', 'rts_gmlc']
+    test_dirs = ['examples/ca', 'examples/ferc', 'examples/rts_gmlc']
     instances = []
 
     for test_dir in test_dirs:
@@ -472,23 +332,23 @@ def main():
     import argparse
     parser = argparse.ArgumentParser(description='Run UC model on all test instances in parallel')
     parser.add_argument('--solver', type=str, default='appsi_highs',
-                       help='Solver to use: highs (default) or cbc')
+                        help='Solver to use: highs (default) or cbc')
     parser.add_argument('--gap', type=float, default=0.01,
-                       help='MIP gap tolerance (default: 0.01)')
+                        help='MIP gap tolerance (default: 0.01)')
     parser.add_argument('--time-limit', type=int, default=None,
-                       help='Time limit per instance in seconds')
+                        help='Time limit per instance in seconds')
     parser.add_argument('--output', type=str, default='new_results_parallel.csv',
-                       help='Output CSV file')
+                        help='Output CSV file')
     parser.add_argument('--verbose', action='store_true',
-                       help='Show solver output')
+                        help='Show solver output')
     parser.add_argument('--instances', nargs='+',
-                       help='Specific instances to run (default: all)')
+                        help='Specific instances to run (default: all)')
     parser.add_argument('--limit', type=int,
-                       help='Limit number of instances to run')
+                        help='Limit number of instances to run')
     parser.add_argument('--parallel', type=int, default=8,
-                       help='Number of instances to solve in parallel (default: 8)')
+                        help='Number of instances to solve in parallel (default: 8)')
     parser.add_argument('--threads-per-instance', type=int, default=2,
-                       help='Number of threads per solver instance (default: 2)')
+                        help='Number of threads per solver instance (default: 2)')
 
     args = parser.parse_args()
 
@@ -538,11 +398,11 @@ def main():
 
     # Initialize CSV file with header (including metadata fields)
     fieldnames = ['instance', 'status', 'solve_time', 'build_time', 'load_time',
-                 'total_time', 'objective_value', 'gap', 'error', 'file_path',
-                 'time_periods', 'n_thermal_gens', 'n_renewable_gens', 'n_must_run',
-                 'total_startup_categories', 'total_pwl_points',
-                 'approx_binary_vars', 'approx_continuous_vars', 'approx_total_vars',
-                 'approx_constraints', 'peak_demand', 'avg_demand', 'total_reserves']
+                  'total_time', 'objective_value', 'gap', 'error', 'file_path',
+                  'time_periods', 'n_thermal_gens', 'n_renewable_gens', 'n_must_run',
+                  'total_startup_categories', 'total_pwl_points',
+                  'approx_binary_vars', 'approx_continuous_vars', 'approx_total_vars',
+                  'approx_constraints', 'peak_demand', 'avg_demand', 'total_reserves']
 
     # Create file with header if it doesn't exist
     if not os.path.exists(args.output):
@@ -568,14 +428,14 @@ def main():
     total_time = time.time() - start_time
 
     # Print summary
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("SUMMARY")
-    print(f"{'='*80}")
+    print(f"{'=' * 80}")
 
     print(f"\nResults saved to {args.output}")
     print(f"\nTotal instances processed: {len(instances_to_solve)}")
     print(f"Total instances (including skipped): {len(instances)}")
-    print(f"Total wall-clock time: {total_time:.2f}s ({total_time/60:.2f} minutes)")
+    print(f"Total wall-clock time: {total_time:.2f}s ({total_time / 60:.2f} minutes)")
 
     # Print summary statistics
     successful = [r for r in all_results if r['status'] in ['optimal', 'feasible']]
@@ -590,9 +450,9 @@ def main():
             print(f"\nSolve time statistics (successful instances):")
             print(f"  Min: {min(solve_times):.2f}s")
             print(f"  Max: {max(solve_times):.2f}s")
-            print(f"  Avg: {sum(solve_times)/len(solve_times):.2f}s")
+            print(f"  Avg: {sum(solve_times) / len(solve_times):.2f}s")
             print(f"  Total CPU time: {sum(solve_times):.2f}s")
-            print(f"  Speedup: {sum(solve_times)/total_time:.2f}x")
+            print(f"  Speedup: {sum(solve_times) / total_time:.2f}x")
 
     if failed:
         print(f"\nFailed instances:")

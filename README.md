@@ -1,6 +1,6 @@
 # Power Grid Lib - Unit Commitment
 
-This benchmark library is curated and maintained by the [IEEE PES Task Force on Benchmarks for Validation of Emerging Power System Algorithms](https://power-grid-lib.github.io/) and is designed to evaluate a well established version of the the Unit Commitment problem.  Specifically, these cases are designed for benchmarking algorithms that solve the following the Mixed-Integer Linear Program described in the formulation [PDF document](MODEL.pdf).
+This benchmark library is curated and maintained by the [IEEE PES Task Force on Benchmarks for Validation of Emerging Power System Algorithms](https://power-grid-lib.github.io/) and is designed to evaluate a well established version of the the Unit Commitment problem.  Specifically, these cases are designed for benchmarking algorithms that solve the following the Mixed-Integer Linear Program described in the formulation [PDF document](src/models/MODEL.pdf).
 
 A detailed description of this mathematical model is available [here](http://www.optimization-online.org/DB_FILE/2018/11/6930.pdf).  All of the cases files are curated in a json-based data format.  Open-source reference implementations are available in [EGRET](https://github.com/grid-parity-exchange/Egret) and [psst](https://github.com/kdheepak/psst).
 

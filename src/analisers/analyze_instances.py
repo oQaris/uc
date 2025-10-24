@@ -4,7 +4,7 @@ Analyze UC instances to extract metadata about complexity
 """
 import json
 import os
-from pathlib import Path
+
 
 def analyze_instance(file_path):
     """Extract metadata from a UC instance"""
@@ -83,19 +83,21 @@ def analyze_instance(file_path):
     # Calculate "complexity score" - weighted combination of factors
     # Higher score = more complex
     complexity_score = (
-        n_binary_vars * 10 +  # Binary vars are most expensive
-        n_continuous_vars * 1 +
-        n_constraints * 0.1 +
-        total_startup_categories * 100 +  # Startup logic is complex
-        must_run_count * 50  # Must-run constraints reduce flexibility
+            n_binary_vars * 10 +  # Binary vars are most expensive
+            n_continuous_vars * 1 +
+            n_constraints * 0.1 +
+            total_startup_categories * 100 +  # Startup logic is complex
+            must_run_count * 50  # Must-run constraints reduce flexibility
     )
     metadata['complexity_score'] = int(complexity_score)
 
     return metadata
 
+
 if __name__ == "__main__":
     # Test on a few instances
     import sys
+
     if len(sys.argv) > 1:
         file_path = sys.argv[1]
         metadata = analyze_instance(file_path)
@@ -103,7 +105,8 @@ if __name__ == "__main__":
             print(f"{key}: {value}")
     else:
         # Analyze all instances
-        from run_all_tests_parallel import find_all_test_instances
+        from src.runners.run_all_tests_parallel import find_all_test_instances
+
         instances = find_all_test_instances()
 
         print("Instance analysis:")

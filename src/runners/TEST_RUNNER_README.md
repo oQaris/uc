@@ -1,35 +1,42 @@
 # Test Runner for UC Model
 
-This script runs the Unit Commitment (UC) model on all test instances from the pglib-uc repository and logs the solve times and results.
+This script runs the Unit Commitment (UC) model on all test instances from the pglib-uc repository and logs the solve
+times and results.
 
 ## Usage
 
 ### Basic usage (run on all test instances):
+
 ```bash
 python run_all_tests.py
 ```
 
 ### Run with custom settings:
+
 ```bash
 python run_all_tests.py --solver cbc --gap 0.01 --output results.csv
 ```
 
 ### Run on a limited number of instances (for testing):
+
 ```bash
 python run_all_tests.py --limit 5
 ```
 
 ### Run on specific instances:
+
 ```bash
 python run_all_tests.py --instances ca/2014-09-01_reserves_0.json ferc/2015-01-01_hw.json
 ```
 
 ### Run with time limit per instance:
+
 ```bash
 python run_all_tests.py --time-limit 300  # 5 minutes per instance
 ```
 
 ### Run with verbose solver output:
+
 ```bash
 python run_all_tests.py --verbose
 ```
@@ -64,13 +71,13 @@ The script generates a CSV file with the following columns:
 The repository contains test instances in three directories:
 
 1. **ca/** - California ISO test instances (20 files)
-   - Various dates with different reserve levels (0%, 1%, 3%, 5%)
+    - Various dates with different reserve levels (0%, 1%, 3%, 5%)
 
 2. **ferc/** - FERC test instances (24 files)
-   - Monthly data for 2015 with high wind (hw) and low wind (lw) scenarios
+    - Monthly data for 2015 with high wind (hw) and low wind (lw) scenarios
 
 3. **rts_gmlc/** - RTS-GMLC test instances (12 files)
-   - Monthly data for 2020
+    - Monthly data for 2020
 
 Total: **52 test instances**
 
@@ -120,6 +127,7 @@ Solve time statistics (successful instances):
 - CBC solver (or any other MIP solver supported by Pyomo)
 
 Install requirements:
+
 ```bash
 conda install -c conda-forge pyomo coincbc
 ```

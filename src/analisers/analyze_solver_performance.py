@@ -3,12 +3,13 @@
 Analyze solver performance based on instance parameters
 Generates visualizations and statistical analysis of solve time dependencies
 """
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
-from pathlib import Path
 import argparse
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
 
 
 def load_results(csv_file):
@@ -72,9 +73,9 @@ def correlation_analysis(df):
 
     corr_with_time = df[available_cols].corr()['solve_time'].sort_values(ascending=False)
 
-    print("="*80)
+    print("=" * 80)
     print("CORRELATION WITH SOLVE TIME")
-    print("="*80)
+    print("=" * 80)
     print(corr_with_time)
     print()
 
@@ -127,7 +128,7 @@ def create_visualizations(df, output_dir='analysis_plots'):
         for dataset in df['dataset'].unique():
             mask = df['dataset'] == dataset
             ax.scatter(df[mask][param], df[mask]['solve_time'],
-                      label=dataset, alpha=0.6, s=50)
+                       label=dataset, alpha=0.6, s=50)
         ax.set_xlabel(label, fontsize=11)
         ax.set_ylabel('Solve Time (s)', fontsize=11)
         ax.set_title(f'Solve Time vs {label}', fontsize=12)
@@ -146,7 +147,7 @@ def create_visualizations(df, output_dir='analysis_plots'):
     for dataset in df['dataset'].unique():
         mask = df['dataset'] == dataset
         axes[0].scatter(df[mask]['problem_size'], df[mask]['solve_time'],
-                       label=dataset, alpha=0.6, s=50)
+                        label=dataset, alpha=0.6, s=50)
     axes[0].set_xscale('log')
     axes[0].set_yscale('log')
     axes[0].set_xlabel('Problem Size (vars × constraints)', fontsize=12)
@@ -157,8 +158,8 @@ def create_visualizations(df, output_dir='analysis_plots'):
 
     # Binary ratio impact
     scatter = axes[1].scatter(df['binary_ratio'], df['solve_time'],
-                             c=df['approx_total_vars'], cmap='viridis',
-                             alpha=0.6, s=50)
+                              c=df['approx_total_vars'], cmap='viridis',
+                              alpha=0.6, s=50)
     axes[1].set_xlabel('Binary Variable Ratio', fontsize=12)
     axes[1].set_ylabel('Solve Time (s)', fontsize=12)
     axes[1].set_title('Solve Time vs Binary Ratio (colored by total vars)', fontsize=13)
@@ -177,7 +178,7 @@ def create_visualizations(df, output_dir='analysis_plots'):
     for dataset in df['dataset'].unique():
         mask = df['dataset'] == dataset
         axes[0].scatter(df[mask]['total_reserves'], df[mask]['solve_time'],
-                       label=dataset, alpha=0.6, s=50)
+                        label=dataset, alpha=0.6, s=50)
     axes[0].set_xlabel('Total Reserves', fontsize=12)
     axes[0].set_ylabel('Solve Time (s)', fontsize=12)
     axes[0].set_title('Solve Time vs Total Reserves', fontsize=13)
@@ -188,7 +189,7 @@ def create_visualizations(df, output_dir='analysis_plots'):
     for dataset in df['dataset'].unique():
         mask = df['dataset'] == dataset
         axes[1].scatter(df[mask]['reserve_ratio'], df[mask]['solve_time'],
-                       label=dataset, alpha=0.6, s=50)
+                        label=dataset, alpha=0.6, s=50)
     axes[1].set_xlabel('Reserve Ratio (reserves/peak_demand)', fontsize=12)
     axes[1].set_ylabel('Solve Time (s)', fontsize=12)
     axes[1].set_title('Solve Time vs Reserve Ratio', fontsize=13)
@@ -222,7 +223,7 @@ def create_visualizations(df, output_dir='analysis_plots'):
     width = 0.25
 
     axes[1].bar(x - width, dataset_stats['solve_time'], width, label='Avg Solve Time (s)', alpha=0.8)
-    axes[1].bar(x, dataset_stats['approx_total_vars']/1000, width, label='Avg Total Vars (×1000)', alpha=0.8)
+    axes[1].bar(x, dataset_stats['approx_total_vars'] / 1000, width, label='Avg Total Vars (×1000)', alpha=0.8)
     axes[1].bar(x + width, dataset_stats['n_thermal_gens'], width, label='Avg Thermal Gens', alpha=0.8)
 
     axes[1].set_xlabel('Dataset', fontsize=12)
@@ -245,7 +246,7 @@ def create_visualizations(df, output_dir='analysis_plots'):
     for dataset in df['dataset'].unique():
         mask = df['dataset'] == dataset
         axes[0, 0].scatter(df[mask]['startup_per_gen'], df[mask]['solve_time'],
-                          label=dataset, alpha=0.6, s=50)
+                           label=dataset, alpha=0.6, s=50)
     axes[0, 0].set_xlabel('Startup Categories per Generator', fontsize=11)
     axes[0, 0].set_ylabel('Solve Time (s)', fontsize=11)
     axes[0, 0].set_title('Solve Time vs Startup Complexity', fontsize=12)
@@ -256,7 +257,7 @@ def create_visualizations(df, output_dir='analysis_plots'):
     for dataset in df['dataset'].unique():
         mask = df['dataset'] == dataset
         axes[0, 1].scatter(df[mask]['pwl_per_gen'], df[mask]['solve_time'],
-                          label=dataset, alpha=0.6, s=50)
+                           label=dataset, alpha=0.6, s=50)
     axes[0, 1].set_xlabel('PWL Points per Generator', fontsize=11)
     axes[0, 1].set_ylabel('Solve Time (s)', fontsize=11)
     axes[0, 1].set_title('Solve Time vs PWL Complexity', fontsize=12)
@@ -267,7 +268,7 @@ def create_visualizations(df, output_dir='analysis_plots'):
     for dataset in df['dataset'].unique():
         mask = df['dataset'] == dataset
         axes[1, 0].scatter(df[mask]['must_run_ratio'], df[mask]['solve_time'],
-                          label=dataset, alpha=0.6, s=50)
+                           label=dataset, alpha=0.6, s=50)
     axes[1, 0].set_xlabel('Must-Run Generator Ratio', fontsize=11)
     axes[1, 0].set_ylabel('Solve Time (s)', fontsize=11)
     axes[1, 0].set_title('Solve Time vs Must-Run Ratio', fontsize=12)
@@ -278,7 +279,7 @@ def create_visualizations(df, output_dir='analysis_plots'):
     for dataset in df['dataset'].unique():
         mask = df['dataset'] == dataset
         axes[1, 1].scatter(df[mask]['gens_per_period'], df[mask]['solve_time'],
-                          label=dataset, alpha=0.6, s=50)
+                           label=dataset, alpha=0.6, s=50)
     axes[1, 1].set_xlabel('Generators per Time Period', fontsize=11)
     axes[1, 1].set_ylabel('Solve Time (s)', fontsize=11)
     axes[1, 1].set_title('Solve Time vs Generator Density', fontsize=12)
@@ -294,9 +295,9 @@ def create_visualizations(df, output_dir='analysis_plots'):
 
 def statistical_summary(df):
     """Print statistical summary"""
-    print("="*80)
+    print("=" * 80)
     print("STATISTICAL SUMMARY")
-    print("="*80)
+    print("=" * 80)
 
     print("\nDataset Statistics:")
     print(df.groupby('dataset').agg({
@@ -312,12 +313,12 @@ def statistical_summary(df):
 
     print("\n\nTop 10 Slowest Instances:")
     slowest = df.nlargest(10, 'solve_time')[['instance', 'solve_time', 'approx_total_vars',
-                                               'n_thermal_gens', 'total_reserves', 'dataset']]
+                                             'n_thermal_gens', 'total_reserves', 'dataset']]
     print(slowest.to_string(index=False))
 
     print("\n\nTop 10 Fastest Instances:")
     fastest = df.nsmallest(10, 'solve_time')[['instance', 'solve_time', 'approx_total_vars',
-                                                'n_thermal_gens', 'total_reserves', 'dataset']]
+                                              'n_thermal_gens', 'total_reserves', 'dataset']]
     print(fastest.to_string(index=False))
 
 
@@ -328,9 +329,9 @@ def regression_analysis(df):
     from sklearn.model_selection import cross_val_score
     from sklearn.preprocessing import StandardScaler
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("REGRESSION ANALYSIS")
-    print("="*80)
+    print("=" * 80)
 
     # Select features for regression
     feature_cols = [
@@ -380,14 +381,14 @@ def regression_analysis(df):
 
 def main():
     parser = argparse.ArgumentParser(description='Analyze solver performance')
-    parser.add_argument('--input', type=str, default='server-solvers/res_parallel.csv',
-                       help='Input CSV file with results')
+    parser.add_argument('--input', type=str, default='server-solvers/res_parallel_highs.csv',
+                        help='Input CSV file with results')
     parser.add_argument('--output-dir', type=str, default='analysis_plots',
-                       help='Directory for output plots')
+                        help='Directory for output plots')
     parser.add_argument('--no-plots', action='store_true',
-                       help='Skip generating plots')
+                        help='Skip generating plots')
     parser.add_argument('--no-regression', action='store_true',
-                       help='Skip regression analysis')
+                        help='Skip regression analysis')
 
     args = parser.parse_args()
 
@@ -416,9 +417,9 @@ def main():
     if not args.no_plots:
         create_visualizations(df, args.output_dir)
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("ANALYSIS COMPLETE")
-    print("="*80)
+    print("=" * 80)
 
 
 if __name__ == "__main__":
