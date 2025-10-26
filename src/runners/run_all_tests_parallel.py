@@ -134,6 +134,8 @@ def load_and_solve_instance(args):
         # минусы:
         # на каждом шаге решаем большую задачу LP
 
+        # Провести сравнительное исследование решателей
+
         # HiGHS-specific options - use highspy directly
         if solver_name == 'highs':
             try:
