@@ -5,7 +5,14 @@
       "Bash(pip install:*)",
       "Bash(conda list:*)",
       "Bash(pip uninstall:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Read(//c/Users/oQaris/Downloads/Telegram Desktop/**)",
+      "Bash(python3 -m json.tool:*)",
+      "Bash(timeout 60 python:*)",
+      "Bash(timeout 120 python:*)",
+      "Bash(timeout 600 python:*)",
+      "Bash(uv add:*)",
+      "Bash(conda install:*)"
     ],
     "deny": [],
     "ask": []
