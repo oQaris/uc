@@ -50,7 +50,105 @@ def _find_binary_variables(model):
     return binary_vars
 
 
-def _verify_solution_feasibility(old_model, data, model_builder, solver_name="appsi_highs", gap=0.01, verbose=False):
+def _get_generators_sorted_by_power(data):
+    """
+    Получить список генераторов, отсортированных по максимальной мощности (убывание)
+
+    Args:
+        data: dict - исходные данные задачи с ключом 'thermal_generators'
+
+    Returns:
+        list: Список имен генераторов, отсортированных по power_output_maximum (от большей к меньшей)
+    """
+    if data is None:
+        raise ValueError("data is required for generator sorting")
+
+    thermal_gens = data.get("thermal_generators", {})
+
+    # Создаем список (имя_генератора, макс_мощность)
+    gen_power_pairs = [(g, gen_data.get("power_output_maximum", 0.0))
+                       for g, gen_data in thermal_gens.items()]
+
+    # Сортируем по мощности (убывание)
+    gen_power_pairs.sort(key=lambda x: x[1], reverse=True)
+
+    # Возвращаем только имена
+    return [g for g, _ in gen_power_pairs]
+
+
+def _set_variable_domains(binary_vars, binary_generators, binary_periods):
+    """
+    Установить домены переменных для текущей подзадачи
+
+    Args:
+        binary_vars: список (var, time_idx_pos) - бинарные переменные модели
+        binary_generators: set - генераторы, которые должны быть бинарными
+        binary_periods: set - временные периоды, которые должны быть бинарными
+    """
+    for var, time_idx_pos in binary_vars:
+        for idx in var:
+            time_period = idx[time_idx_pos]
+            generator = idx[0]  # Для всех переменных UC модели генератор на позиции 0
+
+            # Бинарные: генератор в партии И период в окне
+            if generator in binary_generators and time_period in binary_periods:
+                var[idx].domain = Binary
+            elif not var[idx].is_fixed():
+                var[idx].domain = UnitInterval
+
+
+def _solve_subproblem(model, solver_name, gap):
+    """
+    Решить текущую подзадачу
+
+    Args:
+        model: Pyomo модель
+        solver_name: имя решателя
+        gap: MIP gap tolerance
+
+    Returns:
+        tuple: (result, solve_time, is_optimal)
+    """
+    iter_start = time.time()
+    solver = SolverFactory(solver_name)
+
+    # Установка gap в зависимости от типа решателя
+    if hasattr(solver, 'config'):
+        # APPSI solvers (appsi_highs, etc)
+        solver.config.mip_gap = gap
+        result = solver.solve(model)
+    else:
+        # Legacy solvers (cbc, etc)
+        result = solver.solve(model, options={'ratioGap': gap})
+
+    solve_time = time.time() - iter_start
+    is_optimal = result.solver.termination_condition == TerminationCondition.optimal
+
+    return result, solve_time, is_optimal
+
+
+def _fix_variables(binary_vars, fix_generators, fix_periods):
+    """
+    Зафиксировать переменные для текущей подзадачи
+
+    Args:
+        binary_vars: список (var, time_idx_pos) - бинарные переменные модели
+        fix_generators: set - генераторы, которые нужно зафиксировать
+        fix_periods: set - периоды, которые нужно зафиксировать
+    """
+    for var, time_idx_pos in binary_vars:
+        for idx in var:
+            generator = idx[0]  # Генератор на первой позиции
+            time_period = idx[time_idx_pos]
+
+            # Фиксируем: генератор в партии И период в окне фиксации И не зафиксирован
+            if (generator in fix_generators and
+                    time_period in fix_periods and
+                    not var[idx].is_fixed()):
+                var[idx].fix()
+
+
+def _verify_solution_feasibility(old_model, data, model_builder, solver_name, gap, verbose):
     """
     Проверить допустимость найденного решения в исходной (немодифицированной) задаче
 
@@ -156,31 +254,36 @@ def _verify_solution_feasibility(old_model, data, model_builder, solver_name="ap
     }
 
 
-# todo реализовать внутренний цикл по генераторам (перебирать по несколько штук, по мощности)
-# todo почему решение в первом периоде занимает много, а потом меньше?
 def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
-                        verbose=False, verify_solution=True, data=None, model_builder=None):
+                        verbose=False, verify_solution=True, data=None, model_builder=None,
+                        generators_per_iteration=None):
     """
-    Solve UC model using Relax-and-Fix approach
+    Solve UC model using Relax-and-Fix approach with optional generator decomposition
 
-    Основная идея:
-    1. Разбить временной горизонт на окна (windows)
-    2. Для текущего окна переменные остаются бинарными
-    3. Для будущих периодов переменные релаксируются (становятся непрерывными в [0,1])
-    4. Решаем подзадачу
-    5. Фиксируем решение для части окна
-    6. Двигаем окно дальше
+    Алгоритм:
+    1. Разбить временной горизонт на окна (window_size, window_step)
+    2. Разбить генераторы на партии (generators_per_iteration)
+       - Если generators_per_iteration=None: все генераторы сразу (классический R&F)
+       - Генераторы сортируются по максимальной мощности (убывание)
+    3. Для каждого временного окна:
+       - Для каждой партии генераторов:
+         - Переменные текущей партии в текущем окне - бинарные
+         - Остальные переменные - релаксированы [0,1]
+         - Решить подзадачу
+         - Зафиксировать переменные партии в окне фиксации
+    4. Двигаем окно дальше
 
     Args:
         model: Pyomo ConcreteModel with UC formulation
         window_size: Size of time window for binary variables
         window_step: Step size for moving window
-        solver_name: Solver name for factory
         gap: MIP gap tolerance
+        solver_name: Solver name for factory
         verbose: Show solver output
         verify_solution: Verify final solution feasibility in original problem (default: True)
-        data: Original problem data (required if verify_solution=True)
+        data: Original problem data (required for generator sorting and verification)
         model_builder: Function to build model from data (required if verify_solution=True)
+        generators_per_iteration: Number of generators per iteration (None = all at once)
 
     Returns:
         dict: Results with solve_time, objective, status, and optional verification info
@@ -199,60 +302,66 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
         for var, time_pos in binary_vars:
             print(f"    - {var.name}: time index at position {time_pos}")
 
-    # Relax-and-Fix iterations
+    # Получить отсортированный список всех генераторов
+    if data is None:
+        raise ValueError("'data' argument is required for generator sorting")
+    generators_sorted = _get_generators_sorted_by_power(data)
+    num_generators = len(generators_sorted)
+
+    # Если generators_per_iteration не задан, берем все генераторы сразу (классический R&F)
+    if generators_per_iteration is None:
+        generators_per_iteration = num_generators
+        if verbose:
+            print(f"  Classic Relax-and-Fix: {num_generators} generators at once")
+    else:
+        if verbose:
+            print(f"  Generator-wise decomposition: {num_generators} generators, "
+                  f"{generators_per_iteration} per iteration")
+            print(f"    Generators sorted by power (top 5): {generators_sorted[:5]}")
+
+    # Основной цикл Relax-and-Fix (единая логика для всех стратегий)
     for start in range(0, num_periods, window_step):
         end = min(start + window_size, num_periods)
         step = min(start + window_step, num_periods)
 
+        # Последнее окно - фиксируем все до конца
         if end == num_periods:
             step = end
-
-        if verbose:
-            print(f"  Window [{start}:{end}], fixing [{start}:{step}]")
 
         window_periods = set(time_periods[start:end])
         fix_periods = set(time_periods[start:step])
 
-        # Обрабатываем все бинарные переменные единообразно
-        for var, time_idx_pos in binary_vars:
-            for idx in var:
-                time_period = idx[time_idx_pos]
-
-                # Переменные в окне - бинарные, остальные - непрерывные
-                if time_period in window_periods:
-                    var[idx].domain = Binary
-                elif not var[idx].is_fixed():
-                    var[idx].domain = UnitInterval
-
-        # Solve (create new solver each iteration)
-        iter_start = time.time()
-        solver = SolverFactory(solver_name)
-
-        # Set gap depending on solver type and solve
-        if hasattr(solver, 'config'):
-            # APPSI solvers (appsi_highs, etc)
-            solver.config.mip_gap = gap
-            result = solver.solve(model)
-        else:
-            # Legacy solvers (cbc, etc)
-            result = solver.solve(model, options={'ratioGap': gap})
-
-        # Check iteration result
-        iter_feasible = result.solver.termination_condition == TerminationCondition.optimal
-
         if verbose:
-            status_str = "optimal" if iter_feasible else str(result.solver.termination_condition)
-            print(f"  Iteration solved in {time.time() - iter_start:.2f}s, obj={value(model.obj):.2f}, status={status_str}")
+            print(f"  Time Window [{start}:{end}], fixing [{start}:{step}]")
 
-        if not iter_feasible and verbose:
-            print(f"  WARNING: Iteration did not find optimal solution (continuing anyway)")
+        # Внутренний цикл по партиям генераторов
+        for gen_start_idx in range(0, num_generators, generators_per_iteration):
+            gen_end_idx = min(gen_start_idx + generators_per_iteration, num_generators)
+            current_gen_batch = set(generators_sorted[gen_start_idx:gen_end_idx])
 
-        # Фиксируем переменные, которые покидают окно
-        for var, time_idx_pos in binary_vars:
-            for idx in var:
-                if idx[time_idx_pos] in fix_periods and not var[idx].is_fixed():
-                    var[idx].fix()
+            # Вывод информации о партии (если декомпозиция включена)
+            if verbose and generators_per_iteration < num_generators:
+                print(f"    Generator batch [{gen_start_idx}:{gen_end_idx}] ({len(current_gen_batch)} gens)")
 
+            # 1. Установить домены переменных
+            _set_variable_domains(binary_vars, current_gen_batch, window_periods)
+
+            # 2. Решить подзадачу
+            result, solve_time, is_optimal = _solve_subproblem(model, solver_name, gap)
+
+            # 3. Вывод результата
+            if verbose:
+                status_str = "optimal" if is_optimal else str(result.solver.termination_condition)
+                indent = "    " if generators_per_iteration < num_generators else "  "
+                print(f"{indent}Solved in {solve_time:.2f}s, obj={value(model.obj):.2f}, status={status_str}")
+
+                if not is_optimal:
+                    print(f"{indent}WARNING: Iteration did not find optimal solution (continuing anyway)")
+
+            # 4. Зафиксировать переменные
+            _fix_variables(binary_vars, current_gen_batch, fix_periods)
+
+        # Выход после последнего окна
         if step == num_periods:
             break
 
