@@ -12,7 +12,8 @@
       "Bash(timeout 120 python:*)",
       "Bash(timeout 600 python:*)",
       "Bash(uv add:*)",
-      "Bash(conda install:*)"
+      "Bash(conda install:*)",
+      "Bash(timeout 1800 python:*)"
     ],
     "deny": [],
     "ask": []

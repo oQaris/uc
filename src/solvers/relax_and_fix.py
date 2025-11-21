@@ -256,7 +256,7 @@ def _verify_solution_feasibility(old_model, data, model_builder, solver_name, ga
 
 def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
                         verbose=False, verify_solution=True, data=None, model_builder=None,
-                        generators_per_iteration=None):
+                        generators_per_iteration=None, generator_sort_function=None):
     """
     Solve UC model using Relax-and-Fix approach with optional generator decomposition
 
@@ -284,6 +284,7 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
         data: Original problem data (required for generator sorting and verification)
         model_builder: Function to build model from data (required if verify_solution=True)
         generators_per_iteration: Number of generators per iteration (None = all at once)
+        generator_sort_function: Custom function(data) -> list to sort generators (None = by power desc)
 
     Returns:
         dict: Results with solve_time, objective, status, and optional verification info
@@ -305,7 +306,13 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
     # Получить отсортированный список всех генераторов
     if data is None:
         raise ValueError("'data' argument is required for generator sorting")
-    generators_sorted = _get_generators_sorted_by_power(data)
+
+    # Используем кастомную функцию сортировки или дефолтную (по мощности)
+    if generator_sort_function is not None:
+        generators_sorted = generator_sort_function(data)
+    else:
+        generators_sorted = _get_generators_sorted_by_power(data)
+
     num_generators = len(generators_sorted)
 
     # Если generators_per_iteration не задан, берем все генераторы сразу (классический R&F)
