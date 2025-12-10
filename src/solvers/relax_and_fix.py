@@ -3,7 +3,7 @@ Relax-and-Fix solver for Unit Commitment problem
 """
 import time
 
-from pyomo.environ import Binary, UnitInterval, Var, value, Constraint
+from pyomo.environ import Binary, UnitInterval, Var, value
 from pyomo.opt import SolverFactory, TerminationCondition
 
 
@@ -74,186 +74,6 @@ def _get_generators_sorted_by_power(data):
 
     # Возвращаем только имена
     return [g for g, _ in gen_power_pairs]
-
-
-def _modify_constraints_after_window(model, window_end, time_periods, buffer_periods=2, verbose=False):
-    """
-    ЗАНУЛИТЬ спрос и резервы для периодов ПОСЛЕ окна + буфер
-
-    Оставляем buffer_periods для граничных ограничений.
-
-    Args:
-        model: Pyomo ConcreteModel
-        window_end: последний период окна
-        time_periods: список всех временных периодов
-        buffer_periods: количество периодов буфера
-        verbose: вывод отладки
-
-    Returns:
-        int: количество модифицированных ограничений
-    """
-    modified_count = 0
-
-    for t in time_periods:
-        if t > window_end + buffer_periods:
-            # Деактивировать спрос
-            if hasattr(model, 'demand') and t in model.demand:
-                model.demand[t].deactivate()
-                modified_count += 1
-
-            # Деактивировать резервы
-            if hasattr(model, 'reserves') and t in model.reserves:
-                model.reserves[t].deactivate()
-                modified_count += 1
-
-    if verbose and modified_count > 0:
-        print(f"      Deactivated {modified_count} demand/reserve constraints after period {window_end + buffer_periods} (buffer={buffer_periods})")
-
-    return modified_count
-
-
-def _restore_constraints_for_window(model, window_start, window_end, time_periods, verbose=False):
-    """
-    ВОССТАНОВИТЬ спрос и резервы для периодов текущего окна
-
-    Args:
-        model: Pyomo ConcreteModel
-        window_start: начало окна
-        window_end: конец окна
-        time_periods: список всех временных периодов
-        verbose: вывод отладки
-
-    Returns:
-        int: количество восстановленных ограничений
-    """
-    restored_count = 0
-
-    for t in time_periods:
-        if window_start <= t <= window_end:
-            # Восстановить спрос
-            if hasattr(model, 'demand') and t in model.demand:
-                if not model.demand[t].active:
-                    model.demand[t].activate()
-                    restored_count += 1
-
-            # Восстановить резервы
-            if hasattr(model, 'reserves') and t in model.reserves:
-                if not model.reserves[t].active:
-                    model.reserves[t].activate()
-                    restored_count += 1
-
-    if verbose and restored_count > 0:
-        print(f"      Restored {restored_count} demand/reserve constraints for window [{window_start}:{window_end}]")
-
-    return restored_count
-
-
-def _freeze_all_variables_after_window(model, window_end, buffer_periods=2, verbose=False):
-    """
-    Зафиксировать ВСЕ переменные (бинарные и непрерывные) после окна на 0
-
-    Оставляем buffer_periods свободными для граничных ограничений (ramping).
-    Это допустимо, так как спрос занулён → генераторы могут быть выключены.
-
-    Args:
-        model: Pyomo ConcreteModel
-        window_end: последний период окна
-        buffer_periods: количество периодов после окна, которые остаются свободными
-        verbose: вывод отладки
-
-    Returns:
-        int: количество зафиксированных переменных
-    """
-    fixed_count = 0
-
-    # Список переменных термальных генераторов
-    var_names = ['ug', 'vg', 'wg', 'pg', 'rg', 'cg', 'dg', 'lg']
-
-    for var_name in var_names:
-        if not hasattr(model, var_name):
-            continue
-
-        var_obj = getattr(model, var_name)
-        if not isinstance(var_obj, Var):
-            continue
-
-        for idx in var_obj:
-            # Определить временной период
-            time_period = None
-            if isinstance(idx, tuple):
-                if len(idx) == 2:
-                    time_period = idx[1]  # (g, t)
-                elif len(idx) == 3:
-                    time_period = idx[2]  # (g, s, t) или (g, l, t)
-            elif isinstance(idx, (int, float)):
-                time_period = idx  # (t,)
-
-            # Фиксировать на 0 строго ПОСЛЕ окна + буфер
-            if time_period is not None and time_period > window_end + buffer_periods:
-                if not var_obj[idx].is_fixed():
-                    var_obj[idx].fix(0.0)
-                    fixed_count += 1
-
-    if verbose and fixed_count > 0:
-        print(f"      Fixed {fixed_count} variables after period {window_end + buffer_periods} to 0 (buffer={buffer_periods})")
-
-    return fixed_count
-
-
-def _unfreeze_all_variables_for_window(model, window_start, window_end, verbose=False):
-    """
-    Освободить переменные текущего окна (были зафиксированы на предыдущих итерациях)
-
-    Args:
-        model: Pyomo ConcreteModel
-        window_start: начало окна
-        window_end: конец окна
-        verbose: вывод отладки
-
-    Returns:
-        int: количество освобождённых переменных
-    """
-    unfrozen_count = 0
-
-    var_names = ['ug', 'vg', 'wg', 'pg', 'rg', 'cg', 'dg', 'lg']
-
-    for var_name in var_names:
-        if not hasattr(model, var_name):
-            continue
-
-        var_obj = getattr(model, var_name)
-        if not isinstance(var_obj, Var):
-            continue
-
-        for idx in var_obj:
-            # Определить временной период
-            time_period = None
-            if isinstance(idx, tuple):
-                if len(idx) == 2:
-                    time_period = idx[1]  # (g, t)
-                elif len(idx) == 3:
-                    time_period = idx[2]  # (g, s, t) или (g, l, t)
-            elif isinstance(idx, (int, float)):
-                time_period = idx  # (t,)
-
-            # Освободить переменные окна (но не те, что были зафиксированы _fix_variables)
-            if time_period is not None and window_start <= time_period <= window_end:
-                # Освобождаем только если переменная зафиксирована на 0
-                # (не трогаем переменные, зафиксированные в процессе R&F)
-                if var_obj[idx].is_fixed():
-                    try:
-                        current_value = value(var_obj[idx])
-                        # Освобождаем только если зафиксирована на 0
-                        if abs(current_value) < 1e-6:
-                            var_obj[idx].unfix()
-                            unfrozen_count += 1
-                    except:
-                        pass
-
-    if verbose and unfrozen_count > 0:
-        print(f"      Unfrozen {unfrozen_count} variables for window [{window_start}:{window_end}]")
-
-    return unfrozen_count
 
 
 def _set_variable_domains(binary_vars, binary_generators, binary_periods):
@@ -436,8 +256,7 @@ def _verify_solution_feasibility(old_model, data, model_builder, solver_name, ga
 
 def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
                         verbose=False, verify_solution=True, data=None, model_builder=None,
-                        generators_per_iteration=None, generator_sort_function=None,
-                        deactivate_future_constraints=True, buffer_periods=1):
+                        generators_per_iteration=None, generator_sort_function=None):
     """
     Solve UC model using Relax-and-Fix approach with optional generator decomposition
 
@@ -466,8 +285,6 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
         model_builder: Function to build model from data (required if verify_solution=True)
         generators_per_iteration: Number of generators per iteration (None = all at once)
         generator_sort_function: Custom function(data) -> list to sort generators (None = by power desc)
-        deactivate_future_constraints: Деактивировать demand/reserves после окна (экспериментально, default: True)
-        buffer_periods: Количество периодов буфера для граничных ограничений (default: 1)
 
     Returns:
         dict: Results with solve_time, objective, status, and optional verification info
@@ -509,25 +326,7 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
                   f"{generators_per_iteration} per iteration")
             print(f"    Generators sorted by power (top 5): {generators_sorted[:5]}")
 
-    # Основной цикл Relax-and-Fix с МОДИФИКАЦИЕЙ ОГРАНИЧЕНИЙ
-    #
-    # НОВАЯ СТРАТЕГИЯ (оптимизированная):
-    # - В пределах окна: переменные БИНАРНЫЕ, ограничения АКТИВНЫ
-    # - До окна: переменные ЗАФИКСИРОВАНЫ на решении
-    # - После окна:
-    #   * Ограничения спроса/резервов ДЕАКТИВИРОВАНЫ
-    #   * Переменные ЗАФИКСИРОВАНЫ на 0 (допустимо при нулевом спросе)
-    #
-    # При движении окна:
-    # - Восстанавливаем ограничения для текущего окна
-    # - Освобождаем переменные окна
-    # - В конце все ограничения восстановлены → допустимое решение
-    #
-    # ПРЕИМУЩЕСТВА:
-    # 1. Размер задачи уменьшается (зафиксированные переменные не участвуют в оптимизации)
-    # 2. Допустимость сохраняется (нулевой спрос → нулевая генерация допустима)
-    # 3. Ускорение в ~10-100 раз по сравнению с классическим R&F
-
+    # Основной цикл Relax-and-Fix (единая логика для всех стратегий)
     for start in range(0, num_periods, window_step):
         end = min(start + window_size, num_periods)
         step = min(start + window_step, num_periods)
@@ -542,19 +341,6 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
         if verbose:
             print(f"  Time Window [{start}:{end}], fixing [{start}:{step}]")
 
-        # ОПТИМИЗАЦИЯ: деактивация ограничений после окна
-        if deactivate_future_constraints:
-            # 1. Восстановить ограничения для периодов текущего окна
-            _restore_constraints_for_window(model, time_periods[start], time_periods[end - 1], time_periods, verbose=verbose)
-
-            # 2. Освободить переменные окна (были зафиксированы на 0 на предыдущей итерации)
-            _unfreeze_all_variables_for_window(model, time_periods[start], time_periods[end - 1], verbose=verbose)
-
-            # 3. Деактивировать demand/reserves ПОСЛЕ окна+буфер
-            # НЕ фиксируем переменные - оставляем их релаксированными для допустимости
-            if end < num_periods:
-                _modify_constraints_after_window(model, time_periods[end - 1], time_periods, buffer_periods=buffer_periods, verbose=verbose)
-
         # Внутренний цикл по партиям генераторов
         for gen_start_idx in range(0, num_generators, generators_per_iteration):
             gen_end_idx = min(gen_start_idx + generators_per_iteration, num_generators)
@@ -564,10 +350,10 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
             if verbose and generators_per_iteration < num_generators:
                 print(f"    Generator batch [{gen_start_idx}:{gen_end_idx}] ({len(current_gen_batch)} gens)")
 
-            # 1. Установить домены переменных для окна
+            # 1. Установить домены переменных
             _set_variable_domains(binary_vars, current_gen_batch, window_periods)
 
-            # 2. Решить подзадачу (размер уменьшен - переменные после окна зафиксированы!)
+            # 2. Решить подзадачу
             result, solve_time, is_optimal = _solve_subproblem(model, solver_name, gap)
 
             # 3. Вывод результата
@@ -579,26 +365,12 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
                 if not is_optimal:
                     print(f"{indent}WARNING: Iteration did not find optimal solution (continuing anyway)")
 
-            # 4. Зафиксировать переменные решения в окне
+            # 4. Зафиксировать переменные
             _fix_variables(binary_vars, current_gen_batch, fix_periods)
 
         # Выход после последнего окна
         if step == num_periods:
             break
-
-    # В конце: восстановить ВСЕ ограничения (только если была деактивация)
-    if deactivate_future_constraints:
-        if verbose:
-            print("\n  Restoring all constraints for final solution verification...")
-
-        for t in time_periods:
-            if hasattr(model, 'demand') and t in model.demand:
-                if not model.demand[t].active:
-                    model.demand[t].activate()
-
-            if hasattr(model, 'reserves') and t in model.reserves:
-                if not model.reserves[t].active:
-                    model.reserves[t].activate()
 
     solve_time = time.time() - start_time
 
