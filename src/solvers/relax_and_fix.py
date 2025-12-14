@@ -75,245 +75,6 @@ def _get_generators_sorted_by_power(data):
     # Возвращаем только имена
     return [g for g, _ in gen_power_pairs]
 
-#todo подумать о том, чтобы делать ограничения индивидуально по генераторам
-# Для ограничения tear down зафиксировать переменную включения генератора
-
-# Проходить назад и разфиксировать переменные wg, чтобы можно было в текущий момент его выключить (или может ug чтоб сбросить в 0)
-# Вместо горизонта вперёд, расфиксировать назад переменные по генераторам
-
-
-
-def _calculate_lookahead_window_size(data, strategy='percentile75'):
-    """
-    Рассчитать адаптивный размер окна релаксации (lookahead) на основе параметров генераторов
-
-    Использует статистический подход вместо максимума, чтобы избежать
-    слишком больших окон из-за единичных генераторов с экстремальными параметрами.
-
-    Args:
-        data: dict - исходные данные задачи с ключом 'thermal_generators'
-        strategy: str - стратегия расчета:
-            'percentile75' - 75-й перцентиль (по умолчанию, хороший баланс)
-            'percentile90' - 90-й перцентиль (более консервативный)
-            'median' - медиана (агрессивная оптимизация)
-            'max' - максимум (классический подход, самый консервативный)
-
-    Returns:
-        int: Размер окна релаксации в периодах
-    """
-    if data is None:
-        raise ValueError("data is required for lookahead calculation")
-
-    thermal_gens = data.get("thermal_generators", {})
-
-    uptime_list = []
-    downtime_list = []
-    startup_lag_list = []
-
-    for g, gen_data in thermal_gens.items():
-        # Минимальное время работы
-        uptime = gen_data.get("time_up_minimum", 0)
-        uptime_list.append(uptime)
-
-        # Минимальное время простоя
-        downtime = gen_data.get("time_down_minimum", 0)
-        downtime_list.append(downtime)
-
-        # Максимальный lag из всех startup категорий для данного генератора
-        startup_categories = gen_data.get("startup", [])
-        if startup_categories:
-            max_lag_for_gen = max(sc.get("lag", 0) for sc in startup_categories)
-            startup_lag_list.append(max_lag_for_gen)
-
-    # Объединяем все параметры
-    all_params = uptime_list + downtime_list + startup_lag_list
-
-    if not all_params:
-        return 6  # Разумное значение по умолчанию
-
-    # Применяем выбранную стратегию
-    all_params_sorted = sorted(all_params)
-    n = len(all_params_sorted)
-
-    if strategy == 'max':
-        lookahead_size = all_params_sorted[-1]
-    elif strategy == 'median':
-        lookahead_size = all_params_sorted[n // 2]
-    elif strategy == 'percentile75':
-        idx = int(n * 0.75)
-        lookahead_size = all_params_sorted[min(idx, n - 1)]
-    elif strategy == 'percentile90':
-        idx = int(n * 0.90)
-        lookahead_size = all_params_sorted[min(idx, n - 1)]
-    elif strategy == 'zero':
-        idx = int(n * 0.3)
-        lookahead_size = all_params_sorted[min(idx, n - 1)]
-    else:
-        raise ValueError(f"Unknown strategy: {strategy}")
-
-    # Гарантируем минимум 4 периода (для учета ramping constraints)
-    lookahead_size = max(lookahead_size, 4)
-
-    return lookahead_size
-
-
-def _manage_constraints_for_window(model, active_periods, lookahead_periods, verbose=False):
-    """
-    Активировать/деактивировать ограничения в зависимости от активного горизонта
-
-    Ограничения активны для периодов в active_periods + lookahead_periods.
-    Ограничения деактивируются для всех остальных периодов.
-
-    Args:
-        model: Pyomo ConcreteModel
-        active_periods: set - периоды в текущем окне (бинарные + прошлые зафиксированные)
-        lookahead_periods: set - периоды в окне релаксации (lookahead)
-        verbose: bool - выводить информацию о деактивации
-
-    Note:
-        ВАЖНО: Системные ограничения (demand, reserves) также деактивируются для дальних
-        будущих периодов, т.к. переменные этих периодов зафиксированы на 0.
-        Начальные условия (t0 constraints) никогда не деактивируются.
-    """
-    # Все активные периоды (текущие + lookahead)
-    all_active = active_periods.union(lookahead_periods)
-
-    # Список ограничений с индексом времени, которые нужно управлять
-    # Формат: (constraint_object, time_index_position)
-    time_indexed_constraints = [
-        # СИСТЕМНЫЕ ограничения (t) - время на позиции 0
-        (model.demand, 0),
-        (model.reserves, 0),
-        # Генераторные ограничения (g, t) - время на позиции 1
-        (model.mustrun, 1),
-        (model.logical, 1),
-        (model.uptime, 1),
-        (model.downtime, 1),
-        (model.startup_select, 1),
-        (model.gen_limit1, 1),
-        (model.gen_limit2, 1),
-        (model.ramp_up, 1),
-        (model.ramp_down, 1),
-        (model.power_select, 1),  # PWL
-        (model.cost_select, 1),  # PWL
-        (model.on_select, 1),  # PWL
-    ]
-
-    # Startup allowed имеет индексы (g, s, t) - время на позиции 2
-    time_indexed_constraints.append((model.startup_allowed, 2))
-
-    deactivated_count = 0
-    activated_count = 0
-
-    for constraint, time_idx_pos in time_indexed_constraints:
-        for idx in constraint:
-            # Для ограничений с одним индексом (demand, reserves) idx - это просто число
-            # Для ограничений с несколькими индексами - это кортеж
-            if isinstance(idx, tuple):
-                time_period = idx[time_idx_pos]
-            else:
-                time_period = idx
-
-            # Активировать если период в активном окне
-            if time_period in all_active:
-                if not constraint[idx].active:
-                    constraint[idx].activate()
-                    activated_count += 1
-            else:
-                # Деактивировать если период вне активного окна
-                if constraint[idx].active:
-                    constraint[idx].deactivate()
-                    deactivated_count += 1
-
-    if verbose and (deactivated_count > 0 or activated_count > 0):
-        print(f"    Constraint management: activated {activated_count}, deactivated {deactivated_count}")
-
-
-def _fix_future_variables_to_zero(model, future_periods, binary_vars, verbose=False):
-    """
-    Зафиксировать переменные для дальних будущих периодов на 0
-
-    Это консервативная стратегия: все генераторы считаются выключенными
-    в дальних будущих периодах, что гарантирует допустимость решения.
-
-    Args:
-        model: Pyomo ConcreteModel
-        future_periods: set - периоды вне горизонта релаксации
-        binary_vars: list - список (var, time_idx_pos) бинарных переменных
-        verbose: bool - выводить информацию
-
-    Note:
-        Также фиксирует непрерывные переменные (pg, rg, cg) на 0 для этих периодов.
-    """
-    fixed_count = 0
-
-    # Фиксируем бинарные переменные (ug, vg, wg, dg)
-    for var, time_idx_pos in binary_vars:
-        for idx in var:
-            time_period = idx[time_idx_pos]
-            if time_period in future_periods and not var[idx].is_fixed():
-                var[idx].fix(0)
-                fixed_count += 1
-
-    # Также фиксируем непрерывные переменные генераторов на 0
-    continuous_vars_to_fix = [
-        (model.pg, 1),  # Power above minimum (g, t)
-        (model.rg, 1),  # Reserves (g, t)
-        (model.cg, 1),  # Cost (g, t)
-        (model.lg, 2),  # PWL weights (g, l, t) - время на позиции 2
-    ]
-
-    for var, time_idx_pos in continuous_vars_to_fix:
-        for idx in var:
-            time_period = idx[time_idx_pos]
-            if time_period in future_periods and not var[idx].is_fixed():
-                var[idx].fix(0)
-                fixed_count += 1
-
-    if verbose and fixed_count > 0:
-        print(f"    Fixed {fixed_count} future variables to 0 for {len(future_periods)} periods")
-
-
-def _unfix_variables_in_window(model, window_periods, binary_vars, verbose=False):
-    """
-    Освободить переменные в текущем окне (отменить фиксацию)
-
-    Используется при движении окна вперед для активации новых периодов.
-
-    Args:
-        model: Pyomo ConcreteModel
-        window_periods: set - периоды, которые нужно освободить
-        binary_vars: list - список (var, time_idx_pos) бинарных переменных
-        verbose: bool - выводить информацию
-    """
-    unfixed_count = 0
-
-    # Освобождаем бинарные переменные
-    for var, time_idx_pos in binary_vars:
-        for idx in var:
-            time_period = idx[time_idx_pos]
-            if time_period in window_periods and var[idx].is_fixed():
-                var[idx].unfix()
-                unfixed_count += 1
-
-    # Освобождаем непрерывные переменные
-    continuous_vars = [
-        (model.pg, 1),
-        (model.rg, 1),
-        (model.cg, 1),
-        (model.lg, 2),
-    ]
-
-    for var, time_idx_pos in continuous_vars:
-        for idx in var:
-            time_period = idx[time_idx_pos]
-            if time_period in window_periods and var[idx].is_fixed():
-                var[idx].unfix()
-                unfixed_count += 1
-
-    if verbose and unfixed_count > 0:
-        print(f"    Unfixed {unfixed_count} variables in window")
-
 
 def _set_variable_domains(binary_vars, binary_generators, binary_periods):
     """
@@ -495,8 +256,7 @@ def _verify_solution_feasibility(old_model, data, model_builder, solver_name, ga
 
 def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
                         verbose=False, verify_solution=True, data=None, model_builder=None,
-                        generators_per_iteration=None, generator_sort_function=None,
-                        use_limited_horizon=True, lookahead_strategy='percentile75'):
+                        generators_per_iteration=None, generator_sort_function=None):
     """
     Solve UC model using Relax-and-Fix approach with optional generator decomposition
 
@@ -506,13 +266,9 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
        - Если generators_per_iteration=None: все генераторы сразу (классический R&F)
        - Генераторы сортируются по максимальной мощности (убывание)
     3. Для каждого временного окна:
-       - [NEW] Если use_limited_horizon=True:
-         * Определить горизонт релаксации (lookahead window)
-         * Деактивировать ограничения для дальних будущих периодов
-         * Зафиксировать переменные дальних будущих периодов на 0
        - Для каждой партии генераторов:
          - Переменные текущей партии в текущем окне - бинарные
-         - Переменные в окне релаксации - релаксированы [0,1]
+         - Остальные переменные - релаксированы [0,1]
          - Решить подзадачу
          - Зафиксировать переменные партии в окне фиксации
     4. Двигаем окно дальше
@@ -529,12 +285,6 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
         model_builder: Function to build model from data (required if verify_solution=True)
         generators_per_iteration: Number of generators per iteration (None = all at once)
         generator_sort_function: Custom function(data) -> list to sort generators (None = by power desc)
-        use_limited_horizon: Use limited lookahead window (default: True)
-        lookahead_strategy: Strategy for calculating lookahead window size (default: 'percentile75'):
-            'percentile75' - 75-й перцентиль (рекомендуется, хороший баланс)
-            'percentile90' - 90-й перцентиль (более консервативный)
-            'median' - медиана (агрессивная оптимизация, может дать недопустимое решение)
-            'max' - максимум (самый консервативный, может быть слишком большим)
 
     Returns:
         dict: Results with solve_time, objective, status, and optional verification info
@@ -576,22 +326,6 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
                   f"{generators_per_iteration} per iteration")
             print(f"    Generators sorted by power (top 5): {generators_sorted[:5]}")
 
-    # Рассчитать размер окна релаксации (lookahead)
-    if use_limited_horizon:
-        # Адаптивный расчет на основе параметров генераторов
-        adaptive_lookahead = _calculate_lookahead_window_size(data, strategy=lookahead_strategy)
-
-        # Добавляем +1 для учета ограничений типа wg(t+1)
-        lookahead_size = adaptive_lookahead + 1
-
-        if verbose:
-            print(f"  Limited horizon mode: lookahead window = {lookahead_size} periods")
-            print(f"    (strategy: {lookahead_strategy}, base: {adaptive_lookahead}, +1 for forward-looking)")
-    else:
-        lookahead_size = None
-        if verbose:
-            print(f"  Full horizon mode: all future periods relaxed")
-
     # Основной цикл Relax-and-Fix (единая логика для всех стратегий)
     for start in range(0, num_periods, window_step):
         end = min(start + window_size, num_periods)
@@ -604,38 +338,8 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
         window_periods = set(time_periods[start:end])
         fix_periods = set(time_periods[start:step])
 
-        # Определить горизонт релаксации и будущие периоды
-        if use_limited_horizon and lookahead_size is not None:
-            # Окно релаксации начинается после текущего бинарного окна
-            lookahead_start = step
-            lookahead_end = min(step + lookahead_size, num_periods)
-            lookahead_periods = set(time_periods[lookahead_start:lookahead_end])
-
-            # Дальние будущие периоды (за пределами горизонта)
-            future_periods = set(time_periods[lookahead_end:])
-
-            # Все активные периоды (прошлые зафиксированные + текущее окно + lookahead)
-            active_periods = set(time_periods[0:start]).union(window_periods)
-
-            if verbose:
-                print(f"  Time Window [{start}:{end}], fixing [{start}:{step}], "
-                      f"lookahead [{lookahead_start}:{lookahead_end}], future [{lookahead_end}:{num_periods}]")
-
-            # Освободить переменные в окне релаксации (если они были зафиксированы на 0)
-            if lookahead_periods:
-                _unfix_variables_in_window(model, lookahead_periods, binary_vars, verbose=verbose)
-
-            # Зафиксировать переменные дальних будущих периодов на 0
-            if future_periods:
-                _fix_future_variables_to_zero(model, future_periods, binary_vars, verbose=verbose)
-
-            # Управлять ограничениями
-            _manage_constraints_for_window(model, active_periods, lookahead_periods, verbose=verbose)
-        else:
-            # Полный горизонт (классический режим)
-            lookahead_periods = set()
-            if verbose:
-                print(f"  Time Window [{start}:{end}], fixing [{start}:{step}]")
+        if verbose:
+            print(f"  Time Window [{start}:{end}], fixing [{start}:{step}]")
 
         # Внутренний цикл по партиям генераторов
         for gen_start_idx in range(0, num_generators, generators_per_iteration):
@@ -647,14 +351,7 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
                 print(f"    Generator batch [{gen_start_idx}:{gen_end_idx}] ({len(current_gen_batch)} gens)")
 
             # 1. Установить домены переменных
-            # В режиме limited horizon: бинарные в window_periods, релаксированные в lookahead_periods
-            if use_limited_horizon:
-                binary_periods = window_periods
-                # Переменные в lookahead будут релаксированы (не в binary_periods)
-            else:
-                binary_periods = window_periods
-
-            _set_variable_domains(binary_vars, current_gen_batch, binary_periods)
+            _set_variable_domains(binary_vars, current_gen_batch, window_periods)
 
             # 2. Решить подзадачу
             result, solve_time, is_optimal = _solve_subproblem(model, solver_name, gap)
