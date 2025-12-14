@@ -56,7 +56,7 @@ def solve_direct(data, solver_name="cbc", gap=0.01, verbose=False):
     }
 
 
-def solve_rf(data, window_size, window_step, solver_name="cbc", gap=0.01, verbose=False, use_limited_horizon=False):
+def solve_rf(data, window_size, window_step, solver_name="cbc", gap=0.01, verbose=False, use_limited_horizon=False, lookahead_strategy='percentile75'):
     """Solve UC problem with Relax-and-Fix"""
     print("\n" + "=" * 60)
     print(f"RELAX-AND-FIX {solver_name.upper()} (window={window_size}, step={window_step})")
@@ -71,7 +71,8 @@ def solve_rf(data, window_size, window_step, solver_name="cbc", gap=0.01, verbos
         model, window_size, window_step,
         solver_name=solver_name, gap=gap, verbose=verbose,
         data=data, model_builder=build_uc_model,
-        use_limited_horizon=use_limited_horizon
+        use_limited_horizon=use_limited_horizon,
+        lookahead_strategy=lookahead_strategy
     )
 
     print(f"Solve time: {result['solve_time']:.2f}s")
@@ -114,7 +115,7 @@ def main():
 
     # Relax-and-Fix with different window sizes
     # rf_8_8 = solve_rf(data, window_size=8, window_step=8, solver_name=SOLVER, gap=GAP, verbose=VERBOSE)
-    rf_8_6 = solve_rf(data, window_size=8, window_step=8, solver_name=SOLVER, gap=GAP, verbose=VERBOSE, use_limited_horizon=True)
+    rf_8_6 = solve_rf(data, window_size=8, window_step=8, solver_name=SOLVER, gap=GAP, verbose=VERBOSE, use_limited_horizon=True, lookahead_strategy="zero")
     # rf_6_4 = solve_rf(data, window_size=8, window_step=8, solver_name=SOLVER, gap=GAP, verbose=VERBOSE, use_limited_horizon=True, lookahead_strategy="percentile90")
     # rf_6_4 = solve_rf(data, window_size=6, window_step=4, solver_name=SOLVER, gap=GAP, verbose=VERBOSE)
     # rf_12_10 = solve_rf(data, window_size=12, window_step=10, solver_name=SOLVER, gap=GAP, verbose=VERBOSE)
