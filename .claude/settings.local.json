@@ -13,7 +13,9 @@
       "Bash(timeout 600 python:*)",
       "Bash(uv add:*)",
       "Bash(conda install:*)",
-      "Bash(timeout 1800 python:*)"
+      "Bash(timeout 1800 python:*)",
+      "Bash(timeout 1200 python test_backward_unfixing.py:*)",
+      "Bash(timeout 300 python:*)"
     ],
     "deny": [],
     "ask": []

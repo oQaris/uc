@@ -7,6 +7,11 @@ import json
 from pyomo.environ import ConcreteModel, Var, Objective, Constraint
 from pyomo.environ import NonNegativeReals, Binary, UnitInterval
 
+# Замер скорости на сервере
+# Замер отклонения целевой от решателя
+# Запустить мой алгоритм, замерить время, запустить решатель с данным временем
+# Посмотреть лекцию
+# Сделать презентацию
 
 def build_uc_model(data):
     """
@@ -141,10 +146,11 @@ def build_uc_model(data):
 
             UT = min(gen["time_up_minimum"], data["time_periods"])
             if t >= UT:
-                m.uptime[g, t] = sum(m.vg[g, t] for t in range(t - UT + 1, t + 1)) <= m.ug[g, t]
+                m.uptime[g, t] = sum(m.vg[g, i] for i in range(t - UT + 1, t + 1)) <= m.ug[g, t]
             DT = min(gen["time_down_minimum"], data["time_periods"])
             if t >= DT:
-                m.downtime[g, t] = sum(m.wg[g, t] for t in range(t - DT + 1, t + 1)) <= 1 - m.ug[g, t]
+                m.downtime[g, t] = sum(m.wg[g, i] for i in range(t - DT + 1, t + 1)) <= 1 - m.ug[g, t]
+
             m.startup_select[g, t] = m.vg[g, t] == sum(m.dg[g, s, t] for s, _ in enumerate(gen["startup"]))
 
             m.gen_limit1[g, t] = m.pg[g, t] + m.rg[g, t] <= (
@@ -188,7 +194,7 @@ def build_uc_model(data):
 
 if __name__ == "__main__":
     print("loading data")
-    data = json.load(open(r"C:\Users\oQaris\Desktop\Git\uc\examples\ca\2014-09-01_reserves_1.json"))
+    data = json.load(open(r"C:\Users\oQaris\Desktop\Git\uc\examples\rts_gmlc\2020-01-27.json"))
 
     print("building model")
     m = build_uc_model(data)
@@ -197,7 +203,7 @@ if __name__ == "__main__":
 
     from pyomo.opt import SolverFactory
 
-    cbc = SolverFactory("appsi_highs")
+    solver = SolverFactory("appsi_highs")
 
     print("solving")
-    cbc.solve(m, options={"ratioGap": 0.01}, tee=True)
+    solver.solve(m, options={"ratioGap": 0.01}, tee=True)

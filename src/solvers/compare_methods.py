@@ -56,7 +56,8 @@ def solve_direct(data, solver_name="cbc", gap=0.01, verbose=False):
     }
 
 
-def solve_rf(data, window_size, window_step, solver_name="cbc", gap=0.01, verbose=False, use_limited_horizon=False, lookahead_strategy='percentile75'):
+def solve_rf(data, window_size, window_step, solver_name="cbc", gap=0.01, verbose=False,
+             use_limited_horizon=True):
     """Solve UC problem with Relax-and-Fix"""
     print("\n" + "=" * 60)
     print(f"RELAX-AND-FIX {solver_name.upper()} (window={window_size}, step={window_step})")
@@ -71,15 +72,14 @@ def solve_rf(data, window_size, window_step, solver_name="cbc", gap=0.01, verbos
         model, window_size, window_step,
         solver_name=solver_name, gap=gap, verbose=verbose,
         data=data, model_builder=build_uc_model,
-        use_limited_horizon=use_limited_horizon,
-        lookahead_strategy=lookahead_strategy
+        use_limited_horizon=use_limited_horizon
     )
 
     print(f"Solve time: {result['solve_time']:.2f}s")
     print(f"Objective: {result['objective']:.2f}")
 
     if 'feasible' in result:
-        feasible_str = "✓ FEASIBLE" if result['feasible'] else "✗ INFEASIBLE"
+        feasible_str = "FEASIBLE" if result['feasible'] else "INFEASIBLE"
         print(f"Verification: {feasible_str}")
         if result['feasible']:
             print(f"  Verified objective: {result['verified_objective']:.2f}")
@@ -99,7 +99,7 @@ def main():
     # === CONFIGURATION ===
     SOLVER = "appsi_highs"  # Options: "cbc", "appsi_highs"
     GAP = 0.001
-    DATA_FILE = r"..\..\examples\rts_gmlc\2020-07-06.json"
+    DATA_FILE = r"C:\Users\oQaris\Desktop\Git\uc\examples\ferc\2015-04-01_hw.json"
     VERBOSE = True
     # ====================
 
@@ -110,15 +110,17 @@ def main():
     print(f"Instance: {data['time_periods']} periods, {len(data['thermal_generators'])} thermal gens")
     print(f"Solver: {SOLVER}, Gap: {GAP}")
 
-    # Direct solve
-    direct = solve_direct(data, solver_name=SOLVER, gap=GAP, verbose=VERBOSE)
-
-    # Relax-and-Fix with different window sizes
-    # rf_8_8 = solve_rf(data, window_size=8, window_step=8, solver_name=SOLVER, gap=GAP, verbose=VERBOSE)
-    rf_8_6 = solve_rf(data, window_size=8, window_step=8, solver_name=SOLVER, gap=GAP, verbose=VERBOSE, use_limited_horizon=True, lookahead_strategy="zero")
-    # rf_6_4 = solve_rf(data, window_size=8, window_step=8, solver_name=SOLVER, gap=GAP, verbose=VERBOSE, use_limited_horizon=True, lookahead_strategy="percentile90")
-    # rf_6_4 = solve_rf(data, window_size=6, window_step=4, solver_name=SOLVER, gap=GAP, verbose=VERBOSE)
-    # rf_12_10 = solve_rf(data, window_size=12, window_step=10, solver_name=SOLVER, gap=GAP, verbose=VERBOSE)
+    results = {
+        "direct": solve_direct(data, solver_name=SOLVER, gap=GAP, verbose=VERBOSE),
+        "adaptive_8-8": solve_rf(data, window_size=8, window_step=8, solver_name=SOLVER, gap=GAP, verbose=VERBOSE,
+                                 use_limited_horizon=True),
+        "adaptive_16-16": solve_rf(data, window_size=16, window_step=16, solver_name=SOLVER, gap=GAP,
+                                   verbose=VERBOSE, use_limited_horizon=True),
+        "adaptive_32-12": solve_rf(data, window_size=32, window_step=12, solver_name=SOLVER, gap=GAP,
+                                   verbose=VERBOSE, use_limited_horizon=True),
+    }
+    base_time = results['direct']['total_time']
+    base_obj = results['direct']['objective']
 
     # Summary
     print("\n" + "=" * 60)
@@ -127,19 +129,14 @@ def main():
     print(f"\n{'Method':<30} {'Time (s)':<12} {'Objective':<15} {'Gap (%)':<10} {'Speedup':<10}")
     print("-" * 80)
 
-    def print_row(name, res, base_time, base_obj):
+    def print_row(name_, res):
         gap = 100 * (res['objective'] - base_obj) / base_obj
         speedup = base_time / res['total_time']
-        print(f"{name:<30} {res['total_time']:<12.2f} {res['objective']:<15.2f} {gap:<10.3f} {speedup:<10.2f}x")
+        print(f"{name_:<30} {res['total_time']:<12.2f} {res['objective']:<15.2f} {gap:<10.3f} {speedup:<10.2f}x")
 
-    print_row("Direct", direct, direct['total_time'], direct['objective'])
-    # print_row("R&F (no_horizon)", rf_8_8, direct['total_time'], direct['objective'])
-    print_row("R&F (zero)", rf_8_6, direct['total_time'], direct['objective'])
-    # print_row("R&F (percentile75)", rf_6_4, direct['total_time'], direct['objective'])
-    # print_row("R&F (window=12, step=10)", rf_12_10, direct['total_time'], direct['objective'])
+    for name, solution in results.items():
+        print_row(name, solution)
 
-
-#
 
 if __name__ == "__main__":
     main()

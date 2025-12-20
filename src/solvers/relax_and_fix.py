@@ -75,185 +75,248 @@ def _get_generators_sorted_by_power(data):
     # Возвращаем только имена
     return [g for g, _ in gen_power_pairs]
 
-#todo подумать о том, чтобы делать ограничения индивидуально по генераторам
-# Для ограничения tear down зафиксировать переменную включения генератора
-
-# Проходить назад и разфиксировать переменные wg, чтобы можно было в текущий момент его выключить (или может ug чтоб сбросить в 0)
-# Вместо горизонта вперёд, расфиксировать назад переменные по генераторам
-
-
-
-def _calculate_lookahead_window_size(data, strategy='percentile75'):
+def _calculate_generator_specific_lookahead(model, boundary_period, fix_end_period, data, num_periods):
     """
-    Рассчитать адаптивный размер окна релаксации (lookahead) на основе параметров генераторов
+    Определить индивидуальный lookahead для каждого генератора на основе состояния на границе
 
-    Использует статистический подход вместо максимума, чтобы избежать
-    слишком больших окон из-за единичных генераторов с экстремальными параметрами.
+    Анализирует последний зафиксированный период (boundary_period - 1) и определяет,
+    до какого периода нужно видеть ограничения для поддержки консистентности с min_uptime/min_downtime.
 
     Args:
+        model: Pyomo ConcreteModel - модель с зафиксированными переменными до boundary_period
+        boundary_period: int - первый период текущего окна (граница между зафиксированным и новым)
+        fix_end_period: int - конец окна фиксации текущей итерации (step)
         data: dict - исходные данные задачи с ключом 'thermal_generators'
-        strategy: str - стратегия расчета:
-            'percentile75' - 75-й перцентиль (по умолчанию, хороший баланс)
-            'percentile90' - 90-й перцентиль (более консервативный)
-            'median' - медиана (агрессивная оптимизация)
-            'max' - максимум (классический подход, самый консервативный)
+        num_periods: int - общее количество периодов
 
     Returns:
-        int: Размер окна релаксации в периодах
+        dict: {generator_name: required_end_period} для ВСЕХ генераторов
+              Минимальный lookahead = fix_end_period + 1 (для ramping constraints)
     """
-    if data is None:
-        raise ValueError("data is required for lookahead calculation")
-
     thermal_gens = data.get("thermal_generators", {})
+    generator_lookahead = {}
 
-    uptime_list = []
-    downtime_list = []
-    startup_lag_list = []
+    # Минимальный lookahead для всех = +1 период ПОСЛЕ фиксации (для ramping constraints)
+    min_lookahead_end = min(fix_end_period + 1, num_periods)
+
+    # Определить оставшийся горизонт
+    remaining_horizon = num_periods - fix_end_period
+
+    # Вычислить максимальное ограничение среди всех генераторов
+    # Это нужно для определения, когда использовать полный горизонт
+    max_constraint_global = 0
+    for gen_data in thermal_gens.values():
+        min_uptime = gen_data.get("time_up_minimum", 0)
+        min_downtime = gen_data.get("time_down_minimum", 0)
+        max_constraint_global = max(max_constraint_global, min_uptime, min_downtime)
+
+    # Если оставшийся горизонт меньше или равен максимальному ограничению,
+    # используем полный горизонт для всех генераторов
+    # Это гарантирует, что все генераторы видят достаточно вперед для своих ограничений
+    use_full_horizon = remaining_horizon <= max_constraint_global
 
     for g, gen_data in thermal_gens.items():
-        # Минимальное время работы
-        uptime = gen_data.get("time_up_minimum", 0)
-        uptime_list.append(uptime)
+        min_uptime = gen_data.get("time_up_minimum", 0)
+        min_downtime = gen_data.get("time_down_minimum", 0)
 
-        # Минимальное время простоя
-        downtime = gen_data.get("time_down_minimum", 0)
-        downtime_list.append(downtime)
+        if use_full_horizon:
+            # Близко к концу горизонта - используем полный lookahead для всех
+            generator_lookahead[g] = num_periods
+        else:
+            # Консервативный lookahead: генератор может включиться/выключиться в последний период окна фиксации
+            # В этом случае нужен lookahead до fix_end_period + max(min_uptime, min_downtime)
+            max_constraint = max(min_uptime, min_downtime)
+            constraint_based = min(fix_end_period + max_constraint, num_periods) if max_constraint > 0 else min_lookahead_end
 
-        # Максимальный lag из всех startup категорий для данного генератора
-        startup_categories = gen_data.get("startup", [])
-        if startup_categories:
-            max_lag_for_gen = max(sc.get("lag", 0) for sc in startup_categories)
-            startup_lag_list.append(max_lag_for_gen)
+            # Минимальный lookahead: хотя бы половина оставшегося горизонта
+            # Это гарантирует, что генераторы с малыми ограничениями все равно видят достаточно вперед
+            min_reasonable_lookahead = min(fix_end_period + remaining_horizon // 2, num_periods)
 
-    # Объединяем все параметры
-    all_params = uptime_list + downtime_list + startup_lag_list
+            generator_lookahead[g] = max(constraint_based, min_reasonable_lookahead)
 
-    if not all_params:
-        return 6  # Разумное значение по умолчанию
+        # Получить состояние на границе (последний зафиксированный период)
+        if boundary_period == 0:
+            # Самое первое окно - используем начальное состояние
+            initial_status = gen_data.get("initial_status", 0)
+            ug_at_boundary = 1 if initial_status > 0 else 0
+        else:
+            try:
+                ug_at_boundary = round(value(model.ug[g, boundary_period - 1]))
+            except:
+                ug_at_boundary = 0
 
-    # Применяем выбранную стратегию
-    all_params_sorted = sorted(all_params)
-    n = len(all_params_sorted)
+        # Случай 1: Генератор работает на границе - проверить min_uptime
+        if ug_at_boundary == 1 and min_uptime > 0:
+            # Посчитать сколько периодов подряд он уже работает к моменту boundary
+            uptime_so_far = 1
+            for t in range(boundary_period - 2, -1, -1):
+                try:
+                    ug_value = round(value(model.ug[g, t]))
+                    if ug_value == 1:
+                        uptime_so_far += 1
+                    else:
+                        break
+                except:
+                    break
 
-    if strategy == 'max':
-        lookahead_size = all_params_sorted[-1]
-    elif strategy == 'median':
-        lookahead_size = all_params_sorted[n // 2]
-    elif strategy == 'percentile75':
-        idx = int(n * 0.75)
-        lookahead_size = all_params_sorted[min(idx, n - 1)]
-    elif strategy == 'percentile90':
-        idx = int(n * 0.90)
-        lookahead_size = all_params_sorted[min(idx, n - 1)]
-    elif strategy == 'zero':
-        idx = int(n * 0.3)
-        lookahead_size = all_params_sorted[min(idx, n - 1)]
-    else:
-        raise ValueError(f"Unknown strategy: {strategy}")
+            # Если не завершил min_uptime, нужен extended lookahead
+            if uptime_so_far < min_uptime:
+                remaining = min_uptime - uptime_so_far
+                required_end = min(fix_end_period + remaining, num_periods)
+                generator_lookahead[g] = max(generator_lookahead[g], required_end)
 
-    # Гарантируем минимум 4 периода (для учета ramping constraints)
-    lookahead_size = max(lookahead_size, 4)
+        # Случай 2: Генератор выключен на границе - проверить min_downtime
+        elif ug_at_boundary == 0 and min_downtime > 0:
+            # Посчитать сколько периодов подряд он уже не работает
+            downtime_so_far = 1
+            for t in range(boundary_period - 2, -1, -1):
+                try:
+                    ug_value = round(value(model.ug[g, t]))
+                    if ug_value == 0:
+                        downtime_so_far += 1
+                    else:
+                        break
+                except:
+                    break
 
-    return lookahead_size
+            # Если не завершил min_downtime, нужен extended lookahead
+            if downtime_so_far < min_downtime:
+                remaining = min_downtime - downtime_so_far
+                required_end = min(fix_end_period + remaining, num_periods)
+                generator_lookahead[g] = max(generator_lookahead[g], required_end)
+
+    return generator_lookahead
 
 
-def _manage_constraints_for_window(model, active_periods, lookahead_periods, verbose=False):
+def _manage_constraints_for_window(model, generator_lookahead, num_periods, verbose=False):
     """
-    Активировать/деактивировать ограничения в зависимости от активного горизонта
+    Активировать/деактивировать ограничения с учетом индивидуального lookahead КАЖДОГО генератора
 
-    Ограничения активны для периодов в active_periods + lookahead_periods.
-    Ограничения деактивируются для всех остальных периодов.
+    Системные ограничения (demand, reserves) активны до max(generator_lookahead).
+    Генераторные ограничения активны индивидуально до generator_lookahead[g].
 
     Args:
         model: Pyomo ConcreteModel
-        active_periods: set - периоды в текущем окне (бинарные + прошлые зафиксированные)
-        lookahead_periods: set - периоды в окне релаксации (lookahead)
+        generator_lookahead: dict - {generator_name: required_end_period} для ВСЕХ генераторов
+        num_periods: int - общее количество периодов
         verbose: bool - выводить информацию о деактивации
-
-    Note:
-        ВАЖНО: Системные ограничения (demand, reserves) также деактивируются для дальних
-        будущих периодов, т.к. переменные этих периодов зафиксированы на 0.
-        Начальные условия (t0 constraints) никогда не деактивируются.
     """
-    # Все активные периоды (текущие + lookahead)
-    all_active = active_periods.union(lookahead_periods)
+    # Определить максимальный период активности среди всех генераторов
+    max_lookahead = max(generator_lookahead.values()) if generator_lookahead else num_periods
 
-    # Список ограничений с индексом времени, которые нужно управлять
-    # Формат: (constraint_object, time_index_position)
-    time_indexed_constraints = [
-        # СИСТЕМНЫЕ ограничения (t) - время на позиции 0
+    # СИСТЕМНЫЕ ограничения (t) - активны до max_lookahead
+    system_constraints = [
         (model.demand, 0),
         (model.reserves, 0),
-        # Генераторные ограничения (g, t) - время на позиции 1
-        (model.mustrun, 1),
-        (model.logical, 1),
-        (model.uptime, 1),
-        (model.downtime, 1),
-        (model.startup_select, 1),
-        (model.gen_limit1, 1),
-        (model.gen_limit2, 1),
-        (model.ramp_up, 1),
-        (model.ramp_down, 1),
-        (model.power_select, 1),  # PWL
-        (model.cost_select, 1),  # PWL
-        (model.on_select, 1),  # PWL
     ]
 
-    # Startup allowed имеет индексы (g, s, t) - время на позиции 2
-    time_indexed_constraints.append((model.startup_allowed, 2))
+    # ГЕНЕРАТОРНЫЕ ограничения
+    # Формат: (constraint_object, time_index_position, generator_index_position)
+    generator_constraints = [
+        # (g, t) - генератор на позиции 0, время на позиции 1
+        (model.mustrun, 1, 0),
+        (model.logical, 1, 0),
+        (model.uptime, 1, 0),
+        (model.downtime, 1, 0),
+        (model.startup_select, 1, 0),
+        (model.gen_limit1, 1, 0),
+        (model.gen_limit2, 1, 0),
+        (model.ramp_up, 1, 0),
+        (model.ramp_down, 1, 0),
+        (model.power_select, 1, 0),  # PWL
+        (model.cost_select, 1, 0),  # PWL
+        (model.on_select, 1, 0),  # PWL
+        # (g, s, t) - генератор на позиции 0, время на позиции 2
+        (model.startup_allowed, 2, 0),
+    ]
 
     deactivated_count = 0
     activated_count = 0
 
-    for constraint, time_idx_pos in time_indexed_constraints:
+    # 1. Управление системными ограничениями (до max_lookahead)
+    for constraint, time_idx_pos in system_constraints:
         for idx in constraint:
-            # Для ограничений с одним индексом (demand, reserves) idx - это просто число
-            # Для ограничений с несколькими индексами - это кортеж
-            if isinstance(idx, tuple):
-                time_period = idx[time_idx_pos]
-            else:
-                time_period = idx
+            time_period = idx
 
-            # Активировать если период в активном окне
-            if time_period in all_active:
+            if time_period <= max_lookahead:
                 if not constraint[idx].active:
                     constraint[idx].activate()
                     activated_count += 1
             else:
-                # Деактивировать если период вне активного окна
+                if constraint[idx].active:
+                    constraint[idx].deactivate()
+                    deactivated_count += 1
+
+    # 2. Управление генераторными ограничениями (индивидуально по генераторам)
+    for constraint, time_idx_pos, gen_idx_pos in generator_constraints:
+        for idx in constraint:
+            if not isinstance(idx, tuple):
+                continue
+
+            generator = idx[gen_idx_pos]
+            time_period = idx[time_idx_pos]
+
+            # Каждый генератор имеет свой индивидуальный lookahead
+            required_end = generator_lookahead.get(generator, max_lookahead)
+            should_activate = time_period <= required_end
+
+            if should_activate:
+                if not constraint[idx].active:
+                    constraint[idx].activate()
+                    activated_count += 1
+            else:
                 if constraint[idx].active:
                     constraint[idx].deactivate()
                     deactivated_count += 1
 
     if verbose and (deactivated_count > 0 or activated_count > 0):
-        print(f"    Constraint management: activated {activated_count}, deactivated {deactivated_count}")
+        print(f"    Constraints: activated {activated_count}, deactivated {deactivated_count}")
+        print(f"    Max generator lookahead: period {max_lookahead}")
+        # Показать генераторы с extended lookahead
+        extended_gens = [(g, la) for g, la in generator_lookahead.items() if la > min(generator_lookahead.values())]
+        if extended_gens and len(extended_gens) <= 10:
+            print(f"    Extended lookahead gens: {', '.join([f'{g}->{la}' for g, la in sorted(extended_gens, key=lambda x: x[1], reverse=True)])}")
 
 
-def _fix_future_variables_to_zero(model, future_periods, binary_vars, verbose=False):
+def _fix_future_variables_to_zero(model, future_periods, binary_vars, generator_lookahead, verbose=False):
     """
-    Зафиксировать переменные для дальних будущих периодов на 0
+    Селективно зафиксировать переменные для дальних будущих периодов на 0
 
-    Это консервативная стратегия: все генераторы считаются выключенными
-    в дальних будущих периодах, что гарантирует допустимость решения.
+    НЕ фиксирует переменные критических генераторов в их extended lookahead периодах.
+    Это позволяет избежать конфликтов с min_uptime/min_downtime ограничениями.
 
     Args:
         model: Pyomo ConcreteModel
-        future_periods: set - периоды вне горизонта релаксации
+        future_periods: set - периоды вне базового горизонта релаксации
         binary_vars: list - список (var, time_idx_pos) бинарных переменных
+        generator_lookahead: dict - {generator_name: required_end_period} для критических генераторов
         verbose: bool - выводить информацию
 
     Note:
         Также фиксирует непрерывные переменные (pg, rg, cg) на 0 для этих периодов.
     """
     fixed_count = 0
+    skipped_count = 0
 
     # Фиксируем бинарные переменные (ug, vg, wg, dg)
     for var, time_idx_pos in binary_vars:
         for idx in var:
+            generator = idx[0]  # Генератор всегда на позиции 0
             time_period = idx[time_idx_pos]
-            if time_period in future_periods and not var[idx].is_fixed():
-                var[idx].fix(0)
-                fixed_count += 1
+
+            if time_period not in future_periods or var[idx].is_fixed():
+                continue
+
+            # Проверить: не попадает ли период в extended lookahead критического генератора
+            if generator in generator_lookahead:
+                if time_period <= generator_lookahead[generator]:
+                    # Критический генератор в extended lookahead - НЕ фиксируем
+                    skipped_count += 1
+                    continue
+
+            # Фиксируем на 0
+            var[idx].fix(0)
+            fixed_count += 1
 
     # Также фиксируем непрерывные переменные генераторов на 0
     continuous_vars_to_fix = [
@@ -265,13 +328,23 @@ def _fix_future_variables_to_zero(model, future_periods, binary_vars, verbose=Fa
 
     for var, time_idx_pos in continuous_vars_to_fix:
         for idx in var:
+            generator = idx[0]
             time_period = idx[time_idx_pos]
-            if time_period in future_periods and not var[idx].is_fixed():
-                var[idx].fix(0)
-                fixed_count += 1
 
-    if verbose and fixed_count > 0:
-        print(f"    Fixed {fixed_count} future variables to 0 for {len(future_periods)} periods")
+            if time_period not in future_periods or var[idx].is_fixed():
+                continue
+
+            # Проверить extended lookahead
+            if generator in generator_lookahead:
+                if time_period <= generator_lookahead[generator]:
+                    skipped_count += 1
+                    continue
+
+            var[idx].fix(0)
+            fixed_count += 1
+
+    if verbose and (fixed_count > 0 or skipped_count > 0):
+        print(f"    Fixed {fixed_count} future variables to 0 (skipped {skipped_count} critical gen variables)")
 
 
 def _unfix_variables_in_window(model, window_periods, binary_vars, verbose=False):
@@ -436,12 +509,31 @@ def _verify_solution_feasibility(old_model, data, model_builder, solver_name, ga
         print("    Setting variable values in fresh model...")
 
     vars_set = 0
+    tolerance = 1e-10  # Tolerance for cleaning numerical noise
+
     for var_name, values in var_values.items():
         if hasattr(new_model, var_name):
             new_var = getattr(new_model, var_name)
             for idx, val in values.items():
                 if idx in new_var:
-                    new_var[idx].value = val
+                    # Clean numerical errors before setting values
+                    cleaned_val = val
+
+                    # For binary variables: round to 0 or 1
+                    if new_var[idx].domain == Binary:
+                        cleaned_val = round(val)
+                    # For non-negative variables: ensure non-negativity
+                    elif hasattr(new_var[idx].domain, 'bounds'):
+                        bounds = new_var[idx].domain.bounds()
+                        if bounds[0] == 0:  # NonNegativeReals, UnitInterval, etc.
+                            cleaned_val = max(0.0, val)
+                            if bounds[1] == 1:  # UnitInterval
+                                cleaned_val = min(1.0, cleaned_val)
+                    # For general continuous variables with small negative noise
+                    elif abs(val) < tolerance:
+                        cleaned_val = 0.0
+
+                    new_var[idx].value = cleaned_val
                     vars_set += 1
 
     if verbose:
@@ -496,9 +588,9 @@ def _verify_solution_feasibility(old_model, data, model_builder, solver_name, ga
 def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
                         verbose=False, verify_solution=True, data=None, model_builder=None,
                         generators_per_iteration=None, generator_sort_function=None,
-                        use_limited_horizon=True, lookahead_strategy='percentile75'):
+                        use_limited_horizon=True):
     """
-    Solve UC model using Relax-and-Fix approach with optional generator decomposition
+    Solve UC model using Relax-and-Fix approach with adaptive generator-specific lookahead
 
     Алгоритм:
     1. Разбить временной горизонт на окна (window_size, window_step)
@@ -506,10 +598,13 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
        - Если generators_per_iteration=None: все генераторы сразу (классический R&F)
        - Генераторы сортируются по максимальной мощности (убывание)
     3. Для каждого временного окна:
-       - [NEW] Если use_limited_horizon=True:
-         * Определить горизонт релаксации (lookahead window)
-         * Деактивировать ограничения для дальних будущих периодов
-         * Зафиксировать переменные дальних будущих периодов на 0
+       - Если use_limited_horizon=True:
+         * Проанализировать состояние КАЖДОГО генератора на границе фиксации
+         * Определить индивидуальный lookahead для каждого генератора:
+           - Минимум: step + 1 (для ramping constraints)
+           - Extended: step + remaining_uptime/downtime (если незавершен min_uptime/downtime)
+         * Деактивировать ограничения индивидуально по генераторам
+         * Зафиксировать переменные дальних периодов на 0 (с учетом индивидуального lookahead)
        - Для каждой партии генераторов:
          - Переменные текущей партии в текущем окне - бинарные
          - Переменные в окне релаксации - релаксированы [0,1]
@@ -525,16 +620,11 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
         solver_name: Solver name for factory
         verbose: Show solver output
         verify_solution: Verify final solution feasibility in original problem (default: True)
-        data: Original problem data (required for generator sorting and verification)
+        data: Original problem data (required for generator analysis and verification)
         model_builder: Function to build model from data (required if verify_solution=True)
         generators_per_iteration: Number of generators per iteration (None = all at once)
         generator_sort_function: Custom function(data) -> list to sort generators (None = by power desc)
-        use_limited_horizon: Use limited lookahead window (default: True)
-        lookahead_strategy: Strategy for calculating lookahead window size (default: 'percentile75'):
-            'percentile75' - 75-й перцентиль (рекомендуется, хороший баланс)
-            'percentile90' - 90-й перцентиль (более консервативный)
-            'median' - медиана (агрессивная оптимизация, может дать недопустимое решение)
-            'max' - максимум (самый консервативный, может быть слишком большим)
+        use_limited_horizon: Use adaptive lookahead window (default: True, recommended)
 
     Returns:
         dict: Results with solve_time, objective, status, and optional verification info
@@ -576,20 +666,11 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
                   f"{generators_per_iteration} per iteration")
             print(f"    Generators sorted by power (top 5): {generators_sorted[:5]}")
 
-    # Рассчитать размер окна релаксации (lookahead)
-    if use_limited_horizon:
-        # Адаптивный расчет на основе параметров генераторов
-        adaptive_lookahead = _calculate_lookahead_window_size(data, strategy=lookahead_strategy)
-
-        # Добавляем +1 для учета ограничений типа wg(t+1)
-        lookahead_size = adaptive_lookahead + 1
-
-        if verbose:
-            print(f"  Limited horizon mode: lookahead window = {lookahead_size} periods")
-            print(f"    (strategy: {lookahead_strategy}, base: {adaptive_lookahead}, +1 for forward-looking)")
-    else:
-        lookahead_size = None
-        if verbose:
+    # Режим адаптивного lookahead
+    if verbose:
+        if use_limited_horizon:
+            print(f"  Adaptive lookahead mode: individual per generator (min +1 for ramping)")
+        else:
             print(f"  Full horizon mode: all future periods relaxed")
 
     # Основной цикл Relax-and-Fix (единая логика для всех стратегий)
@@ -605,35 +686,51 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
         fix_periods = set(time_periods[start:step])
 
         # Определить горизонт релаксации и будущие периоды
-        if use_limited_horizon and lookahead_size is not None:
-            # Окно релаксации начинается после текущего бинарного окна
-            lookahead_start = step
-            lookahead_end = min(step + lookahead_size, num_periods)
-            lookahead_periods = set(time_periods[lookahead_start:lookahead_end])
+        if use_limited_horizon:
+            # Для ПЕРВОГО окна (start=0): не деактивируем ограничения, так как модель еще не решалась
+            # Все ограничения нужны для нахождения первого допустимого решения
+            if start == 0:
+                lookahead_periods = set()
+                generator_lookahead = {}
+                if verbose:
+                    print(f"  Time Window [{start}:{end}], fixing [{start}:{step}] (first window - full horizon)")
+            else:
+                # Используем адаптивный lookahead для последующих окон
+                # Анализируем состояние на границе (start - 1) и определяем lookahead для периодов >= step
+                generator_lookahead = _calculate_generator_specific_lookahead(
+                    model, start, step, data, num_periods
+                )
 
-            # Дальние будущие периоды (за пределами горизонта)
-            future_periods = set(time_periods[lookahead_end:])
+                # Определить максимальный lookahead для создания окна релаксации
+                max_lookahead = max(generator_lookahead.values())
 
-            # Все активные периоды (прошлые зафиксированные + текущее окно + lookahead)
-            active_periods = set(time_periods[0:start]).union(window_periods)
+                # Окно релаксации начинается после текущего бинарного окна
+                lookahead_start = step
+                lookahead_end = max_lookahead
+                lookahead_periods = set(time_periods[lookahead_start:min(lookahead_end, num_periods)])
 
-            if verbose:
-                print(f"  Time Window [{start}:{end}], fixing [{start}:{step}], "
-                      f"lookahead [{lookahead_start}:{lookahead_end}], future [{lookahead_end}:{num_periods}]")
+                # Дальние будущие периоды (за пределами lookahead всех генераторов)
+                future_periods = set(time_periods[lookahead_end:]) if lookahead_end < num_periods else set()
 
-            # Освободить переменные в окне релаксации (если они были зафиксированы на 0)
-            if lookahead_periods:
-                _unfix_variables_in_window(model, lookahead_periods, binary_vars, verbose=verbose)
+                if verbose:
+                    print(f"  Time Window [{start}:{end}], fixing [{start}:{step}], "
+                          f"lookahead [{lookahead_start}:{lookahead_end}]")
 
-            # Зафиксировать переменные дальних будущих периодов на 0
-            if future_periods:
-                _fix_future_variables_to_zero(model, future_periods, binary_vars, verbose=verbose)
+                # Освободить переменные в окне релаксации (если они были зафиксированы на 0)
+                if lookahead_periods:
+                    _unfix_variables_in_window(model, lookahead_periods, binary_vars, verbose=verbose)
 
-            # Управлять ограничениями
-            _manage_constraints_for_window(model, active_periods, lookahead_periods, verbose=verbose)
+                # Зафиксировать переменные дальних будущих периодов на 0 (селективно)
+                if future_periods:
+                    _fix_future_variables_to_zero(model, future_periods, binary_vars,
+                                                  generator_lookahead, verbose=verbose)
+
+                # Управлять ограничениями (индивидуально по генераторам)
+                _manage_constraints_for_window(model, generator_lookahead, num_periods, verbose=verbose)
         else:
             # Полный горизонт (классический режим)
             lookahead_periods = set()
+            generator_lookahead = {}
             if verbose:
                 print(f"  Time Window [{start}:{end}], fixing [{start}:{step}]")
 
