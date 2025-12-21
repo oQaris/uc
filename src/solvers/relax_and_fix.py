@@ -75,6 +75,7 @@ def _get_generators_sorted_by_power(data):
     # Возвращаем только имена
     return [g for g, _ in gen_power_pairs]
 
+
 def _calculate_generator_specific_lookahead(model, boundary_period, fix_end_period, data, num_periods):
     """
     Определить индивидуальный lookahead для каждого генератора на основе состояния на границе
@@ -126,7 +127,8 @@ def _calculate_generator_specific_lookahead(model, boundary_period, fix_end_peri
             # Консервативный lookahead: генератор может включиться/выключиться в последний период окна фиксации
             # В этом случае нужен lookahead до fix_end_period + max(min_uptime, min_downtime)
             max_constraint = max(min_uptime, min_downtime)
-            constraint_based = min(fix_end_period + max_constraint, num_periods) if max_constraint > 0 else min_lookahead_end
+            constraint_based = min(fix_end_period + max_constraint,
+                                   num_periods) if max_constraint > 0 else min_lookahead_end
 
             # Минимальный lookahead: хотя бы половина оставшегося горизонта
             # Это гарантирует, что генераторы с малыми ограничениями все равно видят достаточно вперед
@@ -275,7 +277,8 @@ def _manage_constraints_for_window(model, generator_lookahead, num_periods, verb
         # Показать генераторы с extended lookahead
         extended_gens = [(g, la) for g, la in generator_lookahead.items() if la > min(generator_lookahead.values())]
         if extended_gens and len(extended_gens) <= 10:
-            print(f"    Extended lookahead gens: {', '.join([f'{g}->{la}' for g, la in sorted(extended_gens, key=lambda x: x[1], reverse=True)])}")
+            print(
+                f"    Extended lookahead gens: {', '.join([f'{g}->{la}' for g, la in sorted(extended_gens, key=lambda x: x[1], reverse=True)])}")
 
 
 def _fix_future_variables_to_zero(model, future_periods, binary_vars, generator_lookahead, verbose=False):
@@ -428,13 +431,38 @@ def _solve_subproblem(model, solver_name, gap):
     if hasattr(solver, 'config'):
         # APPSI solvers (appsi_highs, etc)
         solver.config.mip_gap = gap
-        result = solver.solve(model)
+        # Пытаемся установить load_solution=False если параметр доступен
+        try:
+            solver.config.load_solution = False
+        except (ValueError, AttributeError):
+            # Параметр может отсутствовать в некоторых версиях
+            pass
+
+        try:
+            result = solver.solve(model)
+        except RuntimeError as e:
+            # HiGHS может бросить RuntimeError если решение не найдено
+            # В этом случае все равно возвращаем результат с termination_condition
+            if "feasible solution was not found" in str(e):
+                # Получаем results напрямую из solver
+                result = solver.results
+                solve_time = time.time() - iter_start
+                return result, solve_time, False
+            else:
+                raise
     else:
         # Legacy solvers (cbc, etc)
-        result = solver.solve(model, options={'ratioGap': gap})
+        result = solver.solve(model, options={'ratioGap': gap}, load_solutions=False)
 
     solve_time = time.time() - iter_start
     is_optimal = result.solver.termination_condition == TerminationCondition.optimal
+
+    # Load solution only if optimal or feasible
+    if is_optimal or result.solver.termination_condition == TerminationCondition.feasible:
+        if hasattr(solver, 'load_vars'):
+            solver.load_vars()  # APPSI interface
+        else:
+            model.solutions.load_from(result)  # Legacy interface
 
     return result, solve_time, is_optimal
 
@@ -532,6 +560,20 @@ def _verify_solution_feasibility(old_model, data, model_builder, solver_name, ga
                     # For general continuous variables with small negative noise
                     elif abs(val) < tolerance:
                         cleaned_val = 0.0
+
+                    # Check and clip against explicit variable bounds (lb, ub)
+                    # This handles cases like pw[gen,t] with bounds=(0.0, max_power)
+                    var_obj = new_var[idx]
+                    if var_obj.lb is not None:
+                        # Allow small violations due to floating point errors
+                        if cleaned_val < var_obj.lb:
+                            if abs(cleaned_val - var_obj.lb) <= tolerance:
+                                cleaned_val = var_obj.lb
+                    if var_obj.ub is not None:
+                        # Allow small violations due to floating point errors
+                        if cleaned_val > var_obj.ub:
+                            if abs(cleaned_val - var_obj.ub) <= tolerance:
+                                cleaned_val = var_obj.ub
 
                     new_var[idx].value = cleaned_val
                     vars_set += 1
@@ -687,15 +729,17 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
 
         # Определить горизонт релаксации и будущие периоды
         if use_limited_horizon:
-            # Для ПЕРВОГО окна (start=0): не деактивируем ограничения, так как модель еще не решалась
-            # Все ограничения нужны для нахождения первого допустимого решения
+            # Для ПЕРВОГО окна (start=0): используем полный горизонт для нахождения начального решения
+            # Деактивация ограничений и фиксация переменных начинается только со ВТОРОГО окна
             if start == 0:
                 lookahead_periods = set()
+                lookahead_start = step
+                lookahead_end = num_periods
                 generator_lookahead = {}
                 if verbose:
                     print(f"  Time Window [{start}:{end}], fixing [{start}:{step}] (first window - full horizon)")
             else:
-                # Используем адаптивный lookahead для последующих окон
+                # Для последующих окон: используем адаптивный lookahead
                 # Анализируем состояние на границе (start - 1) и определяем lookahead для периодов >= step
                 generator_lookahead = _calculate_generator_specific_lookahead(
                     model, start, step, data, num_periods
@@ -728,8 +772,9 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
                 # Управлять ограничениями (индивидуально по генераторам)
                 _manage_constraints_for_window(model, generator_lookahead, num_periods, verbose=verbose)
         else:
-            # Полный горизонт (классический режим)
-            lookahead_periods = set()
+            # Полный горизонт для всех окон
+            lookahead_start = step
+            lookahead_end = num_periods
             generator_lookahead = {}
             if verbose:
                 print(f"  Time Window [{start}:{end}], fixing [{start}:{step}]")
@@ -745,22 +790,55 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
 
             # 1. Установить домены переменных
             # В режиме limited horizon: бинарные в window_periods, релаксированные в lookahead_periods
-            if use_limited_horizon:
-                binary_periods = window_periods
-                # Переменные в lookahead будут релаксированы (не в binary_periods)
-            else:
-                binary_periods = window_periods
-
-            _set_variable_domains(binary_vars, current_gen_batch, binary_periods)
+            _set_variable_domains(binary_vars, current_gen_batch, window_periods)
 
             # 2. Решить подзадачу
             result, solve_time, is_optimal = _solve_subproblem(model, solver_name, gap)
 
-            # 3. Вывод результата
+            # 3. Проверить результат и вывести информацию
+            termination = result.solver.termination_condition
+
+            if termination == TerminationCondition.infeasible or \
+               termination == TerminationCondition.infeasibleOrUnbounded:
+                # Subproblem is infeasible - this is a critical error
+                error_msg = [
+                    f"\n{'='*60}",
+                    "INFEASIBLE SUBPROBLEM DETECTED",
+                    f"{'='*60}",
+                    f"Time window: [{start}:{end}], fixing [{start}:{step}]",
+                ]
+                if use_limited_horizon and 'lookahead_end' in locals():
+                    error_msg.append(f"Lookahead: [{step}:{lookahead_end}]")
+
+                error_msg.extend([
+                    f"Generator batch: [{gen_start_idx}:{gen_end_idx}]",
+                    f"Termination condition: {termination}",
+                    "",
+                    "Possible causes:",
+                    "1. Previous window fixed variables create conflicts",
+                    "2. Lookahead window is too small for min_uptime/min_downtime constraints",
+                    "3. Demand cannot be met with current variable fixings",
+                    "",
+                    "Suggestions:",
+                    "- Try larger window_size or window_step",
+                    "- Try use_limited_horizon=False for full horizon",
+                    "- Check if the original problem is feasible",
+                    f"{'='*60}"
+                ])
+
+                raise RuntimeError("\n".join(error_msg))
+
             if verbose:
-                status_str = "optimal" if is_optimal else str(result.solver.termination_condition)
+                status_str = "optimal" if is_optimal else str(termination)
                 indent = "    " if generators_per_iteration < num_generators else "  "
-                print(f"{indent}Solved in {solve_time:.2f}s, obj={value(model.obj):.2f}, status={status_str}")
+
+                # Only access objective if solution was loaded
+                if is_optimal or termination == TerminationCondition.feasible:
+                    obj_str = f"obj={value(model.obj):.2f}"
+                else:
+                    obj_str = "obj=N/A"
+
+                print(f"{indent}Solved in {solve_time:.2f}s, {obj_str}, status={status_str}")
 
                 if not is_optimal:
                     print(f"{indent}WARNING: Iteration did not find optimal solution (continuing anyway)")

@@ -57,7 +57,7 @@ def solve_direct(data, solver_name="cbc", gap=0.01, verbose=False):
 
 
 def solve_rf(data, window_size, window_step, solver_name="cbc", gap=0.01, verbose=False,
-             use_limited_horizon=True):
+             use_limited_horizon=True, generators_per_iteration=None):
     """Solve UC problem with Relax-and-Fix"""
     print("\n" + "=" * 60)
     print(f"RELAX-AND-FIX {solver_name.upper()} (window={window_size}, step={window_step})")
@@ -72,7 +72,8 @@ def solve_rf(data, window_size, window_step, solver_name="cbc", gap=0.01, verbos
         model, window_size, window_step,
         solver_name=solver_name, gap=gap, verbose=verbose,
         data=data, model_builder=build_uc_model,
-        use_limited_horizon=use_limited_horizon
+        use_limited_horizon=use_limited_horizon,
+        generators_per_iteration=generators_per_iteration
     )
 
     print(f"Solve time: {result['solve_time']:.2f}s")
@@ -111,13 +112,13 @@ def main():
     print(f"Solver: {SOLVER}, Gap: {GAP}")
 
     results = {
-        "direct": solve_direct(data, solver_name=SOLVER, gap=GAP, verbose=VERBOSE),
         "adaptive_8-8": solve_rf(data, window_size=8, window_step=8, solver_name=SOLVER, gap=GAP, verbose=VERBOSE,
-                                 use_limited_horizon=True),
-        "adaptive_16-16": solve_rf(data, window_size=16, window_step=16, solver_name=SOLVER, gap=GAP,
-                                   verbose=VERBOSE, use_limited_horizon=True),
-        "adaptive_32-12": solve_rf(data, window_size=32, window_step=12, solver_name=SOLVER, gap=GAP,
-                                   verbose=VERBOSE, use_limited_horizon=True),
+                                 use_limited_horizon=True, generators_per_iteration=32),
+        "adaptive_16-16": solve_rf(data, window_size=16, window_step=16, solver_name=SOLVER, gap=GAP, verbose=VERBOSE,
+                                   use_limited_horizon=True, generators_per_iteration=32),
+        "adaptive_32-12": solve_rf(data, window_size=32, window_step=12, solver_name=SOLVER, gap=GAP, verbose=VERBOSE,
+                                   use_limited_horizon=True, generators_per_iteration=32),
+        "direct": solve_direct(data, solver_name=SOLVER, gap=GAP, verbose=VERBOSE),
     }
     base_time = results['direct']['total_time']
     base_obj = results['direct']['objective']
