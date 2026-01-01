@@ -6,6 +6,8 @@ import time
 from pyomo.environ import Binary, UnitInterval, Var, value
 from pyomo.opt import SolverFactory, TerminationCondition
 
+from .diagnostics import diagnose_infeasibility
+
 
 def _get_time_index_position(var):
     """
@@ -444,8 +446,11 @@ def _solve_subproblem(model, solver_name, gap):
             # HiGHS может бросить RuntimeError если решение не найдено
             # В этом случае все равно возвращаем результат с termination_condition
             if "feasible solution was not found" in str(e):
-                # Получаем results напрямую из solver
-                result = solver.results
+                # Для APPSI solvers, результат уже в solver после вызова solve
+                # Создаем mock результат для обратной совместимости
+                from pyomo.opt import SolverResults
+                result = SolverResults()
+                result.solver.termination_condition = TerminationCondition.infeasible
                 solve_time = time.time() - iter_start
                 return result, solve_time, False
             else:
@@ -486,6 +491,151 @@ def _fix_variables(binary_vars, fix_generators, fix_periods):
                     time_period in fix_periods and
                     not var[idx].is_fixed()):
                 var[idx].fix()
+
+
+def _refix_periods(model, periods_to_fix, verbose=False):
+    """
+    Зафиксировать все переменные в указанных периодах на их текущих значениях
+
+    Args:
+        model: Pyomo ConcreteModel
+        periods_to_fix: set - периоды для фиксации
+        verbose: bool - выводить информацию
+    """
+    if not periods_to_fix:
+        return
+
+    fixed_count = 0
+
+    # Фиксируем все бинарные переменные в указанных периодах
+    for var_name in ['ug', 'vg', 'wg', 'dg']:
+        if not hasattr(model, var_name):
+            continue
+
+        var_obj = getattr(model, var_name)
+
+        for idx in var_obj:
+            # Определить позицию времени
+            if len(idx) == 2:  # (g, t)
+                time_period = idx[1]
+            elif len(idx) == 3:  # (g, s, t) или (g, l, t)
+                time_period = idx[2]
+            else:
+                continue
+
+            if time_period in periods_to_fix and not var_obj[idx].is_fixed():
+                var_obj[idx].fix()
+                fixed_count += 1
+
+    if verbose and fixed_count > 0:
+        print(f"    Re-fixed {fixed_count} variables in backward-unfixed periods")
+
+
+def _backward_unfix_for_startup(model, window_start, data, verbose=False):
+    """
+    Разфиксировать минимальное количество переменных из прошлых окон для обеспечения достижимости
+
+    Проблема: если генератор зафиксирован на OFF в прошлых периодах и имеет min_downtime > 0,
+    он не может включиться в новом окне сразу. Нужно разфиксировать переменные запуска
+    в прошлых периодах, чтобы дать возможность начать запуск заранее.
+
+    Аналогично для выключения генераторов с min_uptime > 0.
+
+    Args:
+        model: Pyomo ConcreteModel
+        window_start: int - начало нового окна (1-based)
+        data: dict - исходные данные с thermal_generators
+        verbose: bool - выводить информацию
+
+    Returns:
+        set: множество разфиксированных периодов
+    """
+    if window_start <= 1:
+        return set()
+
+    thermal_gens = data.get("thermal_generators", {})
+    unfixed_periods = set()
+    unfixed_count = 0
+
+    for gen_name, gen_data in thermal_gens.items():
+        min_downtime = gen_data.get("time_down_minimum", 0)
+        min_uptime = gen_data.get("time_up_minimum", 0)
+
+        boundary_period = window_start - 1
+
+        if (gen_name, boundary_period) not in model.ug:
+            continue
+
+        ug_boundary = model.ug[gen_name, boundary_period]
+
+        if not ug_boundary.is_fixed():
+            continue
+
+        ug_boundary_value = round(value(ug_boundary))
+
+        # СЛУЧАЙ 1: Генератор OFF на границе, может потребоваться включить в новом окне
+        if ug_boundary_value == 0 and min_downtime > 0:
+            # Посчитать сколько периодов подряд он был OFF
+            consecutive_off = 1
+            for t in range(boundary_period - 1, 0, -1):
+                if (gen_name, t) in model.ug and model.ug[gen_name, t].is_fixed():
+                    if round(value(model.ug[gen_name, t])) == 0:
+                        consecutive_off += 1
+                    else:
+                        break
+                else:
+                    break
+
+            # Если не выполнен min_downtime, разфиксировать переменные для возможности запуска
+            if consecutive_off < min_downtime:
+                # Разфиксировать периоды [window_start - min_downtime : boundary_period]
+                unfix_start = max(1, window_start - min_downtime)
+                unfix_end = boundary_period
+
+                for t in range(unfix_start, unfix_end + 1):
+                    for var_name in ['ug', 'vg', 'wg']:
+                        if hasattr(model, var_name) and (gen_name, t) in getattr(model, var_name):
+                            var = getattr(model, var_name)[gen_name, t]
+                            if var.is_fixed():
+                                var.unfix()
+                                var.domain = Binary
+                                unfixed_count += 1
+                                unfixed_periods.add(t)
+
+        # СЛУЧАЙ 2: Генератор ON на границе, может потребоваться выключить в новом окне
+        elif ug_boundary_value == 1 and min_uptime > 0:
+            # Посчитать сколько периодов подряд он был ON
+            consecutive_on = 1
+            for t in range(boundary_period - 1, 0, -1):
+                if (gen_name, t) in model.ug and model.ug[gen_name, t].is_fixed():
+                    if round(value(model.ug[gen_name, t])) == 1:
+                        consecutive_on += 1
+                    else:
+                        break
+                else:
+                    break
+
+            # Если не выполнен min_uptime, разфиксировать переменные для возможности выключения
+            if consecutive_on < min_uptime:
+                unfix_start = max(1, window_start - min_uptime)
+                unfix_end = boundary_period
+
+                for t in range(unfix_start, unfix_end + 1):
+                    for var_name in ['ug', 'vg', 'wg']:
+                        if hasattr(model, var_name) and (gen_name, t) in getattr(model, var_name):
+                            var = getattr(model, var_name)[gen_name, t]
+                            if var.is_fixed():
+                                var.unfix()
+                                var.domain = Binary
+                                unfixed_count += 1
+                                unfixed_periods.add(t)
+
+    if verbose and unfixed_count > 0:
+        unique_periods = sorted(unfixed_periods)
+        print(f"    Backward unfixing: {unfixed_count} variables in {len(unique_periods)} periods "
+              f"({min(unique_periods)}-{max(unique_periods)})")
+
+    return unfixed_periods
 
 
 def _verify_solution_feasibility(old_model, data, model_builder, solver_name, gap, verbose):
@@ -727,50 +877,49 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
         window_periods = set(time_periods[start:end])
         fix_periods = set(time_periods[start:step])
 
+        # BACKWARD UNFIXING: разфиксировать минимальное количество переменных из прошлых окон
+        # для обеспечения возможности запуска/выключения генераторов
+        unfixed_periods = set()
+        if start > 0:
+            # Используем start+1 т.к. time_periods 1-based: time_periods[0] = 1
+            unfixed_periods = _backward_unfix_for_startup(
+                model, time_periods[start], data, verbose=verbose
+            )
+
         # Определить горизонт релаксации и будущие периоды
         if use_limited_horizon:
-            # Для ПЕРВОГО окна (start=0): используем полный горизонт для нахождения начального решения
-            # Деактивация ограничений и фиксация переменных начинается только со ВТОРОГО окна
-            if False:
-                lookahead_periods = set()
-                lookahead_start = step
-                lookahead_end = num_periods
-                generator_lookahead = {}
-                if verbose:
-                    print(f"  Time Window [{start}:{end}], fixing [{start}:{step}] (first window - full horizon)")
-            else:
-                # Для последующих окон: используем адаптивный lookahead
-                # Анализируем состояние на границе (start - 1) и определяем lookahead для периодов >= step
-                generator_lookahead = _calculate_generator_specific_lookahead(
-                    model, start, step, data, num_periods
-                )
+            # Для последующих окон: используем адаптивный lookahead
+            # Анализируем состояние на границе (start - 1) и определяем lookahead для периодов >= step
+            generator_lookahead = _calculate_generator_specific_lookahead(
+                model, start, step, data, num_periods
+            )
 
-                # Определить максимальный lookahead для создания окна релаксации
-                max_lookahead = max(generator_lookahead.values())
+            # Определить максимальный lookahead для создания окна релаксации
+            max_lookahead = max(generator_lookahead.values())
 
-                # Окно релаксации начинается после текущего бинарного окна
-                lookahead_start = step
-                lookahead_end = max_lookahead
-                lookahead_periods = set(time_periods[lookahead_start:min(lookahead_end, num_periods)])
+            # Окно релаксации начинается после текущего бинарного окна
+            lookahead_start = step
+            lookahead_end = max_lookahead
+            lookahead_periods = set(time_periods[lookahead_start:min(lookahead_end, num_periods)])
 
-                # Дальние будущие периоды (за пределами lookahead всех генераторов)
-                future_periods = set(time_periods[lookahead_end:]) if lookahead_end < num_periods else set()
+            # Дальние будущие периоды (за пределами lookahead всех генераторов)
+            future_periods = set(time_periods[lookahead_end:]) if lookahead_end < num_periods else set()
 
-                if verbose:
-                    print(f"  Time Window [{start}:{end}], fixing [{start}:{step}], "
-                          f"lookahead [{lookahead_start}:{lookahead_end}]")
+            if verbose:
+                print(f"  Time Window [{start}:{end}], fixing [{start}:{step}], "
+                      f"lookahead [{lookahead_start}:{lookahead_end}]")
 
-                # Освободить переменные в окне релаксации (если они были зафиксированы на 0)
-                if lookahead_periods:
-                    _unfix_variables_in_window(model, lookahead_periods, binary_vars, verbose=verbose)
+            # Освободить переменные в окне релаксации (если они были зафиксированы на 0)
+            if lookahead_periods:
+                _unfix_variables_in_window(model, lookahead_periods, binary_vars, verbose=verbose)
 
-                # Зафиксировать переменные дальних будущих периодов на 0 (селективно)
-                if future_periods:
-                    _fix_future_variables_to_zero(model, future_periods, binary_vars,
-                                                  generator_lookahead, verbose=verbose)
+            # Зафиксировать переменные дальних будущих периодов на 0 (селективно)
+            if future_periods:
+                _fix_future_variables_to_zero(model, future_periods, binary_vars,
+                                              generator_lookahead, verbose=verbose)
 
-                # Управлять ограничениями (индивидуально по генераторам)
-                _manage_constraints_for_window(model, generator_lookahead, num_periods, verbose=verbose)
+            # Управлять ограничениями (индивидуально по генераторам)
+            _manage_constraints_for_window(model, generator_lookahead, num_periods, verbose=verbose)
         else:
             # Полный горизонт для всех окон
             lookahead_start = step
@@ -800,7 +949,20 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
 
             if termination == TerminationCondition.infeasible or \
                termination == TerminationCondition.infeasibleOrUnbounded:
-                # Subproblem is infeasible - this is a critical error
+                # Subproblem is infeasible - run diagnostics
+                iteration_info = {
+                    'start': start,
+                    'end': end,
+                    'step': step,
+                    'gen_start': gen_start_idx,
+                    'gen_end': gen_end_idx
+                }
+
+                # Запуск диагностики (экспорт модели и анализ)
+                if data is not None:
+                    diagnose_infeasibility(model, data, iteration_info, export_model=True)
+
+                # Формирование сообщения об ошибке
                 error_msg = [
                     f"\n{'='*60}",
                     "INFEASIBLE SUBPROBLEM DETECTED",
@@ -814,6 +976,8 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
                     f"Generator batch: [{gen_start_idx}:{gen_end_idx}]",
                     f"Termination condition: {termination}",
                     "",
+                    "Diagnostics have been run - check output above for details.",
+                    "",
                     "Possible causes:",
                     "1. Previous window fixed variables create conflicts",
                     "2. Lookahead window is too small for min_uptime/min_downtime constraints",
@@ -823,6 +987,7 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
                     "- Try larger window_size or window_step",
                     "- Try use_limited_horizon=False for full horizon",
                     "- Check if the original problem is feasible",
+                    "- Review the exported LP file in debug_models/ directory",
                     f"{'='*60}"
                 ])
 
@@ -845,6 +1010,10 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
 
             # 4. Зафиксировать переменные
             _fix_variables(binary_vars, current_gen_batch, fix_periods)
+
+        # Зафиксировать обратно разфиксированные периоды из backward unfixing
+        if unfixed_periods:
+            _refix_periods(model, unfixed_periods, verbose=verbose)
 
         # Выход после последнего окна
         if step == num_periods:
