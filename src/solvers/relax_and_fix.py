@@ -731,7 +731,7 @@ def solve_relax_and_fix(model, window_size, window_step, gap, solver_name,
         if use_limited_horizon:
             # Для ПЕРВОГО окна (start=0): используем полный горизонт для нахождения начального решения
             # Деактивация ограничений и фиксация переменных начинается только со ВТОРОГО окна
-            if start == 0:
+            if False:
                 lookahead_periods = set()
                 lookahead_start = step
                 lookahead_end = num_periods

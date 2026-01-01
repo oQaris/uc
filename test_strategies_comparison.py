@@ -10,10 +10,10 @@ from src.solvers.relax_and_fix import solve_relax_and_fix
 from src.solvers.generator_selection_strategies import STRATEGIES, get_strategy
 
 # Configuration
-TEST_FILE = "examples/rts_gmlc/2020-01-27.json"
+TEST_FILE = r"C:\Users\oQaris\Desktop\Git\uc\examples\ca\2015-03-01_reserves_3.json"
 WINDOW_SIZE = 8
-WINDOW_STEP = 4
-GENERATORS_PER_ITERATION = 10  # None for classic R&F
+WINDOW_STEP = 8
+GENERATORS_PER_ITERATION = 61  # None for classic R&F
 GAP = 0.01
 SOLVER_NAME = "appsi_highs"
 BASELINE_TIME_LIMIT = 300  # 5 minutes for direct solver
