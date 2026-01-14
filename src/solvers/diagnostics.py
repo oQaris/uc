@@ -4,6 +4,7 @@
 import os
 
 from pyomo.environ import value, Constraint, Binary
+from pyomo.core.plugins.transform.relax_integrality import RelaxIntegrality
 
 
 def export_model_state(model, iteration_info, output_dir="debug_models"):
@@ -20,6 +21,8 @@ def export_model_state(model, iteration_info, output_dir="debug_models"):
     """
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
+
+    # RelaxIntegrality().apply_to(model)
 
     # Формируем имя файла
     time_window = f"t{iteration_info['start']}-{iteration_info['end']}"
@@ -141,7 +144,7 @@ def check_demand_feasibility(model, data, iteration_info):
     start = iteration_info['start']
     end = iteration_info['end']
 
-    for t in range(start, end):
+    for t in range(start, end + 1):  # Включаем end период
         # ВАЖНО: t - это 1-based индекс из модели (1, 2, 3, ...),
         # а demand - это 0-based список, поэтому используем t-1
         t_idx = t - 1
@@ -184,6 +187,65 @@ def check_demand_feasibility(model, data, iteration_info):
     print(f"  {'=' * 60}\n")
 
 
+def analyze_variable_domains(model, iteration_info):
+    """
+    Анализировать домены переменных в текущем окне
+
+    Args:
+        model: Pyomo ConcreteModel
+        iteration_info: dict с информацией о текущей итерации
+    """
+    from pyomo.environ import Var, UnitInterval
+
+    print(f"\n  {'=' * 60}")
+    print(f"  VARIABLE DOMAINS ANALYSIS")
+    print(f"  {'=' * 60}")
+
+    start = iteration_info['start']
+    end = iteration_info['end']
+
+    domain_stats = {}
+
+    for component in model.component_objects(ctype=Var):
+        var_name = component.name
+        binary_count = 0
+        relaxed_count = 0
+        fixed_count = 0
+
+        for idx in component:
+            # Check if variable is in current window
+            # For (g, t) variables, time is at position 1
+            # For (g, s, t) variables, time is at position 2
+            if len(idx) == 2:
+                time_period = idx[1]
+            elif len(idx) == 3:
+                time_period = idx[2]
+            else:
+                continue
+
+            if start <= time_period <= end:  # Включаем end период
+                if component[idx].is_fixed():
+                    fixed_count += 1
+                elif component[idx].domain == Binary:
+                    binary_count += 1
+                elif component[idx].domain == UnitInterval:
+                    relaxed_count += 1
+
+        if binary_count > 0 or relaxed_count > 0:
+            domain_stats[var_name] = {
+                'binary': binary_count,
+                'relaxed': relaxed_count,
+                'fixed': fixed_count
+            }
+
+    # Вывод информации
+    for var_name, stats in sorted(domain_stats.items()):
+        total = stats['binary'] + stats['relaxed'] + stats['fixed']
+        print(f"  {var_name}: {stats['binary']} Binary, {stats['relaxed']} Relaxed, {stats['fixed']} Fixed (total: {total})")
+
+    print(f"  {'=' * 60}\n")
+
+
 def diagnose_infeasibility(model, data, iteration_info, export_model=True):
     """
     Комплексная диагностика недостижимости
@@ -211,10 +273,13 @@ def diagnose_infeasibility(model, data, iteration_info, export_model=True):
     # 2. Анализ зафиксированных переменных
     analyze_fixed_variables(model, iteration_info)
 
-    # 3. Анализ активных ограничений
+    # 3. Анализ доменов переменных
+    analyze_variable_domains(model, iteration_info)
+
+    # 4. Анализ активных ограничений
     analyze_active_constraints(model)
 
-    # 4. Проверка выполнимости спроса
+    # 5. Проверка выполнимости спроса
     check_demand_feasibility(model, data, iteration_info)
 
     print(f"\n{'#' * 70}")

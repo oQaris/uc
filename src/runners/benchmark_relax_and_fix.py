@@ -12,22 +12,19 @@ This script:
 8. Finds optimal hyperparameters for solve_relax_and_fix
 """
 
+import csv
 import json
 import time
 import traceback
-from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor, as_completed
-from typing import Dict, List, Optional, Tuple
-import csv
-import sys
+from pathlib import Path
+from typing import Dict, List, Optional
 
-# Add parent directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
-from models.uc_model import build_uc_model
-from solvers.relax_and_fix import solve_relax_and_fix
-from pyomo.opt import SolverFactory, TerminationCondition
 from pyomo.environ import value
+from pyomo.opt import SolverFactory, TerminationCondition
+
+from src.models.uc_model import build_uc_model
+from src.solvers import solve_relax_and_fix
 
 
 def solve_with_standard_highs(data: dict, time_limit: float, gap: float = 0.01) -> Dict:
@@ -551,7 +548,7 @@ def main():
     parser = argparse.ArgumentParser(description='Benchmark Relax-and-Fix vs HiGHS solver')
     parser.add_argument('--examples-dir', default=r'C:\Users\oQaris\Desktop\Git\uc\examples',
                         help='Directory containing example instances')
-    parser.add_argument('--output', default='benchmark_results.csv',
+    parser.add_argument('--output', default='benchmark_results_xxx.csv',
                         help='Output CSV file')
     parser.add_argument('--workers', type=int, default=32,
                         help='Number of parallel workers')

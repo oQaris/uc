@@ -73,7 +73,8 @@ def solve_rf(data, window_size, window_step, solver_name="cbc", gap=0.01, verbos
         solver_name=solver_name, gap=gap, verbose=verbose,
         data=data, model_builder=build_uc_model,
         use_limited_horizon=use_limited_horizon,
-        generators_per_iteration=generators_per_iteration
+        generators_per_iteration=generators_per_iteration,
+        verify_solution=False  # Временно отключаем для отладки последнего окна
     )
 
     print(f"Solve time: {result['solve_time']:.2f}s")
@@ -100,7 +101,7 @@ def main():
     # === CONFIGURATION ===
     SOLVER = "appsi_highs"  # Options: "cbc", "appsi_highs"
     GAP = 0.001
-    DATA_FILE = r"C:\Users\oQaris\Desktop\Git\uc\examples\ferc\2015-04-01_hw.json"
+    DATA_FILE = r"C:\Users\oQaris\Desktop\Git\uc\examples\rts_gmlc\2020-05-05.json"
     VERBOSE = True
     # ====================
 
@@ -112,12 +113,16 @@ def main():
     print(f"Solver: {SOLVER}, Gap: {GAP}")
 
     results = {
-        "adaptive_8-8": solve_rf(data, window_size=8, window_step=8, solver_name=SOLVER, gap=GAP, verbose=VERBOSE,
-                                 use_limited_horizon=True, generators_per_iteration=32),
-        "adaptive_16-16": solve_rf(data, window_size=16, window_step=16, solver_name=SOLVER, gap=GAP, verbose=VERBOSE,
-                                   use_limited_horizon=True, generators_per_iteration=32),
-        "adaptive_32-12": solve_rf(data, window_size=32, window_step=12, solver_name=SOLVER, gap=GAP, verbose=VERBOSE,
-                                   use_limited_horizon=True, generators_per_iteration=32),
+        # "adaptive_8-8_no_decomp": solve_rf(data, window_size=8, window_step=8, solver_name=SOLVER, gap=GAP, verbose=False,
+        #                                     use_limited_horizon=True, generators_per_iteration=None),
+        "adaptive_8-8_gen100": solve_rf(data, window_size=8, window_step=8, solver_name=SOLVER, gap=GAP, verbose=VERBOSE,
+                                         use_limited_horizon=True, generators_per_iteration=120),
+        # "adaptive_8-8": solve_rf(data, window_size=8, window_step=8, solver_name=SOLVER, gap=GAP, verbose=VERBOSE,
+        #                          use_limited_horizon=True, generators_per_iteration=32),
+        # "adaptive_16-16": solve_rf(data, window_size=16, window_step=16, solver_name=SOLVER, gap=GAP, verbose=VERBOSE,
+        #                            use_limited_horizon=True, generators_per_iteration=32),
+        # "adaptive_32-12": solve_rf(data, window_size=32, window_step=12, solver_name=SOLVER, gap=GAP, verbose=VERBOSE,
+        #                            use_limited_horizon=True, generators_per_iteration=32),
         "direct": solve_direct(data, solver_name=SOLVER, gap=GAP, verbose=VERBOSE),
     }
     base_time = results['direct']['total_time']
