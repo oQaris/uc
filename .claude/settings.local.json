@@ -20,7 +20,15 @@
       "Bash(timeout 3600 python:*)",
       "Bash(appsi_highs:*)",
       "Bash(findstr:*)",
-      "Bash(timeout:*)"
+      "Bash(timeout:*)",
+      "WebFetch(domain:rpglab.github.io)",
+      "WebSearch",
+      "Bash(python3:*)",
+      "WebFetch(domain:arxiv.org)",
+      "WebFetch(domain:github.com)",
+      "Bash(git status:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
