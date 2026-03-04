@@ -17,10 +17,11 @@ import pickle
 import time
 
 import numpy as np
+from pyomo.environ import TerminationCondition
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 
 from src.models.uc_model import build_uc_model
-from pyomo.environ import TerminationCondition
 
 
 # ---------------------------------------------------------------------------
@@ -284,8 +285,44 @@ def generate_training_data(data_dir, solver_name="appsi_highs", gap=0.02,
 # Model training
 # ---------------------------------------------------------------------------
 
-def train_commitment_models(X, Y, gen_names, T, verbose=True):
-    """Train one logistic-regression classifier per (generator, period).
+def _create_classifier(method, random_state=0):
+    """Create a classifier instance for the given method.
+
+    Parameters
+    ----------
+    method : str
+        One of ``"lr"`` (logistic regression), ``"rf"`` (random forest),
+        ``"cb"`` (CatBoost gradient boosting).
+
+    Returns
+    -------
+    classifier : sklearn-compatible estimator
+    tag : str
+    """
+    if method == "lr":
+        return LogisticRegression(
+            random_state=random_state, solver="liblinear",
+            max_iter=300, C=1.0,
+        ), "lr"
+    elif method == "rf":
+        return RandomForestClassifier(
+            n_estimators=100, max_depth=5, random_state=random_state,
+            n_jobs=1,
+        ), "rf"
+    elif method == "cb":
+        from catboost import CatBoostClassifier
+        return CatBoostClassifier(
+            iterations=200, depth=4, learning_rate=0.1,
+            random_seed=random_state, verbose=False,
+            auto_class_weights="Balanced",
+        ), "cb"
+    else:
+        raise ValueError(f"Unknown ML method: {method!r}. "
+                         f"Use 'lr', 'rf', or 'cb'.")
+
+
+def train_commitment_models(X, Y, gen_names, T, method="lr", verbose=True):
+    """Train one classifier per (generator, period).
 
     Parameters
     ----------
@@ -293,6 +330,10 @@ def train_commitment_models(X, Y, gen_names, T, verbose=True):
     Y : ndarray (n_samples, n_generators * T) — may contain NaN
     gen_names : list[str]
     T : int
+    method : str
+        ``"lr"`` — logistic regression (default),
+        ``"rf"`` — random forest,
+        ``"cb"`` — CatBoost gradient boosting.
 
     NaN values in Y are filtered out per-column: only samples where the
     generator was present contribute to training.  If a generator has no
@@ -305,9 +346,11 @@ def train_commitment_models(X, Y, gen_names, T, verbose=True):
     scores : list of float
         Training accuracy for columns that were actually trained.
     """
+    METHOD_NAMES = {"lr": "LR", "rf": "RF", "cb": "CatBoost"}
+
     models_dict = {}
     scores = []
-    n_lr = 0
+    n_trained = 0
     n_const = 0
     n_no_model = 0
 
@@ -335,15 +378,12 @@ def train_commitment_models(X, Y, gen_names, T, verbose=True):
                 n_const += 1
                 has_any_model = True
             else:
-                lr = LogisticRegression(
-                    random_state=0, solver="liblinear", max_iter=300,
-                    C=1.0
-                )
-                lr.fit(X_valid, y_valid)
-                sc = lr.score(X_valid, y_valid)
-                period_models.append((lr, "lr"))
+                clf, tag = _create_classifier(method)
+                clf.fit(X_valid, y_valid)
+                sc = clf.score(X_valid, y_valid)
+                period_models.append((clf, tag))
                 scores.append(sc)
-                n_lr += 1
+                n_trained += 1
                 has_any_model = True
 
         if has_any_model:
@@ -351,7 +391,8 @@ def train_commitment_models(X, Y, gen_names, T, verbose=True):
 
     if verbose:
         mean_sc = np.mean(scores) if scores else 0
-        parts = [f"{n_lr} LR models", f"{n_const} constant"]
+        label = METHOD_NAMES.get(method, method)
+        parts = [f"{n_trained} {label} models", f"{n_const} constant"]
         if n_no_model:
             parts.append(f"{n_no_model} no_model")
         print(f"Trained {', '.join(parts)}, "
@@ -738,7 +779,7 @@ def solve_ml_assisted(data, models_dict, T,
                                     load_solutions=False)
         # Check if we got a feasible solution
         if solve_result.solver.termination_condition in {
-                TerminationCondition.optimal, TerminationCondition.feasible}:
+            TerminationCondition.optimal, TerminationCondition.feasible}:
             pyomo_model.solutions.load_from(solve_result)
         else:
             feasible = False

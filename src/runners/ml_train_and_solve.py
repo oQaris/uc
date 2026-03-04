@@ -31,7 +31,7 @@ import numpy as np
 
 # подумать как ускорить генерацию данных
 
-# вместо логистической регрессии попробовать другие методы
+# Поддерживаемые ML методы: lr (логистическая регрессия), rf (random forest), cb (CatBoost)
 
 # попробовать параллельный запуск - стандартный и ml одновременно, ограничиваем время и в любой момент времени понимаем
 # какое решение, до первой остановки, если нет, то видим текущее решение и оценку оптимума. и если разница минимальная,
@@ -76,7 +76,8 @@ def train_and_evaluate(args):
         return
 
     print(f"Dataset: {args.data_dir} ({len(files)} instances)")
-    print(f"Solver: {args.solver}, gap: {args.gap}, threads: {args.threads}")
+    print(f"Solver: {args.solver}, gap: {args.gap}, threads: {args.threads}, "
+          f"ML method: {args.ml_method}")
     if args.first_feasible:
         print(f"Training mode: FIRST FEASIBLE (fast labels)")
 
@@ -121,7 +122,7 @@ def train_and_evaluate(args):
 
         t0 = time.time()
         models_dict, scores = train_commitment_models(
-            X, Y, gen_names, T, verbose=True)
+            X, Y, gen_names, T, method=args.ml_method, verbose=True)
         train_time = time.time() - t0
         print(f"Training completed in {train_time:.1f}s")
 
@@ -383,7 +384,7 @@ def cross_validate(args):
         print(f"  Training data: {X.shape[0]} samples")
 
         models_dict, scores = train_commitment_models(
-            X, Y, gen_names, T, verbose=True)
+            X, Y, gen_names, T, method=args.ml_method, verbose=True)
 
         # Test on held-out instance
         test_data = all_datasets[test_fname]
@@ -455,6 +456,11 @@ def main():
     )
     parser.add_argument("--data-dir", required=True,
                         help="Path to dataset directory (e.g. examples/rts_gmlc)")
+    parser.add_argument("--ml-method", default="lr",
+                        choices=["lr", "rf", "cb"],
+                        help="ML method: lr (logistic regression), "
+                             "rf (random forest), cb (CatBoost) "
+                             "(default: lr)")
     parser.add_argument("--solver", default="appsi_highs",
                         help="Solver name (default: appsi_highs)")
     parser.add_argument("--gap", type=float, default=0.01,
