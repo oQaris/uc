@@ -322,7 +322,7 @@ def _create_classifier(method, random_state=0):
         return MLPClassifier(
             hidden_layer_sizes=(64, 32),
             activation="relu",
-            max_iter=500,
+            max_iter=150,
             random_state=random_state,
         ), "mlp"
     elif method == "svm":
