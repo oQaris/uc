@@ -280,11 +280,14 @@ def cross_validate(args):
     print(f"Union of generators: {len(gen_names)} across {len(files)} instances")
 
     # Pre-solve all instances (original + augmented) with caching.
-    # Each instance is solved once and reused across folds.
+    # Original instances are solved with evaluation gap (args.gap) so
+    # results double as the standard MILP baseline — no need to re-solve.
+    # Augmented instances use the (possibly looser) args.train_gap.
     print("=" * 60)
     print("Pre-solving all instances")
     print("=" * 60)
     solutions = {}  # (fname, tag) -> (features, labels_in_union_order)
+    std_results = {}  # fname -> solve_standard-style dict (for originals)
     n_cached = 0
 
     for fi, fname in enumerate(files):
@@ -322,13 +325,19 @@ def cross_validate(args):
                         print(f"  {label} ... old cache format, re-solving")
                         os.remove(cp)
 
+            # Original instances use eval gap; augmented use train gap
+            is_original = (tag == "original")
+            solve_gap = args.gap if is_original else args.train_gap
+            use_ff = False if is_original else args.first_feasible
+
             print(f"  Solving {label} ...", end=" ", flush=True)
             t0 = time.time()
             try:
                 commitment, obj = solve_instance_for_labels(
-                    inst_data, args.solver, args.train_gap,
+                    inst_data, args.solver, solve_gap,
                     args.time_limit, args.threads,
-                    first_feasible=args.first_feasible)
+                    first_feasible=use_ff)
+                elapsed = time.time() - t0
                 features = extract_features(inst_data)
 
                 # Build labels in union gen order; NaN for missing generators
@@ -349,10 +358,38 @@ def cross_validate(args):
                              labels=np.array(inst_labels),
                              gen_names=np.array(inst_gen_names))
 
-                elapsed = time.time() - t0
                 print(f"OK  obj={obj:.0f}  time={elapsed:.1f}s")
+
+                # Reuse original solve as standard baseline
+                if is_original:
+                    std_results[fname] = {
+                        "objective": obj,
+                        "solve_time": elapsed,
+                        "build_time": 0.0,
+                        "total_time": elapsed,
+                        "status": "optimal",
+                    }
             except Exception as e:
+                elapsed = time.time() - t0
                 print(f"FAILED: {e}")
+                if is_original:
+                    std_results[fname] = {
+                        "objective": None,
+                        "solve_time": elapsed,
+                        "build_time": 0.0,
+                        "total_time": elapsed,
+                        "status": str(e),
+                    }
+
+    # Solve standard baseline for instances missing from cache
+    # (original was cached → labels reused, but no std_results yet)
+    for fname in files:
+        if fname not in std_results:
+            print(f"\n  Standard baseline for {fname}:")
+            std_results[fname] = solve_standard(
+                all_datasets[fname], solver_name=args.solver, gap=args.gap,
+                time_limit=args.time_limit, threads=args.threads,
+                verbose=True)
 
     print(f"\nPre-solved: {len(solutions)} samples"
           f" ({n_cached} from cache)")
@@ -393,10 +430,12 @@ def cross_validate(args):
 
         print(f"\n  Evaluating on {test_fname}:")
 
-        # Standard solve
-        std_result = solve_standard(
-            test_data, solver_name=args.solver, gap=args.gap,
-            time_limit=args.time_limit, threads=args.threads, verbose=True)
+        # Standard solve (from pre-computed baseline)
+        std_result = std_results[test_fname]
+        obj_str = f"{std_result['objective']:.0f}" if std_result['objective'] else "N/A"
+        print(f"Standard solve: status={std_result['status']}, obj={obj_str}, "
+              f"solve_time={std_result['solve_time']:.2f}s, "
+              f"build_time={std_result['build_time']:.2f}s")
 
         # ML-assisted solve
         ml_result = solve_ml_assisted(
