@@ -476,13 +476,13 @@ def main():
     parser.add_argument("--threads", type=int, default=1,
                         help="Solver threads (default: 1)")
     parser.add_argument("--n-augmented", type=int, default=0,
-                        help="Augmented instances per original (default: 5)")
-    parser.add_argument("--noise-std", type=float, default=0.03,
-                        help="Noise std-dev for augmentation (default: 0.03)")
-    parser.add_argument("--scale-min", type=float, default=0.9,
-                        help="Min demand scale factor (default: 0.9)")
-    parser.add_argument("--scale-max", type=float, default=1.1,
-                        help="Max demand scale factor (default: 1.1)")
+                        help="Augmented instances per original (default: 0)")
+    parser.add_argument("--noise-std", type=float, default=0.05,
+                        help="Noise std-dev for augmentation (default: 0.05)")
+    parser.add_argument("--scale-min", type=float, default=0.5,
+                        help="Min demand scale factor (default: 0.5)")
+    parser.add_argument("--scale-max", type=float, default=1.5,
+                        help="Max demand scale factor (default: 1.5)")
     parser.add_argument("--confidence", type=float, default=None,
                         help="Confidence threshold for fixing (e.g. 0.9)")
     parser.add_argument("--save-models", default=None,
