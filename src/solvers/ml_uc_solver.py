@@ -1,8 +1,8 @@
 """
 ML-Assisted Unit Commitment Solver
 
-Based on: Ramesh & Li, "Machine Learning Assisted Model Reduction for
-Security-Constrained Unit Commitment", NAPS 2022.
+Based on: Ramesh & Li, "Machine Learning Assisted Model Reduction for Security-Constrained Unit Commitment", NAPS 2022.
+https://arxiv.org/abs/2111.09824
 
 Approach:
 1. Train logistic regression models on historical demand → commitment data
@@ -20,6 +20,9 @@ import numpy as np
 from pyomo.environ import TerminationCondition
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neural_network import MLPClassifier
+from sklearn.svm import SVC
 
 from src.models.uc_model import build_uc_model
 
@@ -316,9 +319,26 @@ def _create_classifier(method, random_state=0):
             random_seed=random_state, verbose=False,
             auto_class_weights="Balanced",
         ), "cb"
+    elif method == "mlp":
+        return MLPClassifier(
+            hidden_layer_sizes=(64, 32),
+            activation="relu",
+            max_iter=500,
+            random_state=random_state,
+        ), "mlp"
+    elif method == "svm":
+        return SVC(
+            kernel="rbf", C=1.0, gamma="scale",
+            probability=True,
+            random_state=random_state,
+        ), "svm"
+    elif method == "knn":
+        return KNeighborsClassifier(
+            n_neighbors=3, weights="distance",
+        ), "knn"
     else:
         raise ValueError(f"Unknown ML method: {method!r}. "
-                         f"Use 'lr', 'rf', or 'cb'.")
+                         f"Use 'lr', 'rf', 'cb', 'mlp', 'svm', or 'knn'.")
 
 
 def train_commitment_models(X, Y, gen_names, T, method="lr", verbose=True):
@@ -346,7 +366,8 @@ def train_commitment_models(X, Y, gen_names, T, method="lr", verbose=True):
     scores : list of float
         Training accuracy for columns that were actually trained.
     """
-    METHOD_NAMES = {"lr": "LR", "rf": "RF", "cb": "CatBoost"}
+    METHOD_NAMES = {"lr": "LR", "rf": "RF", "cb": "CatBoost",
+                    "mlp": "MLP", "svm": "SVM", "knn": "KNN"}
 
     models_dict = {}
     scores = []
@@ -379,6 +400,9 @@ def train_commitment_models(X, Y, gen_names, T, method="lr", verbose=True):
                 has_any_model = True
             else:
                 clf, tag = _create_classifier(method)
+                # KNN: n_neighbors не может превышать число сэмплов
+                if method == "knn" and len(X_valid) < clf.n_neighbors:
+                    clf.n_neighbors = max(1, len(X_valid))
                 clf.fit(X_valid, y_valid)
                 sc = clf.score(X_valid, y_valid)
                 period_models.append((clf, tag))

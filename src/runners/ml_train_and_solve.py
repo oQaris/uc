@@ -31,7 +31,8 @@ import numpy as np
 
 # подумать как ускорить генерацию данных
 
-# Поддерживаемые ML методы: lr (логистическая регрессия), rf (random forest), cb (CatBoost)
+# Поддерживаемые ML методы: lr (логистическая регрессия), rf (random forest), cb (CatBoost),
+# mlp (нейросеть), svm (метод опорных векторов), knn (K ближайших соседей)
 
 # попробовать параллельный запуск - стандартный и ml одновременно, ограничиваем время и в любой момент времени понимаем
 # какое решение, до первой остановки, если нет, то видим текущее решение и оценку оптимума. и если разница минимальная,
@@ -457,9 +458,11 @@ def main():
     parser.add_argument("--data-dir", required=True,
                         help="Path to dataset directory (e.g. examples/rts_gmlc)")
     parser.add_argument("--ml-method", default="lr",
-                        choices=["lr", "rf", "cb"],
+                        choices=["lr", "rf", "cb", "mlp", "svm", "knn"],
                         help="ML method: lr (logistic regression), "
-                             "rf (random forest), cb (CatBoost) "
+                             "rf (random forest), cb (CatBoost), "
+                             "mlp (neural network), svm (SVM), "
+                             "knn (K nearest neighbors) "
                              "(default: lr)")
     parser.add_argument("--solver", default="appsi_highs",
                         help="Solver name (default: appsi_highs)")
@@ -467,8 +470,8 @@ def main():
                         help="MIP gap for evaluation solves (default: 0.01)")
     parser.add_argument("--train-gap", type=float, default=0.02,
                         help="MIP gap for training data generation (default: 0.02)")
-    parser.add_argument("--time-limit", type=int, default=3000,
-                        help="Solver time limit in seconds (default: 300)")
+    parser.add_argument("--time-limit", type=int, default=3600,
+                        help="Solver time limit in seconds (default: 1 hour)")
     parser.add_argument("--threads", type=int, default=1,
                         help="Solver threads (default: 1)")
     parser.add_argument("--n-augmented", type=int, default=0,
