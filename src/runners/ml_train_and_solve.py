@@ -303,7 +303,7 @@ def cross_validate(args):
         for tag, inst_data in instances_to_solve:
             label = f"[{fi + 1}/{len(files)}] {fname} ({tag})"
 
-            # Try loading from cache
+            # Try loading from cache (only labels; features are re-extracted)
             if cache_dir:
                 cp = _cache_path_for(cache_dir, fname, tag)
                 if os.path.exists(cp):
@@ -312,7 +312,8 @@ def cross_validate(args):
                         cached_gn = list(cached["gen_names"])
                         labels = _remap_labels(
                             cached_gn, cached["labels"], gen_names, T)
-                        solutions[(fname, tag)] = (cached["features"], labels)
+                        solutions[(fname, tag)] = (
+                            extract_features(inst_data), labels)
                         n_cached += 1
                         print(f"  {label} ... CACHED")
                         continue

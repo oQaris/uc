@@ -34,10 +34,9 @@ from src.models.uc_model import build_uc_model
 def extract_features(data):
     """Extract feature vector from a UC instance.
 
-    Features = [demand_1/peak, ..., demand_T/peak, reserves_1/peak, ..., reserves_T/peak]
-
-    Normalization by peak demand keeps features in [0, 1] range and makes
-    models transferable across demand levels.
+    Features (all normalized by peak demand):
+    - demand profile (T values)
+    - reserves profile (T values)
     """
     demand = np.array(data["demand"], dtype=np.float64)
     reserves = np.array(data["reserves"], dtype=np.float64)
@@ -215,7 +214,7 @@ def generate_training_data(data_dir, solver_name="appsi_highs", gap=0.02,
         for tag, inst_data in instances_to_solve:
             label = f"[{fi + 1}/{len(files)}] {fname} ({tag})"
 
-            # Try loading from cache
+            # Try loading from cache (only labels; features are re-extracted)
             if cache_dir:
                 cp = _cache_path_for(cache_dir, fname, tag)
                 if os.path.exists(cp):
@@ -224,7 +223,7 @@ def generate_training_data(data_dir, solver_name="appsi_highs", gap=0.02,
                         cached_gn = list(cached["gen_names"])
                         labels = _remap_labels(
                             cached_gn, cached["labels"], gen_names, T)
-                        X_list.append(cached["features"])
+                        X_list.append(extract_features(inst_data))
                         Y_list.append(labels)
                         n_cached += 1
                         if verbose:
