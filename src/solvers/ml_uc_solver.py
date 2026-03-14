@@ -317,6 +317,7 @@ def _create_classifier(method, random_state=0):
             iterations=200, depth=4, learning_rate=0.1,
             random_seed=random_state, verbose=False,
             auto_class_weights="Balanced",
+            thread_count=1,
         ), "cb"
     elif method == "mlp":
         return MLPClassifier(
